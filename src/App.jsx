@@ -7,7 +7,7 @@ import { theme } from './theme/theme';
 import { authService } from './entities/users/authService';
 import Login from './entities/users/Login';
 import Register from './entities/users/Register';
-import Dashboard from './entities/Dashboard';
+import Dashboard from './entities/DashBoard';
 
 function App() {
   useEffect(() => {

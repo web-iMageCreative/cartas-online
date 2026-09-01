@@ -14,15 +14,15 @@ $stmt = $db->prepare("SELECT id, fullname, email, password FROM users WHERE emai
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 
-if (!$user || !password_verify($password, $user['password_hash'])) {
+if (!$user || !password_verify($password, $user['password'])) {
     Response::error('Credenciales inválidas', 401);
 }
 
 // Generar token
 $token = Auth::generateToken($user['id'], $user['email']);
 
-// Eliminar password_hash de la respuesta
-unset($user['password_hash']);
+// Eliminar password de la respuesta
+unset($user['password']);
 
 // Enviar token en el header y en el body
 header('X-Auth-Token: ' . $token);

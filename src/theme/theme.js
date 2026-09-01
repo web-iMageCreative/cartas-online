@@ -11,18 +11,18 @@ export const theme = createTheme({
   colors: {
     // Colores por defecto de Mantine (blue, red, green, etc.)
     // Solo necesita definir los que quiera modificar
-    // brand: [
-    //   '#f0f9ff',
-    //   '#e0f2fe',
-    //   '#bae6fd',
-    //   '#7dd3fc',
-    //   '#38bdf8',
-    //   '#0ea5e9',
-    //   '#0284c7',
-    //   '#0369a1',
-    //   '#075985',
-    //   '#0c4a6e',
-    // ],
+    brand: [
+      '#f0f9ff',
+      '#e0f2fe',
+      '#bae6fd',
+      '#7dd3fc',
+      '#38bdf8',
+      '#0ea5e9',
+      '#0284c7',
+      '#0369a1',
+      '#075985',
+      '#0c4a6e',
+    ],
   },
   
   // Color principal que se usará como valor por defecto en componentes

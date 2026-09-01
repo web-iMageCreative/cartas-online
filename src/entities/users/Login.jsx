@@ -15,6 +15,7 @@ import {
 import { IconBrandGoogle } from '@tabler/icons-react';
 import { authService } from './authService';
 import { useNavigate } from 'react-router-dom';
+import { theme } from '../../theme/theme';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -65,14 +66,15 @@ export default function Login() {
         justifyContent: 'center', 
         alignItems: 'center', 
         minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
+        // backgroundColor: '#f8f9fa',
+        border: 'none',
       }}
     >
       <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
         <Title order={2} ta="center" mb="xs">
           🍽️ Cartas Online
         </Title>
-        <Title order={4} c="dimmed" ta="center" mb="lg">
+        <Title order={3} c="dimmed" ta="center" mb="lg">
           Iniciar sesión
         </Title>
 
@@ -93,8 +95,8 @@ export default function Login() {
             <Button 
               type="submit" 
               loading={loading} 
-              fullWidth 
-              color="red"
+              fullWidth
+              c={theme.colors.brand[3]}
             >
               Iniciar sesión
             </Button>

@@ -30,7 +30,7 @@ if ($stmt->fetch()) {
 // Crear usuario
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $db->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
+$stmt = $db->prepare("INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)");
 $stmt->execute([$name, $email, $passwordHash]);
 
 $userId = $db->lastInsertId();

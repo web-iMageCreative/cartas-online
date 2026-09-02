@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Paper, Title, Stack, PasswordInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { authService } from './authService';
-import { notificationService } from '../../shared/notificationService';
+import { AuthService } from './AuthService';
+import { NotificationService } from '../../shared/NotificationService';
 import { theme } from '../../theme/theme';
 
 export default function ResetPassword() {
@@ -37,16 +37,16 @@ export default function ResetPassword() {
    
    useEffect(() => {
       if (!hash) {
-         notificationService.error('El enlace de restablecimiento de contraseña no es válido.', {
+         NotificationService.error('El enlace de restablecimiento de contraseña no es válido.', {
             title: 'Error',
          });
          Navigate('/login');
       } else {
          console.log(hash)
-         authService.verifyResetPasswordHash(hash)
+         AuthService.verifyResetPasswordHash(hash)
           .then(result => {
             if (!result.success) {
-               notificationService.error('El enlace de restablecimiento de contraseña no es válido.', {
+               NotificationService.error('El enlace de restablecimiento de contraseña no es válido.', {
                   title: 'Error',
                });
                Navigate('/login');
@@ -65,19 +65,19 @@ export default function ResetPassword() {
       setLoading(true);
 
       try { 
-         const result = await authService.resetPassword(hash,values.password, values.password_repeat);
+         const result = await AuthService.resetPassword(hash,values.password, values.password_repeat);
          if (result.success) {
-            notificationService.success('Contraseña restablecida correctamente.', {
+            NotificationService.success('Contraseña restablecida correctamente.', {
                title: 'Contraseña actualizada',
             });
             Navigate('/login');
          } else {
-            notificationService.error('Error al enviar el correo de recuperación de contraseña: ' + result.message, {
+            NotificationService.error('Error al enviar el correo de recuperación de contraseña: ' + result.message, {
                title: 'Error al solicitar recuperación de contraseña',
             });
          }
       } catch (error) {
-         notificationService.error(error.message, {
+         NotificationService.error(error.message, {
             title: 'Error',
          });
          console.log('Error:', error);

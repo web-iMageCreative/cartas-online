@@ -4,13 +4,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { theme } from './theme/theme';
-import { authService } from './entities/users/authService';
+import { AuthService } from './entities/users/AuthService';
 import AppRoutes from './Routes';
 
 function App() {
   useEffect(() => {
     // Manejar callback de Google
-    if (authService.handleGoogleCallback()) {
+    if (AuthService.handleGoogleCallback()) {
       // Redirigir al dashboard
       window.location.href = '/dashboard';
     }

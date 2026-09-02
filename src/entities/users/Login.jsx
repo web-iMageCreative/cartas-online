@@ -13,15 +13,22 @@ import {
   Box,
 } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
-import { authService } from './authService';
-import { notificationService } from '../../shared/notificationService';
+import { AuthService } from './AuthService';
+import { NotificationService } from '../../shared/NotificationService';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '../../theme/theme';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  
+
+  const checkToken = () => {
+    const token = AuthService.getToken();
+    if (token) navigate('/dashboard');
+  };
+
+  useEffect(() => checkToken(), []);
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -33,30 +40,26 @@ export default function Login() {
     },
   });
 
-  useEffect(() => {
-    const checkToken = async () => {
-      const token = await authService.getToken();
-      if (token) {
-        navigate('/dashboard');
-      }
-    };
-    checkToken();
-  }, []);
-
   const handleSubmit = async (values) => {
     setLoading(true);
 
     try {
-      const result = await authService.login(values.email, values.password);
+      const result = await AuthService.login(values.email, values.password);
       if (result.success) {
-        notificationService.success('Bienvenido de nuevo', {
+        NotificationService.success('Bienvenido de nuevo', {
           title: 'Usuario identificado correctamente',
         });
         navigate('/dashboard');
       } else {
+        NotificationService.error('Error al iniciar sesión', {
+          title: 'Usuario no identificado',
+        });
         form.setErrors({ email: result.message });
       }
     } catch (error) {
+      NotificationService.error('Error al iniciar sesión', {
+        title: 'Usuario no identificado',
+      });
       console.error('Error:', error);
     } finally {
       setLoading(false);
@@ -65,7 +68,7 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      const url = await authService.getGoogleLoginUrl();
+      const url = await AuthService.getGoogleLoginUrl();
       if (url) {
         window.location.href = url;
       }

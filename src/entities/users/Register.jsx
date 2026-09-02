@@ -12,7 +12,8 @@ import {
   Box,
 } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
-import { authService } from './authService';
+import { AuthService } from './AuthService';
+import { NotificationService } from '../../shared/NotificationService';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '../../theme/theme';
 
@@ -31,21 +32,29 @@ export default function Register() {
       name: (value) => (value.trim().length < 2 ? 'El nombre debe tener al menos 2 caracteres' : null),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Email inválido'),
       password: (value) => (value.length < 8 ? 'La contraseña debe tener al menos 8 caracteres' : null),
-      confirmPassword: (value, values) => 
-        value !== values.password ? 'Las contraseñas no coinciden' : null,
+      confirmPassword: (value, values) => (value !== values.password ? 'Las contraseñas no coinciden' : null)
     },
   });
 
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const result = await authService.register(values.name, values.email, values.password);
+      const result = await AuthService.register(values.name, values.email, values.password);
       if (result.success) {
+        NotificationService.success('Bienvenido a Cartas Online', {
+          title: 'Usuario registrado correctamente',
+        });
         navigate('/dashboard');
       } else {
+        NotificationService.error('Error al registrar usuario', {
+          title: 'Usuario no registrado',
+        });
         form.setErrors({ email: result.message });
       }
     } catch (error) {
+      NotificationService.error('Error al registrar usuario', {
+        title: 'Usuario no registrado',
+      });
       console.error('Error:', error);
     } finally {
       setLoading(false);
@@ -54,7 +63,7 @@ export default function Register() {
 
   const handleGoogleLogin = async () => {
     try {
-      const url = await authService.getGoogleLoginUrl();
+      const url = await AuthService.getGoogleLoginUrl();
       if (url) {
         window.location.href = url;
       }

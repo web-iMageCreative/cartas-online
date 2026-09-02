@@ -1,26 +1,26 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
-export const authService = {
+export class AuthService {
 
-async register(name, email, password) {
-  const response = await fetch(`${API_URL}/auth/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ name, email, password }),
-  });
+  static async register(name, email, password) {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (data.success) {
-    localStorage.setItem('authToken', data.token);
+    if (data.success) {
+      localStorage.setItem('authToken', data.token);
+    }
+
+    return data;
   }
 
-  return data;
-},
-
-  async login(email, password) {
+  static async login(email, password) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: {
@@ -36,16 +36,16 @@ async register(name, email, password) {
     }
 
     return data;
-  },
+  }
 
   // Login con Google - Obtener URL de autorización
-  async getGoogleLoginUrl() {
+  static async getGoogleLoginUrl() {
     const response = await fetch(`${API_URL}/auth/google-login-url`);
     const data = await response.json();
     return data.data?.url;
-  },
+  }
 
-  async forgotPassword(email) {
+  static async forgotPassword(email) {
     const response = await fetch(`${API_URL}/auth/forgot-password`, {
       method: 'POST',
       headers: {
@@ -56,10 +56,10 @@ async register(name, email, password) {
 
     const data = await response.json();
     return data;
-  },
+  }
 
   // Verificar token en URL (callback de Google)
-  handleGoogleCallback() {
+  static handleGoogleCallback() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
     
@@ -72,21 +72,21 @@ async register(name, email, password) {
     }
     
     return false;
-  },
+  }
 
   // Obtener token
-  getToken() {
+  static getToken() {
     return localStorage.getItem('authToken');
-  },
+  }
 
   // Cerrar sesión
-  logout() {
+  static logout() {
     localStorage.removeItem('authToken');
     window.location.href = '/login';
-  },
+  }
 
   // Obtener usuario actual
-  async getCurrentUser() {
+  static async getCurrentUser() {
     const token = this.getToken();
     if (!token) {
       return null;
@@ -104,9 +104,9 @@ async register(name, email, password) {
     }
 
     return null;
-  },
+  }
 
-  async resetPassword(hash, password, password_repeat) {
+  static async resetPassword(hash, password, password_repeat) {
     const response = await fetch(`${API_URL}/auth/reset-password`, {
       method: 'POST',
       headers: {
@@ -117,9 +117,9 @@ async register(name, email, password) {
 
     const data = await response.json();
     return data;
-  },
+  }
 
-  async verifyResetPasswordHash(hash) {
+  static async verifyResetPasswordHash(hash) {
     const response = await fetch(`${API_URL}/auth/verify-reset-password-hash`, {
       method: 'POST',
       headers: {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Box, Paper, Title, Stack, TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { authService } from './authService';
-import { notificationService } from '../../shared/notificationService';
+import { AuthService } from './AuthService';
+import { NotificationService } from '../../shared/NotificationService';
 import { theme } from '../../theme/theme';
 
 export default function ForgotPassword() {
@@ -31,18 +31,18 @@ export default function ForgotPassword() {
       setLoading(true);
 
       try { 
-         const result = await authService.forgotPassword(values.email);
+         const result = await AuthService.forgotPassword(values.email);
          if (result.success) {
-            notificationService.success('Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.', {
+            NotificationService.success('Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.', {
                title: 'Correo de recuperación enviado',
             });
          } else {
-            notificationService.error('Error al enviar el correo de recuperación de contraseña: ' + result.message, {
+            NotificationService.error('Error al enviar el correo de recuperación de contraseña: ' + result.message, {
                title: 'Error al solicitar recuperación de contraseña',
             });
          }
       } catch (error) {
-         notificationService.error(error.message, {
+         NotificationService.error(error.message, {
             title: 'Error',
          });
          console.log('Error:', error);

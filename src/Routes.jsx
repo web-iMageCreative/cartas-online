@@ -4,11 +4,11 @@ import Register from './entities/users/Register';
 import ForgotPassword from './entities/users/ForgotPassword';
 import ResetPassword from './entities/users/ResetPassword';
 import Dashboard from './entities/DashBoard';
-import ProtectedRoute from './components/ProtectedRoute';
-import { authService } from './entities/users/authService';
+import ProtectedRoute from './ProtectedRoute';
+import { AuthService } from './entities/users/AuthService';
 
 export default function AppRoutes() {
-  const token = authService.getToken();
+  const token = AuthService.getToken();
 
   return (
     <Routes>

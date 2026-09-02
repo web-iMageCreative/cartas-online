@@ -1,7 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
 export const authService = {
-  // Login con email/contraseña
   async login(email, password) {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -14,13 +13,7 @@ export const authService = {
     const data = await response.json();
 
     if (data.success) {
-      // Guardar token
-      const token = data.data?.token || response.headers.get('X-Auth-Token');
-      if (token) {
-        localStorage.setItem('auth_token', token);
-        // Configurar header por defecto para futuras peticiones
-        this.setToken(token);
-      }
+      localStorage.setItem('authToken', data.token);
     }
 
     return data;
@@ -33,13 +26,26 @@ export const authService = {
     return data.data?.url;
   },
 
+  async forgotPassword(email) {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    return data;
+  },
+
   // Verificar token en URL (callback de Google)
   handleGoogleCallback() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
     
     if (token) {
-      localStorage.setItem('auth_token', token);
+      localStorage.setItem('authToken', token);
       this.setToken(token);
       // Limpiar URL
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -49,20 +55,14 @@ export const authService = {
     return false;
   },
 
-  // Configurar token para todas las peticiones
-  setToken(token) {
-    // Almacenar para uso futuro
-    localStorage.setItem('auth_token', token);
-  },
-
   // Obtener token
   getToken() {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('authToken');
   },
 
   // Cerrar sesión
   logout() {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('authToken');
     window.location.href = '/login';
   },
 
@@ -86,6 +86,32 @@ export const authService = {
 
     return null;
   },
+
+  async resetPassword(hash, password, password_repeat) {
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ hash, password, password_repeat }),
+    });
+
+    const data = await response.json();
+    return data;
+  },
+
+  async verifyResetPasswordHash(hash) {
+    const response = await fetch(`${API_URL}/auth/verify-reset-password-hash`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ hash }),
+    });
+
+    const data = await response.json();
+    return data;
+  }
 };
 
 // Interceptor para peticiones fetch

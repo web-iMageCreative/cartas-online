@@ -1,5 +1,5 @@
 // src/pages/auth/Login.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { 
   TextInput, 
@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
 import { authService } from './authService';
+import { notificationService } from '../../shared/notificationService';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '../../theme/theme';
 
@@ -32,11 +33,25 @@ export default function Login() {
     },
   });
 
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await authService.getToken();
+      if (token) {
+        navigate('/dashboard');
+      }
+    };
+    checkToken();
+  }, []);
+
   const handleSubmit = async (values) => {
     setLoading(true);
+
     try {
       const result = await authService.login(values.email, values.password);
       if (result.success) {
+        notificationService.success('Bienvenido de nuevo', {
+          title: 'Usuario identificado correctamente',
+        });
         navigate('/dashboard');
       } else {
         form.setErrors({ email: result.message });

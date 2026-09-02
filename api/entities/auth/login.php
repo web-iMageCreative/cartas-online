@@ -1,5 +1,4 @@
 <?php
-// entities/auth/login.php
 
 $db = Database::getInstance()->getConnection();
 
@@ -10,7 +9,7 @@ if (!$email || !$password) {
     Response::error('Email y contraseña son requeridos', 400);
 }
 
-$stmt = $db->prepare("SELECT id, fullname, email, password FROM users WHERE email = ?");
+$stmt = $db->prepare("SELECT id, fullname, email, password FROM users WHERE email = ? AND is_active = 1");
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 

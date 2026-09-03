@@ -23,6 +23,18 @@ export const theme = createTheme({
       '#075985',
       '#0c4a6e',
     ],
+    custom: [
+      '#ceeaf0',
+      '#35c7e6',
+      '#1a7f96',
+      '#015668',
+      '#002132',
+      '#022739',
+      '#022739',
+      '#022739',
+      '#022739',
+      '#022739',
+    ]
   },
   
   // Color principal que se usará como valor por defecto en componentes
@@ -31,12 +43,12 @@ export const theme = createTheme({
   
   // Índice (0-9) del color principal que se considera primario
   // Puede ser distinto para modo claro y oscuro [citation:2][citation:6]
-  primaryShade: { light: 6, dark: 8 },
+  primaryShade: { light: 5, dark: 9 },
   // O simplemente: primaryShade: 6,
   
   // Controla si el color del texto debe cambiar automáticamente basado
   // en el color de fondo para garantizar contraste [citation:5]
-  autoContrast: false,
+  autoContrast: true,
   
   // Valor de luminosidad (0-1) usado para determinar si el texto debe ser
   // claro u oscuro cuando autoContrast está activado [citation:5]
@@ -193,29 +205,118 @@ export const theme = createTheme({
   // ============================================
   
   // Personalización de componentes individuales [citation:10]
-  components: {
-    // Ejemplo: Button
-    // Button: {
-    //   defaultProps: {
-    //     variant: 'filled',
-    //     size: 'md',
-    //     radius: 'md',
-    //   },
+ components: {
+    Box: {
+      styles: (theme) => ({
+        root: {
+          // En modo oscuro, el fondo será ligeramente diferente
+          backgroundColor: theme.defaultGradient.dark[7],
+        },
+      }),
+    },
+    Paper: {
+      styles: (theme) => ({
+        root: {
+          // En modo oscuro, el fondo será ligeramente diferente
+          backgroundColor: theme.colors.custom[8],
+          borderColor: theme.colors.custom[3]
+        },
+      }),
+    },
+    // Card: {
     //   styles: (theme) => ({
     //     root: {
-    //       fontWeight: 600,
+    //       backgroundColor: theme.colors.dark[6],
     //     },
     //   }),
-    //   classNames: {
-    //     root: 'mi-clase-button',
-    //   },
     // },
-    
-    // Ejemplo: TextInput
+    Button: {
+      styles: (theme, { variant }) => ({
+        root: {
+          backgroundColor: variant === 'filled' ? theme.colors.custom[3] : 'transparent',
+          borderColor: variant === 'outline' ? theme.colors.custom[3] : 'transparent',
+          color: theme.colors.custom[1],
+          
+        },
+      }),
+    },
     // TextInput: {
-    //   defaultProps: {
-    //     size: 'md',
-    //   },
+    //   styles: (theme) => ({
+    //     root: {
+    //       // cuando el wrapper está enfocado (Mantine añade data-focused)
+    //       '&[data-focused]': {
+    //         // selector más específico hacia el input interno
+    //         '& .mantine-TextInput-input': {
+    //           border: `1px solid ${theme.colors.custom[2]}`,
+    //           boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33`,
+    //         },
+    //       },
+    //     },
+    //     input: {
+    //       backgroundColor: theme.colors.custom[4],
+    //       border: `1px solid ${theme.colors.custom[3]}`,
+    //       borderRadius: theme.radius.md,
+    //       outline: 'none',
+    //       color: theme.colors.custom[0],
+    //       // cubrir también el foco directo sobre el input
+    //       '&:focus': {
+    //         border: `1px solid ${theme.colors.custom[2]}`,
+    //         boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33`,
+    //         outline: 'none',
+    //       },
+    //       '&:focus-visible': {
+    //         border: `1px solid ${theme.colors.custom[2]}`,
+    //         boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33`,
+    //       },
+    //       '&::placeholder': {
+    //         color: theme.colorScheme === 'dark' ? theme.colors.custom[2] : theme.colors.custom[6],
+    //         opacity: 1,
+    //       },
+    //     },
+    //     label: {
+    //       color: theme.colors.custom[1],
+    //     },
+    //   }),
+    // },
+
+    // PasswordInput: {
+    //   styles: (theme) => ({
+    //     root: {
+    //       border: 'none',
+    //       '&[data-focused]': {
+    //         '& .mantine-PasswordInput-input': {
+    //           border: `1px solid ${theme.colors.custom[1]}`,
+    //           boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33`,
+    //         },
+    //       },
+    //     },
+    //     input: {
+    //       backgroundColor: theme.colors.custom[4],
+    //       border: `1px solid ${theme.colors.custom[3]}`,
+    //       borderRadius: theme.radius.md,
+    //       outline: 'none',
+    //       color: theme.colors.custom[0],
+    //       '&:focus': {
+    //         border: `1px solid ${theme.colors.custom[1]}`,
+    //         boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33`,
+    //         outline: 'none',
+    //       },
+    //       '&:focus-visible': {
+    //         border: `1px solid ${theme.colors.custom[1]}`,
+    //         boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33`,
+    //       },
+    //       '&::placeholder': {
+    //         color: theme.colorScheme === 'dark' ? theme.colors.custom[2] : theme.colors.custom[6],
+    //         opacity: 1,
+    //       },
+    //     },
+    //     label: {
+    //       color: theme.colors.custom[1],
+    //     },
+    //     rightSection: {
+    //       color: theme.colors.custom[1],
+    //     },
+    //   }),
     // },
   },
   
@@ -224,11 +325,24 @@ export const theme = createTheme({
   // ============================================
   
   // Estilos globales añadidos a la aplicación [citation:2]
-  // globalStyles: (theme) => ({
-  //   body: {
-  //     backgroundColor: theme.colors.gray[0],
-  //   },
-  // }),
+  globalStyles: (theme) => ({
+    // foco / wrapper focused y foco directo sobre el input
+    '.mantine-TextInput-root[data-focused] .mantine-TextInput-input, .mantine-TextInput-input:focus': {
+      border: `1px solid ${theme.colors.custom[2]} !important`,
+      boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33 !important`,
+      outline: 'none',
+    },
+    '.mantine-PasswordInput-root[data-focused] .mantine-PasswordInput-input, .mantine-PasswordInput-input:focus': {
+      border: `1px solid ${theme.colors.custom[1]} !important`,
+      boxShadow: `0 0 0 2px ${theme.colors.custom[2]}33 !important`,
+      outline: 'none',
+    },
+    // placeholder global
+    '.mantine-TextInput-input::placeholder, .mantine-PasswordInput-input::placeholder': {
+      color: theme.colorScheme === 'dark' ? theme.colors.custom[2] : theme.colors.custom[6],
+      opacity: 1,
+    },
+  }),
   
   // ============================================
   // 10. PROPIEDADES PERSONALIZADAS
@@ -236,6 +350,13 @@ export const theme = createTheme({
   
   // Añadir sus propias propiedades al tema [citation:2]
   other: {
-    // customProperty: 'valor',
+    gradients: {
+      // Gradiente cálido (rojo-naranja)
+      basic: {
+        from: '#242424',
+        to: '#7dd3fc',
+        deg: 45,
+      },
+    },
   },
 });

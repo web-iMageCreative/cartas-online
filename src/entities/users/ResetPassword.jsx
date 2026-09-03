@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Paper, Title, Stack, PasswordInput, Button } from '@mantine/core';
+import { Paper, Title, Stack, PasswordInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { AuthService } from './AuthService';
 import { NotificationService } from '../../shared/NotificationService';
@@ -87,48 +87,38 @@ export default function ResetPassword() {
    }
 
    return (
-     <Box 
-          style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            minHeight: '100vh',
-            // backgroundColor: '#f8f9fa',
-            border: 'none',
-          }}
-        >
-          <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
-            <Title order={2} ta="center" mb="xs">
-              🍽️ Cartas Online
-            </Title>
-            <Title order={3} c="dimmed" ta="center" mb="lg">
-               Reiniciar contraseña
-            </Title>
-    
-            <form onSubmit={form.onSubmit(handleSubmit)}>
-               <Stack gap="md">
-                  <PasswordInput
-                     label="Contraseña"
-                     placeholder="Contraseña"
-                     {...form.getInputProps('password')}
-                  />
-                  <PasswordInput
-                     label="Repetir contraseña"
-                     placeholder="Repite la contraseña"
-                     {...form.getInputProps('password_repeat')}
-                  />
-                  <Button 
-                     type="submit" 
-                     loading={loading} 
-                     disabled={!form.isValid()} 
-                     fullWidth
-                     c={theme.colors.brand[3]}
-                  >
-                     Recuperar contraseña
-                  </Button>
-               </Stack>
-            </form>
-         </Paper>
-      </Box>
+     
+   <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
+      <Title order={2} ta="center" mb="xs">
+         🍽️ Cartas Online
+      </Title>
+      <Title order={3} c="dimmed" ta="center" mb="lg">
+         Reiniciar contraseña
+      </Title>
+
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+         <Stack gap="md">
+            <PasswordInput
+               label="Contraseña"
+               placeholder="Contraseña"
+               {...form.getInputProps('password')}
+            />
+            <PasswordInput
+               label="Repetir contraseña"
+               placeholder="Repite la contraseña"
+               {...form.getInputProps('password_repeat')}
+            />
+            <Button 
+               type="submit" 
+               loading={loading} 
+               disabled={!form.isValid()} 
+               fullWidth
+               c={theme.colors.brand[3]}
+            >
+               Recuperar contraseña
+            </Button>
+         </Stack>
+      </form>
+   </Paper>
  );
 }

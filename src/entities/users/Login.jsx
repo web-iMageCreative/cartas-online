@@ -1,7 +1,7 @@
 // src/pages/auth/Login.jsx
 import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { 
+import {
   TextInput, 
   PasswordInput, 
   Button, 
@@ -10,13 +10,12 @@ import {
   Stack, 
   Divider,
   Group,
-  Box,
 } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
 import { AuthService } from './AuthService';
 import { NotificationService } from '../../shared/NotificationService';
 import { useNavigate } from 'react-router-dom';
-import { theme } from '../../theme/theme';
+// Do not import the static theme object here; use runtime theme from MantineProvider instead
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -78,21 +77,11 @@ export default function Login() {
   };
 
   return (
-    <Box 
-      style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh',
-        // backgroundColor: '#f8f9fa',
-        border: 'none',
-      }}
-    >
       <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
         <Title order={2} ta="center" mb="xs">
-          🍽️ Cartas Online
+          Kamarero.es
         </Title>
-        <Title order={3} c="dimmed" ta="center" mb="lg">
+        <Title className="form-title" order={3} c="dimmed" ta="center" mb="lg">
           Iniciar sesión
         </Title>
 
@@ -111,10 +100,11 @@ export default function Login() {
             />
 
             <Button 
+              variant='filled'
               type="submit" 
               loading={loading} 
               fullWidth
-              c={theme.colors.brand[3]}
+              c="brand.3"
             >
               Iniciar sesión
             </Button>
@@ -148,6 +138,5 @@ export default function Login() {
           </Button>
         </Group>
       </Paper>
-    </Box>
   );
 }

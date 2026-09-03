@@ -9,7 +9,6 @@ import {
   Stack, 
   Divider,
   Group,
-  Box,
 } from '@mantine/core';
 import { IconBrandGoogle } from '@tabler/icons-react';
 import { AuthService } from './AuthService';
@@ -73,81 +72,71 @@ export default function Register() {
   };
 
   return (
-    <Box 
-      style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh',
-        border: 'none',
-      }}
-    >
-      <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
-        <Title order={2} ta="center" mb="xs">
-          🍽️ Cartas Online
-        </Title>
-        <Title order={3} c="dimmed" ta="center" mb="lg">
-          Crear cuenta
-        </Title>
+    <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
+      <Title order={2} ta="center" mb="xs">
+        🍽️ Cartas Online
+      </Title>
+      <Title order={3} c="dimmed" ta="center" mb="lg">
+        Crear cuenta
+      </Title>
 
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
-            <TextInput
-              label="Nombre completo"
-              placeholder="Tu nombre"
-              {...form.getInputProps('name')}
-            />
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="md">
+          <TextInput
+            label="Nombre completo"
+            placeholder="Tu nombre"
+            {...form.getInputProps('name')}
+          />
 
-            <TextInput
-              label="Email"
-              placeholder="tu@email.com"
-              {...form.getInputProps('email')}
-            />
+          <TextInput
+            label="Email"
+            placeholder="tu@email.com"
+            {...form.getInputProps('email')}
+          />
 
-            <PasswordInput
-              label="Contraseña"
-              placeholder="Tu contraseña"
-              {...form.getInputProps('password')}
-            />
+          <PasswordInput
+            label="Contraseña"
+            placeholder="Tu contraseña"
+            {...form.getInputProps('password')}
+          />
 
-            <PasswordInput
-              label="Confirmar contraseña"
-              placeholder="Repite tu contraseña"
-              {...form.getInputProps('confirmPassword')}
-            />
+          <PasswordInput
+            label="Confirmar contraseña"
+            placeholder="Repite tu contraseña"
+            {...form.getInputProps('confirmPassword')}
+          />
 
-            <Button 
-              type="submit" 
-              loading={loading} 
-              fullWidth
-              c={theme.colors.brand[3]}
-            >
-              Registrarse
-            </Button>
-          </Stack>
-        </form>
-
-        <Divider 
-          label="O registrarse con" 
-          labelPosition="center" 
-          my="lg" 
-        />
-
-        <Button
-          variant="outline"
-          fullWidth
-          leftSection={<IconBrandGoogle size={18} />}
-          onClick={handleGoogleLogin}
-        >
-          Google
-        </Button>
-
-        <Group justify="center" mt="lg">
-          <Button variant="subtle" size="sm" component="a" href="/login">
-            ¿Ya tienes cuenta? Inicia sesión
+          <Button 
+            type="submit" 
+            loading={loading} 
+            fullWidth
+            c={theme.colors.brand[3]}
+          >
+            Registrarse
           </Button>
-        </Group>
-      </Paper>
-    </Box>
+        </Stack>
+      </form>
+
+      <Divider 
+        label="O registrarse con" 
+        labelPosition="center" 
+        my="lg" 
+      />
+
+      <Button
+        variant="outline"
+        fullWidth
+        leftSection={<IconBrandGoogle size={18} />}
+        onClick={handleGoogleLogin}
+      >
+        Google
+      </Button>
+
+      <Group justify="center" mt="lg">
+        <Button variant="subtle" size="sm" component="a" href="/login">
+          ¿Ya tienes cuenta? Inicia sesión
+        </Button>
+      </Group>
+    </Paper>
   );
 }

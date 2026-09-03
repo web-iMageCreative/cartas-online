@@ -1,0 +1,26 @@
+.mantine-TextInput-input,
+.mantine-PasswordInput-input {
+  color: var(--mantine-color-custom-0) !important;
+  border-color: var(--mantine-color-custom-3);
+  background: var(--mantine-color-custom-4) !important;
+}
+
+.mantine-PasswordInput-visibilityToggle {
+  color: var(--mantine-color-custom-1) !important;
+}
+
+.form-title {
+  text-transform: uppercase;
+  color: var(--mantine-color-custom-2) !important;
+}
+
+.mantine-TextInput-label,
+.mantine-PasswordInput-label {
+  color: var(--mantine-color-custom-1) !important;
+}
+
+/* .mantine-TextInput-input:focus,
+.mantine-PasswordInput-input:focus {
+  border-color: #35c7e6 !important;
+  box-shadow: 2px 2px 4px 2px #00000033 !important;
+} */

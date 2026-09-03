@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Paper, Title, Stack, TextInput, Button } from '@mantine/core';
+import { Paper, Title, Stack, TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { AuthService } from './AuthService';
 import { NotificationService } from '../../shared/NotificationService';
@@ -52,43 +52,32 @@ export default function ForgotPassword() {
    }
 
    return (
-     <Box 
-          style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            minHeight: '100vh',
-            // backgroundColor: '#f8f9fa',
-            border: 'none',
-          }}
-        >
-          <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
-            <Title order={2} ta="center" mb="xs">
-              🍽️ Cartas Online
-            </Title>
-            <Title order={3} c="dimmed" ta="center" mb="lg">
+      <Paper withBorder shadow="md" p={30} radius="md" style={{ width: 420 }}>
+      <Title order={2} ta="center" mb="xs">
+         🍽️ Cartas Online
+      </Title>
+      <Title order={3} c="dimmed" ta="center" mb="lg">
+         Recuperar contraseña
+      </Title>
+
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+         <Stack gap="md">
+            <TextInput
+               label="Email"
+               placeholder="tu@email.com"
+               {...form.getInputProps('email')}
+            />
+            <Button 
+               type="submit" 
+               loading={loading} 
+               disabled={!form.isValid()} 
+               fullWidth
+               c={theme.colors.brand[3]}
+            >
                Recuperar contraseña
-            </Title>
-    
-            <form onSubmit={form.onSubmit(handleSubmit)}>
-               <Stack gap="md">
-                  <TextInput
-                     label="Email"
-                     placeholder="tu@email.com"
-                     {...form.getInputProps('email')}
-                  />
-                  <Button 
-                     type="submit" 
-                     loading={loading} 
-                     disabled={!form.isValid()} 
-                     fullWidth
-                     c={theme.colors.brand[3]}
-                  >
-                     Recuperar contraseña
-                  </Button>
-               </Stack>
-            </form>
-         </Paper>
-      </Box>
+            </Button>
+         </Stack>
+      </form>
+   </Paper>
  );
 }

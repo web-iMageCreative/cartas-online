@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Paper, Title, Stack, PasswordInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { IconArrowAutofitLeft } from '@tabler/icons-react';
 import { AuthService } from './AuthService';
 import { NotificationService } from '../../shared/NotificationService';
 import { theme } from '../../theme/theme';
@@ -117,6 +118,8 @@ export default function ResetPassword() {
             >
                Recuperar contraseña
             </Button>
+
+            
          </Stack>
       </form>
    </Paper>

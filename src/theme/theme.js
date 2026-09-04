@@ -63,8 +63,8 @@ export const theme = createTheme({
   // ============================================
   
   // Fuente principal: se usa en la mayoría de componentes [citation:3]
-  fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
-  
+  //fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+    fontFamily: 'Poppins, Inter,sans-serif',
   // Fuente monoespaciada: se usa en Code, Kbd y CodeHighlight [citation:3]
   fontFamilyMonospace: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace',
   
@@ -91,7 +91,8 @@ export const theme = createTheme({
   
   // Estilos de los encabezados (h1-h6) [citation:3]
   headings: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+   //fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+    fontFamily: 'Poppins, sans-serif',
     fontWeight: '700',
     sizes: {
       h1: { fontSize: rem(36), lineHeight: '1.4', fontWeight: '700' },

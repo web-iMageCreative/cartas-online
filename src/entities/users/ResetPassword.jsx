@@ -109,7 +109,9 @@ export default function ResetPassword() {
                placeholder="Repite la contraseña"
                {...form.getInputProps('password_repeat')}
             />
+            <IconArrowAutofitLeft />
             <Button 
+               variant='filled'
                type="submit" 
                loading={loading} 
                disabled={!form.isValid()} 

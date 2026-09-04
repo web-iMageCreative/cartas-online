@@ -17,7 +17,8 @@ createRoot(document.getElementById('root')).render(
           justifyContent: 'center', 
           alignItems: 'center', 
           minHeight: '100vh',
-          backgroundImage: 'url(./src/assets/imgs/app-bg.jpg)',
+          backgroundImage: 'url(/src/assets/imgs/app-bg.jpg)',
+          backgroundSize: 'cover',
           border: 'none',
         }}
       >

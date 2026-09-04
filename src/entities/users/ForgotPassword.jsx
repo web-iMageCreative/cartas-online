@@ -4,6 +4,7 @@ import { useForm } from '@mantine/form';
 import { AuthService } from './AuthService';
 import { NotificationService } from '../../shared/NotificationService';
 import { theme } from '../../theme/theme';
+import { IconArrowAutofitLeft } from '@tabler/icons-react';
 
 export default function ForgotPassword() {
    const [loading, setLoading] = useState(false);
@@ -68,6 +69,7 @@ export default function ForgotPassword() {
                {...form.getInputProps('email')}
             />
             <Button 
+               variant='filled'
                type="submit" 
                loading={loading} 
                disabled={!form.isValid()} 
@@ -75,6 +77,10 @@ export default function ForgotPassword() {
                c={theme.colors.brand[3]}
             >
                Recuperar contraseña
+            </Button>
+            <Button component='a' href="/login" variant="subtle" fullWidth>
+               <IconArrowAutofitLeft />
+               Volver al inicio de sesión
             </Button>
          </Stack>
       </form>

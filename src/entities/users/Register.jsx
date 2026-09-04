@@ -107,6 +107,7 @@ export default function Register() {
           />
 
           <Button 
+            variant='filled'
             type="submit" 
             loading={loading} 
             fullWidth

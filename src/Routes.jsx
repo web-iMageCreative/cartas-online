@@ -5,6 +5,7 @@ import ForgotPassword from './entities/users/ForgotPassword';
 import ResetPassword from './entities/users/ResetPassword';
 import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
+import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import { AuthService } from './entities/users/AuthService';
 
 export default function AppRoutes() {
@@ -21,6 +22,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/businesses/create"
+        element={
+          <ProtectedRoute>
+            <BusinessesCreate />
           </ProtectedRoute>
         }
       />

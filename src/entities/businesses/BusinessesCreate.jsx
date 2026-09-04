@@ -1,27 +1,59 @@
-import { Paper } from "@mantine/core";
+import { Paper, Title } from "@mantine/core";
 import BusinessesForm from "./BusinessesForm";
-import { hasLength } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
+import BusinessesService from "./BusinessesService";
+import { AuthService } from "../users/AuthService";
+import { useState } from "react";
 
 export default function BusinessesCreate() {
-    const navigate = useNavigate();
-    const handleSubmit = (values) => {
-        // Aquí puedes manejar la lógica de creación del negocio, como enviar los datos a tu API
-        console.log("Datos del negocio:", values);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (values) => {
+    const currentUser = AuthService.getCurrentUser();
+
+    if (!currentUser || !currentUser.id) {
+      console.error("No hay usuario autenticado o no trae id");
+      return;
     }
 
-    const handleCancel = () => {
-        navigate("/dashboard"); // Redirige a la página de dashboard o a la lista de negocios
-        // Aquí puedes manejar la lógica de cancelación, por ejemplo, redirigir a la lista de negocios
+    const payload = {
+      ...values,
+      user_id: Number(currentUser.id),
     };
 
+    console.log("Payload para crear negocio:", payload);
+
+    try {
+      setLoading(true);
+      const response = await BusinessesService.createBusiness(payload);
+      console.log("Negocio creado:", response);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error creando negocio:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+      navigate("/dashboard"); // Redirige a la página de dashboard o a la lista de negocios
+      // Aquí puedes manejar la lógica de cancelación, por ejemplo, redirigir a la lista de negocios
+  };
+
   return (
-    <Paper>
-      <h1>Create Business</h1>
-      <p>This is the business creation page.</p>
+    <Paper p={30}>      
+      <Title order={2} ta="center" mb="xs">
+        🍽️ Cartas Online
+      </Title>
+      <Title order={3} c="dimmed" ta="center" mb="lg">
+        Crear nuevo negocio
+      </Title>
+
       <BusinessesForm 
         onSubmit={handleSubmit}
-        onCancel={handleCancel}      
+        onCancel={handleCancel}
+        isLoading={loading}
       />
         
     </Paper>

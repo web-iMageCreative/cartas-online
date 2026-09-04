@@ -33,7 +33,7 @@ export default function MenusCreate() {
   }
 
   return (
-    <Paper style={{ width: 420 }}>
+    <Paper p={30} style={{ width: 420 }}>
       <Title order={2} ta="center" mb="xs">
         🍽️ Cartas Online
       </Title>

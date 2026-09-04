@@ -1,5 +1,6 @@
 .mantine-TextInput-input,
-.mantine-PasswordInput-input {
+.mantine-PasswordInput-input,
+.mantine-Textarea-input {
   color: var(--mantine-color-custom-0) !important;
   border-color: var(--mantine-color-custom-3);
   background: var(--mantine-color-custom-4) !important;
@@ -15,7 +16,8 @@
 }
 
 .mantine-TextInput-label,
-.mantine-PasswordInput-label {
+.mantine-PasswordInput-label,
+.mantine-Textarea-label {
   color: var(--mantine-color-custom-1) !important;
 }
 

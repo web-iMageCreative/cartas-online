@@ -18,6 +18,7 @@ export default function MenusCreate() {
       .then((response) => {
         console.log('Menu created successfully:', response);
         // Aquí puedes agregar la lógica para manejar la respuesta del backend
+        console.log('REDIRECCIÓN:', `/${business_slug}/menus`);
         navigate(`/${business_slug}/menus`); // Redirige a la página de menús del negocio
       })
       .catch((error) => {
@@ -40,7 +41,6 @@ export default function MenusCreate() {
       <Title order={3} c="dimmed" ta="center" mb="lg">
         Crear Menú para {business_slug}
       </Title>
-    
       <MenusForm onSubmit={handleSubmit} onCancel={handleCancel} />
     </Paper>
   );

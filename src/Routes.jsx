@@ -7,7 +7,9 @@ import ResetPassword from './entities/users/ResetPassword';
 import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
+// import BusinessesList from './entities/businesses/BusinessesList';
 import MenusCreate from './entities/menus/MenusCreate';
+import MenusList from './entities/menus/MenusList';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
@@ -21,7 +23,9 @@ export default function AppRoutes() {
       <Route path="/reset-password/:hash"        element={ <ResetPassword /> } />
       <Route path="/dashboard"                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
       <Route path="/businesses/create"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
+      <Route path="/businesses/create/bussinesList"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
       <Route path="/:business_slug/menus/create" element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
+      <Route path="/:business_slug/menus" element= { <ProtectedRoute><MenusList /></ProtectedRoute> } />
     </Routes>
   );
 }

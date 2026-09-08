@@ -54,6 +54,10 @@ export default function MenusForm({
           label="Nombre del menú"
           {...form.getInputProps('name')}
         />
+        <TextInput
+          label="Descripción"
+          {...form.getInputProps('description')}
+        />
 
         <Button
           variant='filled' 

@@ -1,4 +1,4 @@
-import { Title, Stack, TextInput, Button, Paper, Group, Container } from '@mantine/core';
+import { Title, Stack, TextInput, Button, Paper, Container, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 export default function MenusForm({
@@ -13,10 +13,7 @@ export default function MenusForm({
     initialValues: mode === 'edit' ? initialValues : { name: '', slug: '', description: ''},
     validate: {
       name: (value) => (value.length < 2 ? 'El nombre debe tener al menos 2 caracteres' : null),
-      // slug: (value) => {
-      //   if (!value) return null;
-      //   return /^[a-z0-9-]+$/.test(value) ? null : 'URL amigable inválida (solo minúsculas, números y guiones)';
-      // }
+      description: (value) => (value.length < 2 ? 'la descripción es obligatoria' : null),
     },
   });
 
@@ -42,31 +39,45 @@ export default function MenusForm({
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Nuevo Menú
       </Title>
+
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
-          <TextInput
-            label="Nombre del menú"
-            {...form.getInputProps('name')}
-          />
-          <TextInput
-            label="Descripción"
-            {...form.getInputProps('description')}
-          />
+          <Paper shadow='md' p="md">
+            <Stack gap="md">
+              <Group grow align="flex-start">
+                <TextInput
+                  label="Nombre del menú"
+                  placeholder="Da un nombre al menú"
+                  withAsterisk
+                  {...form.getInputProps('name')}
+                />
+              </Group>
+              <Group grow align="flex-start">
+                <TextInput
+                  label="Descripción"
+                  placeholder="Describe en qué consiste el Menú"
+                  withAsterisk
+                  {...form.getInputProps('description')}
+                />
+              </Group>
+            </Stack>
+          </Paper>
 
-            <Paper shadow='md' className='form-actions' p="md">
-              <Button
-                variant='filled' 
-                type="submit"
-                loading={isLoading}
-              >
-                {submitLabel}
-              </Button>
+          <Paper shadow='md' className='form-actions' p="md">
+            <Button
+              variant='filled' 
+              type="submit"
+              loading={isLoading}
+            >
+              {submitLabel}
+            </Button>
 
-              <Button variant="outline" onClick={() => onCancel()}>
-                Cancelar
-              </Button>
-            </Paper>
-          </Stack>
+            <Button variant="outline" onClick={() => onCancel()}>
+              Cancelar
+            </Button>
+          </Paper>
+
+        </Stack>
       </form>
     </Container>
   );

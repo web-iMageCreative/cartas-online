@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MenusServices from './MenusService';
+import { Container, Title, Paper, Stack } from '@mantine/core';
+import { NotificationService } from '../../shared/NotificationService';
 
 export default function MenusList() {
   const { business_slug } = useParams();
@@ -12,25 +14,28 @@ export default function MenusList() {
         setMenus(data);
       })
       .catch((error) => {
-        console.error(error);
+        NotificationService.error('No encontramos menús para este negocio: ' + error, {
+          title: 'Error cargando menús',
+        });
       });
   }, [business_slug]);
 
-console.log("menus:", menus);
-console.log("tipo:", typeof menus);
-console.log("es array:", Array.isArray(menus));
-
   return (
-    <>
-      <h1>Menús de {business_slug}</h1>
-
-      {menus.map((menu) => (
-        <div key={menu.id}>
-          <h2>{menu.name}</h2>
-          <p>{menu.description}</p>
-        </div>
-      ))}
-    </>
+    <Container miw="450">
+      <Title order={3} c="custom.0" ta="center" mb="lg">
+        Menús de {business_slug}
+      </Title>
+      <Stack gap="md">
+        {menus.map((menu) => (
+          <Paper p="lg" key={menu.id}>
+            <Title order={4} c="custom.0" mb="xs">
+              {menu.name}
+            </Title>
+            <p>{menu.description}</p>
+          </Paper>
+        ))}
+      </Stack>
+    </Container>
   );
 }
 

@@ -128,26 +128,28 @@ export default function BusinessesForm({
          
 
           {/* Fila 3: Imágenes (Archivos) */}
-          <Group grow align="flex-start">
-            <FileInput
-              label="Logo"
-              placeholder="Seleccionar logo"
-              accept="image/png,image/jpeg,image/webp,image/svg+xml"
-              leftSection={<IconUpload size={18} stroke={1.5} />}
-              clearable
-              {...form.getInputProps('logo')}
-              value={form.values.logo || null}
-            />
-            <FileInput
-              label="Portada"
-              placeholder="Seleccionar portada"
-              accept="image/png,image/jpeg,image/webp"
-              leftSection={<IconPhoto size={18} stroke={1.5} />}
-              clearable
-              {...form.getInputProps('cover_image')}
-              value={form.values.cover_image || null}
-            />
-          </Group>
+          <Paper p="lg" shadow="md">
+            <Group grow align="flex-start">
+              <FileInput
+                label="Logo"
+                placeholder="Seleccionar logo"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                leftSection={<IconUpload size={18} stroke={1.5} />}
+                clearable
+                {...form.getInputProps('logo')}
+                value={form.values.logo || null}
+              />
+              <FileInput
+                label="Portada"
+                placeholder="Seleccionar portada"
+                accept="image/png,image/jpeg,image/webp"
+                leftSection={<IconPhoto size={18} stroke={1.5} />}
+                clearable
+                {...form.getInputProps('cover_image')}
+                value={form.values.cover_image || null}
+              />
+            </Group>
+          </Paper>
 
           {/* Acciones del formulario */}
           <Paper className="form-actions" shadow="md" p="lg">

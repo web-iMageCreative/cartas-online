@@ -19,6 +19,8 @@ export default function MenusCreate() {
       setLoading(true);
       const result = await MenusServices.createMenu(values);
 
+      console.log(result);
+
       if (result.success) {
         NotificationService.success('Ha añadido correctamente un nuevo menú', {
           title: 'Nuevo Menú creado',
@@ -27,12 +29,12 @@ export default function MenusCreate() {
         navigate(`/${business_slug}/menus`);
       } else {
         NotificationService.error(result.message, {
-          title: 'Error crando Menú',
+          title: 'Error creando Menú: ',
         });
       }
     } catch(error) {
-      NotificationService.error(error.message, {
-        title: 'Error crando Menú',
+      NotificationService.error(error, {
+        title: 'Error',
       });
     } finally {
       setLoading(false);

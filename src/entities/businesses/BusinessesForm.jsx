@@ -1,11 +1,14 @@
 import { useForm } from '@mantine/form';
 import {
+  Paper,
   TextInput,
   Textarea,
   Button,
   Title,
   Stack,
   Group,
+  Space,
+  Container,
 } from '@mantine/core';
 
 const defaultBusinessValues = {
@@ -62,83 +65,97 @@ export default function BusinessesForm({
   };
 
   return (
-    <>
-    <Title order={3} ta="center" mb="lg">
-      {mode === 'create' ? 'Nuevo Negocio' : 'Editar Negocio'}
-    </Title>
+    <Container miw="450">
+      <Title order={3} c="custom.0" ta="center" mb="lg">
+        {mode === 'create' ? 'Nuevo Negocio' : 'Editar Negocio'}
+      </Title>
 
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap="md">
-        {/* Fila 1: Nombre y Slug */}
-        <Group grow align="flex-start">
-          <TextInput
-            label="Nombre"
-            placeholder="Ej: Mi Restaurante"
-            withAsterisk
-            {...form.getInputProps('name')}
-          />
-        </Group>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="md">
+          {/* Fila 1: Nombre y Slug */}
 
-        {/* Descripción */}
-        <Textarea
-          label="Descripción"
-          placeholder="Breve descripción del negocio..."
-          minRows={3}
-          {...form.getInputProps('description')}
-        />
+          <Paper shadow="md" p="lg">
+            <Stack gap="md">
+              <Group grow align="flex-start">
+                <TextInput
+                  label="Nombre"
+                  placeholder="Ej: Mi Restaurante"
+                  withAsterisk
+                  {...form.getInputProps('name')}
+                />
+              </Group>
 
-        {/* Fila 2: Email y Teléfono */}
-        <Group grow align="flex-start">
-          <TextInput
-            label="Email"
-            placeholder="contacto@negocio.com"
-            {...form.getInputProps('email')}
-          />
-          <TextInput
-            label="Teléfono"
-            placeholder="+34 600 000 000"
-            {...form.getInputProps('phone')}
-          />
-        </Group>
+              <Space />
 
-        {/* Dirección */}
-        <TextInput
-          label="Dirección"
-          placeholder="Calle Principal, 123"
-          {...form.getInputProps('address')}
-        />
+            {/* Descripción */}
+              <Textarea
+                label="Descripción"
+                placeholder="Breve descripción del negocio..."
+                minRows={3}
+                {...form.getInputProps('description')}
+              />
+            </Stack>
+          </Paper>
 
-        {/* Fila 3: Imágenes (URLs) */}
-        {/* <Group grow align="flex-start">
-          <TextInput
-            label="URL del Logo"
-            placeholder="https://ejemplo.com/logo.png"
-            {...form.getInputProps('logo')}
-          />
-          <TextInput
-            label="URL de la Portada"
-            placeholder="https://ejemplo.com/portada.jpg"
-            {...form.getInputProps('cover_image')}
-          />
-        </Group> */}
+          {/* Fila 2: Email y Teléfono */}
+          <Paper shadow="md" p="lg">
+            <Stack gap="md">
+              <Group grow align="flex-start">
+                <TextInput
+                  label="Email"
+                  placeholder="contacto@negocio.com"
+                  {...form.getInputProps('email')}
+                />
+                <TextInput
+                  label="Teléfono"
+                  placeholder="+34 600 000 000"
+                  {...form.getInputProps('phone')}
+                />
+              </Group>
 
-        <Button
-          variant="filled"
-          type="submit"
-          loading={isLoading}
-          c="brand.3"
-        >
-          {submitLabel || (mode === 'create' ? 'Crear Negocio' : 'Guardar Cambios')}
-        </Button>
+              {/* Dirección */}
+              <TextInput
+                label="Dirección"
+                placeholder="Calle Principal, 123"
+                {...form.getInputProps('address')}
+              />
+            </Stack>
+          </Paper>
 
-        <Button
-          variant="outline"
-          onClick={handleCancel}
-        >
-          Cancelar
-        </Button>
-      </Stack>
-    </form>
-    </>
+          {/* Fila 3: Imágenes (URLs) */}
+          {/* <Group grow align="flex-start">
+            <TextInput
+              label="URL del Logo"
+              placeholder="https://ejemplo.com/logo.png"
+              {...form.getInputProps('logo')}
+            />
+            <TextInput
+              label="URL de la Portada"
+              placeholder="https://ejemplo.com/portada.jpg"
+              {...form.getInputProps('cover_image')}
+            />
+          </Group> */}
+
+          <Paper className="form-actions" shadow="md" p="lg">
+            <Button
+              variant="filled"
+              type="submit"
+              loading={isLoading}
+              c="brand.3"
+            >
+              {submitLabel || (mode === 'create' ? 'Crear Negocio' : 'Guardar Cambios')}
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+            >
+              Cancelar
+            </Button>
+          </Paper>
+
+        </Stack>
+      </form>
+    </Container>
   );
 }

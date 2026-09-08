@@ -1,47 +1,53 @@
-import { Paper, Title } from '@mantine/core';
-import MenusForm from './MenusForm';
+import { useState } from  'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import MenusForm from './MenusForm';
 import MenusServices from './MenusService';
+import { NotificationService } from '../../shared/NotificationService';
 
 
 export default function MenusCreate() {
   const { business_slug } = useParams();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  console.log('business_slug:', business_slug);
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log('Form submitted with values:', values);
     // Aquí puedes agregar la lógica para enviar los datos del formulario al backend
     values.business_slug = business_slug;
 
-    MenusServices.createMenu(values)
-      .then((response) => {
-        console.log('Menu created successfully:', response);
-        // Aquí puedes agregar la lógica para manejar la respuesta del backend
-        navigate(`/${business_slug}/menus`); // Redirige a la página de menús del negocio
-      })
-      .catch((error) => {
-        console.error('Error creating menu:', error);
-        // Aquí puedes agregar la lógica para manejar errores
+    try {
+      setLoading(true);
+      const result = await MenusServices.createMenu(values);
+
+      if (result.success) {
+        NotificationService.success('Ha añadido correctamente un nuevo menú', {
+          title: 'Nuevo Menú creado',
+        });
+
+        navigate(`/${business_slug}/menus`);
+      } else {
+        NotificationService.error(result.message, {
+          title: 'Error crando Menú',
+        });
+      }
+    } catch(error) {
+      NotificationService.error(error.message, {
+        title: 'Error crando Menú',
       });
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleCancel = () => {
-    console.log('Form cancelled');
-    // Aquí puedes agregar la lógica para manejar la cancelación del formulario
+    NotificationService.info('Ha cancelado la creación de un nuevo menú', {
+      title: 'Operación cancelada'
+    });
+    
     navigate(`/${business_slug}/menus`); // Redirige a la página de menús del negocio
   }
 
   return (
-    <Paper p={30} style={{ width: 420 }}>
-      <Title order={2} ta="center" mb="xs">
-        🍽️ Cartas Online
-      </Title>
-      <Title order={3} c="dimmed" ta="center" mb="lg">
-        Crear Menú para {business_slug}
-      </Title>
-    
-      <MenusForm onSubmit={handleSubmit} onCancel={handleCancel} />
-    </Paper>
+    <MenusForm onSubmit={handleSubmit} onCancel={handleCancel} isLoading={loading} />
   );
 }

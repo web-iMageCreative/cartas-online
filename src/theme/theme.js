@@ -29,7 +29,7 @@ export const theme = createTheme({
       '#1a7f96',
       '#015668',
       '#002132',
-      '#022739',
+      '#00131d',
       '#022739',
       '#022739',
       '#022739',
@@ -64,7 +64,7 @@ export const theme = createTheme({
   
   // Fuente principal: se usa en la mayoría de componentes [citation:3]
   //fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
-    fontFamily: 'Poppins, Inter,sans-serif',
+  fontFamily: 'Poppins, Inter,sans-serif',
   // Fuente monoespaciada: se usa en Code, Kbd y CodeHighlight [citation:3]
   fontFamilyMonospace: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace',
   
@@ -135,11 +135,11 @@ export const theme = createTheme({
   
   // Sombras para componentes como Paper, Modal, Menu [citation:2]
   shadows: {
-    xs: '0 1px 2px rgba(0, 0, 0, 0.05)',
-    sm: '0 1px 3px rgba(0, 0, 0, 0.08)',
-    md: '0 4px 12px rgba(0, 0, 0, 0.08)',
-    lg: '0 8px 24px rgba(0, 0, 0, 0.10)',
-    xl: '0 12px 48px rgba(0, 0, 0, 0.12)',
+    xs: '0 1px 2px rgba(0, 0, 0, 0.4)',
+    sm: '0 1px 3px rgba(0, 0, 0, 0.35)',
+    md: '0 4px 6px rgba(0, 0, 0, 0.30)',
+    lg: '0 8px 12px rgba(0, 0, 0, 0.25)',
+    xl: '0 12px 24px rgba(0, 0, 0, 0.20)',
   },
   
   // ============================================

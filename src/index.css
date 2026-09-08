@@ -1,28 +1,44 @@
 .mantine-TextInput-input,
 .mantine-PasswordInput-input,
 .mantine-Textarea-input {
-  color: var(--mantine-color-custom-0) !important;
+  color: var(--mantine-color-custom-0);
   border-color: var(--mantine-color-custom-3);
-  background: var(--mantine-color-custom-4) !important;
+  background: var(--mantine-color-custom-4);
+
+  transition: all .5s;
 }
 
 .mantine-PasswordInput-visibilityToggle {
-  color: var(--mantine-color-custom-1) !important;
+  color: var(--mantine-color-custom-1);
 }
 
 .form-title {
   text-transform: uppercase;
-  color: var(--mantine-color-custom-2) !important;
+  color: var(--mantine-color-custom-2);
 }
 
 .mantine-TextInput-label,
 .mantine-PasswordInput-label,
 .mantine-Textarea-label {
-  color: var(--mantine-color-custom-1) !important;
+  color: var(--mantine-color-custom-1);
 }
 
-/* .mantine-TextInput-input:focus,
-.mantine-PasswordInput-input:focus {
-  border-color: #35c7e6 !important;
-  box-shadow: 2px 2px 4px 2px #00000033 !important;
-} */
+.mantine-TextInput-input:focus,
+.mantine-PasswordInput-input:focus,
+.mantine-Textarea-input:focus {
+  border-color: var(--mantine-color-custom-1);
+  box-shadow: 2px 6px 10px #00000066;
+}
+
+.mantine-AppShell-header{
+  background-color: var(--mantine-color-custom-5);
+}
+
+.mantine-AppShell-navbar {
+  background-color: var(--mantine-color-custom-4);
+}
+
+.mantine-Paper-root.form-actions {
+  display: flex;
+  justify-content: space-between;
+}

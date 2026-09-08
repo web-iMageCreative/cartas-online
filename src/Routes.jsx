@@ -8,20 +8,26 @@ import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import MenusCreate from './entities/menus/MenusCreate';
+import PrivateLayout from './layouts/PrivateLayouts';
+import PublicLayout from './layouts/PublicLayouts';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
 
   return (
     <Routes>
-      <Route path="/"                            element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
-      <Route path="/login"                       element={ <Login /> } />
-      <Route path="/register"                    element={ <Register /> } />
-      <Route path="/forgot-password"             element={ <ForgotPassword /> } />
-      <Route path="/reset-password/:hash"        element={ <ResetPassword /> } />
-      <Route path="/dashboard"                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
-      <Route path="/businesses/create"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
-      <Route path="/:business_slug/menus/create" element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
+      <Route element={<PrivateLayout />}>
+        <Route path="/dashboard"                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
+        <Route path="/businesses/create"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
+        <Route path="/:business_slug/menus/create" element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
+      </Route>
+      <Route element={<PublicLayout />}>
+        <Route path="/"                            element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
+        <Route path="/login"                       element={ <Login /> } />
+        <Route path="/register"                    element={ <Register /> } />
+        <Route path="/forgot-password"             element={ <ForgotPassword /> } />
+        <Route path="/reset-password/:hash"        element={ <ResetPassword /> } />
+      </Route>
     </Routes>
   );
 }

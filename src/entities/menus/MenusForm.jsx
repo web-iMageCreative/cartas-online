@@ -1,21 +1,22 @@
-import { Title, Stack, TextInput, Button } from '@mantine/core';
+import { Title, Stack, TextInput, Button, Paper, Group, Container } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 export default function MenusForm({
   initialValues = null,
   onSubmit,
   onCancel,
-  loading = false,
+  isLoading = false,
   mode = 'create',
+  submitLabel = 'Crear Menú',
 }) {
   const form = useForm({
     initialValues: mode === 'edit' ? initialValues : { name: '', slug: '', description: ''},
     validate: {
       name: (value) => (value.length < 2 ? 'El nombre debe tener al menos 2 caracteres' : null),
-      slug: (value) => {
-        if (!value) return null;
-        return /^[a-z0-9-]+$/.test(value) ? null : 'URL amigable inválida (solo minúsculas, números y guiones)';
-      }
+      // slug: (value) => {
+      //   if (!value) return null;
+      //   return /^[a-z0-9-]+$/.test(value) ? null : 'URL amigable inválida (solo minúsculas, números y guiones)';
+      // }
     },
   });
 
@@ -29,46 +30,45 @@ export default function MenusForm({
   };
 
   const handleSubmit = (values) => {
-    // Asegurar que el slug esté generado
     if (!values.slug && values.name) {
       values.slug = generateSlug(values.name);
     }
+
     onSubmit(values);
   };
 
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
-  };
-
   return (
-    <>
-    <Title order={4} c="dimmed" ta="center" mb="lg">
-      Formulario Menú
-    </Title>
-    
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap="md">
-        <TextInput
-          label="Nombre del menú"
-          {...form.getInputProps('name')}
-        />
-
-        <Button
-          variant='filled' 
-          type="submit"
-          loading={loading}
-        >
-          Enviar
-        </Button>
-
-        <Button variant="outline" onClick={handleCancel}>
-          Cancelar
-        </Button>
+    <Container miw="450">
+      <Title order={3} c="custom.0" ta="center" mb="lg">
+        Nuevo Menú
+      </Title>
       
-      </Stack>
-    </form>
-    </>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="md">
+          <Paper shadow='md' p="md">
+            <Group grow align="flex-start">
+              <TextInput
+                label="Nombre del menú"
+                {...form.getInputProps('name')}
+              />
+            </Group>
+          </Paper>
+
+          <Paper shadow='md' className='form-actions' p="md">
+            <Button
+              variant='filled' 
+              type="submit"
+              loading={isLoading}
+            >
+              {submitLabel}
+            </Button>
+
+            <Button variant="outline" onClick={() => onCancel()}>
+              Cancelar
+            </Button>
+          </Paper>
+        </Stack>
+      </form>
+    </Container>
   );
 }

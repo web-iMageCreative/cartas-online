@@ -1,8 +1,8 @@
-import { Paper, Title } from "@mantine/core";
 import BusinessesForm from "./BusinessesForm";
 import { useNavigate } from "react-router-dom";
 import BusinessesService from "./BusinessesService";
 import { AuthService } from "../users/AuthService";
+import { NotificationService } from '../../shared/NotificationService';
 import { useState } from "react";
 
 export default function BusinessesCreate() {
@@ -13,7 +13,9 @@ export default function BusinessesCreate() {
     const currentUser = AuthService.getCurrentUser();
 
     if (!currentUser || !currentUser.id) {
-      console.error("No hay usuario autenticado o no trae id");
+      NotificationService.error( 'No hay usuario autenticado o no tiene id', {
+        title: 'Error de identificación',
+      });
       return;
     }
 
@@ -22,40 +24,43 @@ export default function BusinessesCreate() {
       user_id: Number(currentUser.id),
     };
 
-    console.log("Payload para crear negocio:", payload);
-
     try {
       setLoading(true);
       const response = await BusinessesService.createBusiness(payload);
-      console.log("Negocio creado:", response);
+      
+      if (response.success) {
+        NotificationService.success('El nuevo negocio ha sido añadido correctamente', {
+          title: 'Negocio creado',
+        });
+      } else {
+        NotificationService.error( response.message, {
+          title: 'Error al añadir negocio',
+        });
+      }
+
       navigate("/dashboard");
     } catch (error) {
-      console.error("Error creando negocio:", error);
+      NotificationService.error( error.message, {
+        title: 'Error al añadir negocio',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancel = () => {
-      navigate("/dashboard"); // Redirige a la página de dashboard o a la lista de negocios
-      // Aquí puedes manejar la lógica de cancelación, por ejemplo, redirigir a la lista de negocios
+    NotificationService.info( 'Ha cancelado la creación de un nuevo negocio', {
+      title: 'Operación cancelada',
+    });
+    
+    navigate("/dashboard"); 
   };
 
   return (
-    <Paper p={30}>      
-      <Title order={2} ta="center" mb="xs">
-        🍽️ Cartas Online
-      </Title>
-      <Title order={3} c="dimmed" ta="center" mb="lg">
-        Crear nuevo negocio
-      </Title>
-
       <BusinessesForm 
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isLoading={loading}
       />
-        
-    </Paper>
   );
 }

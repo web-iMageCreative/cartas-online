@@ -1,4 +1,3 @@
-import { Button } from "@mantine/core";
 import { AuthService } from "./users/AuthService";
 import { useEffect } from "react";
 
@@ -13,16 +12,7 @@ export default function Dashboard() {
     checkToken();
   }, []);
 
-  const handleLogOut = async () => {
-    await AuthService.logout();
-  }
-
  return (
-   <>
    <div>Dashboard</div>
-   <Button variant="outline" color="red" onClick={ () => {handleLogOut()} }>
-      Cerrar sesión
-   </Button>
-   </>
  );
 }

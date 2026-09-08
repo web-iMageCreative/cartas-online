@@ -2,24 +2,34 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
 export default class BusinessesServices {
   static async createBusiness(menuData) {
-    try {
-      const response = await fetch(`${API_URL}/businesses/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(menuData),
-      });
+    const formData = new FormData();
 
-      if (!response.ok) {
-        throw new Error('Error al crear el Negocio');
+    Object.entries(menuData).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === '') return;
+
+      if (value instanceof File) {
+        formData.append(key, value);
+        return;
       }
 
-      return await response.json();
+      formData.append(key, String(value));
+      
+    });
 
-    } catch (error) {
-      console.error('Error al crear el negocio: ', error);
-      throw error;
+    console.log("FormData para crear negocio:", formData);
+    console.log("menuData:", menuData);
+
+    const response = await fetch(`${API_URL}/businesses/create`, {
+      method: 'POST',
+     //body: JSON.stringify(formData),
+       body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al crear el Negocio');
     }
+
+    return await response.json();
+
   }
 }

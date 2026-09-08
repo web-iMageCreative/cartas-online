@@ -30,7 +30,7 @@ export default function BusinessesCreate() {
       console.log("Negocio creado:", response);
       navigate("/dashboard");
     } catch (error) {
-      console.error("Error creando negocio:", error);
+      console.error("Error creando negocio: ", error);
     } finally {
       setLoading(false);
     }

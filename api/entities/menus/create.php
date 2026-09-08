@@ -17,9 +17,15 @@ $stmt = $db->prepare("SELECT id FROM businesses WHERE slug = ?");
 $stmt->execute([$business_slug]);
 if ($business = $stmt->fetch()) {
    $business_id = $business['id'];
+} else {
+    Response::error('No encuentra negocio: '.$business_slug, 501);
 }
 
 $stmt = $db->prepare("INSERT INTO menus (name, description, slug, business_id) VALUES (?, ?, ?, ?)");
-$stmt->execute([$name, $description, $slug, $business_id]);
+$insert = $stmt->execute([$name, $description, $slug, $business_id]);
+
+if(!$insert) {
+    Response::error('error al crear menu: '.$stmt->errorInfo()[2], 501);
+}
 
 Response::success('Menú creado exitosamente');

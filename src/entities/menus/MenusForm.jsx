@@ -42,32 +42,31 @@ export default function MenusForm({
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Nuevo Menú
       </Title>
-      
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
-          <Paper shadow='md' p="md">
-            <Group grow align="flex-start">
-              <TextInput
-                label="Nombre del menú"
-                {...form.getInputProps('name')}
-              />
-            </Group>
-          </Paper>
+          <TextInput
+            label="Nombre del menú"
+            {...form.getInputProps('name')}
+          />
+          <TextInput
+            label="Descripción"
+            {...form.getInputProps('description')}
+          />
 
-          <Paper shadow='md' className='form-actions' p="md">
-            <Button
-              variant='filled' 
-              type="submit"
-              loading={isLoading}
-            >
-              {submitLabel}
-            </Button>
+            <Paper shadow='md' className='form-actions' p="md">
+              <Button
+                variant='filled' 
+                type="submit"
+                loading={isLoading}
+              >
+                {submitLabel}
+              </Button>
 
-            <Button variant="outline" onClick={() => onCancel()}>
-              Cancelar
-            </Button>
-          </Paper>
-        </Stack>
+              <Button variant="outline" onClick={() => onCancel()}>
+                Cancelar
+              </Button>
+            </Paper>
+          </Stack>
       </form>
     </Container>
   );

@@ -1,4 +1,5 @@
 import { useForm } from '@mantine/form';
+import { IconUpload, IconPhoto } from '@tabler/icons-react';
 import {
   Paper,
   TextInput,
@@ -9,18 +10,19 @@ import {
   Group,
   Space,
   Container,
+  FileInput,
 } from '@mantine/core';
 
 const defaultBusinessValues = {
   name: '',
   slug: '',
   description: '',
-  cover_image: '',
-  logo: '',
+  cover_image: '', 
+  logo: '',       
   address: '',
   email: '',
   phone: '',
-  is_active: true,
+  is_active: '',
 };
 
 export default function BusinessesForm({
@@ -29,14 +31,20 @@ export default function BusinessesForm({
   onSubmit,
   onCancel,
   isLoading = false,
-  submitLabel = 'Crear Negocio',
+  submitLabel,
 }) {
+  // Asegurar que si initialValues trae "" en imágenes, se conviertan a null
+  const formattedInitialValues = {
+    ...defaultBusinessValues,
+    ...initialValues,
+    logo: initialValues?.logo || null,
+    cover_image: initialValues?.cover_image || null,
+  };
+
   const form = useForm({
-    initialValues: mode === 'create' ? defaultBusinessValues : initialValues,
+    initialValues: mode === 'create' ? defaultBusinessValues : formattedInitialValues,
     validate: {
       name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
-      // email: (value) => (value && !/^\S+@\S+$/.test(value) ? 'Email inválido' : null),
-      // slug: (value) => (value.trim().length === 0 ? 'El slug es obligatorio' : null),
     },
   });
 
@@ -50,18 +58,13 @@ export default function BusinessesForm({
   };
 
   const handleSubmit = (values) => {
-    // Asegurar que el slug esté generado
-    if (!values.slug && values.name) {
-      values.slug = generateSlug(values.name);
+    // Generar el slug automáticamente si no se ha definido
+    const updatedValues = { ...values };
+    if (!updatedValues.slug && updatedValues.name) {
+      updatedValues.slug = generateSlug(updatedValues.name);
     }
       
-    onSubmit(values);
-  };
-
-  const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
+    onSubmit(updatedValues);
   };
 
   return (
@@ -122,20 +125,31 @@ export default function BusinessesForm({
             </Stack>
           </Paper>
 
-          {/* Fila 3: Imágenes (URLs) */}
-          {/* <Group grow align="flex-start">
-            <TextInput
-              label="URL del Logo"
-              placeholder="https://ejemplo.com/logo.png"
-              {...form.getInputProps('logo')}
-            />
-            <TextInput
-              label="URL de la Portada"
-              placeholder="https://ejemplo.com/portada.jpg"
-              {...form.getInputProps('cover_image')}
-            />
-          </Group> */}
+         
 
+          {/* Fila 3: Imágenes (Archivos) */}
+          <Group grow align="flex-start">
+            <FileInput
+              label="Logo"
+              placeholder="Seleccionar logo"
+              accept="image/png,image/jpeg,image/webp,image/svg+xml"
+              leftSection={<IconUpload size={18} stroke={1.5} />}
+              clearable
+              {...form.getInputProps('logo')}
+              value={form.values.logo || null}
+            />
+            <FileInput
+              label="Portada"
+              placeholder="Seleccionar portada"
+              accept="image/png,image/jpeg,image/webp"
+              leftSection={<IconPhoto size={18} stroke={1.5} />}
+              clearable
+              {...form.getInputProps('cover_image')}
+              value={form.values.cover_image || null}
+            />
+          </Group>
+
+          {/* Acciones del formulario */}
           <Paper className="form-actions" shadow="md" p="lg">
             <Button
               variant="filled"
@@ -148,7 +162,7 @@ export default function BusinessesForm({
 
             <Button
               variant="outline"
-              onClick={handleCancel}
+              onClick={() => onCancel()}
             >
               Cancelar
             </Button>

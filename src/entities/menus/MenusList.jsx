@@ -3,12 +3,24 @@ import { useParams } from 'react-router-dom';
 import MenusServices from './MenusService';
 import { Container, Title, Paper, Stack } from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
+import BusinessesServices from '../businesses/BusinessesService';
 
 export default function MenusList() {
   const { business_slug } = useParams();
   const [menus, setMenus] = useState([]);
+  const [businessName, setBusinessName] = useState('');
 
   useEffect(() => {
+    BusinessesServices.getBusinessNameBySlug(business_slug)
+      .then((data) => {
+        setBusinessName(data)
+      })
+      .catch((error) => {
+        NotificationService.error('No se ha podido obtener el nombre del negocio: ' + error, {
+          title: 'Error cargando Nombre del Negocio',
+        });
+      });
+
     MenusServices.listMenu(business_slug)
       .then((data) => {
         setMenus(data);
@@ -23,7 +35,7 @@ export default function MenusList() {
   return (
     <Container miw="450">
       <Title order={3} c="custom.0" ta="center" mb="lg">
-        Menús de {business_slug}
+        Menús de {businessName}
       </Title>
       <Stack gap="md">
         {menus.map((menu) => (

@@ -1,7 +1,26 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
 export default class BusinessesServices {
-  // Método 1: Crear negocio (usa FormData para enviar imágenes)
+  static async getBusinessNameBySlug(slug) {
+    if (!slug) return null;
+
+    const response = await fetch(`${API_URL}/businesses/get-name-by-slug`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ slug }),
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      return null;
+    }
+
+    return result.data?.name || slug;
+  }
+  
   static async createBusiness(menuData) {
     const formData = new FormData();
 
@@ -29,24 +48,26 @@ export default class BusinessesServices {
     }
 
     return await response.json();
+
   }
 
-  // Método 2: Obtener negocio por Slug (usa JSON para enviar solo texto)
-  static async getBusinessBySlug(business_slug) {
-    const response = await fetch(`${API_URL}/businesses/show`, {
+  static async getBusinessBySlug( slug ) {
+    if (!slug) return null;
+
+    const response = await fetch(`${API_URL}/businesses/get`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ business_slug }),
+      body: JSON.stringify({ slug }),
     });
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(result.message || 'Error al obtener el negocio');
+      return null;
     }
 
-    return result.data;
+    return result.data?.name || slug;
   }
 }

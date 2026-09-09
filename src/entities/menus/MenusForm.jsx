@@ -17,7 +17,7 @@ export default function MenusForm({
     },
   });
 
-   const generateSlug = (name) => {
+  const generateSlug = (name) => {
     return name
       .toLowerCase()
       .normalize('NFD')
@@ -26,10 +26,9 @@ export default function MenusForm({
       .replace(/^-+|-+$/g, '');
   };
 
-  const handleSubmit = (values) => {
-    if (!values.slug && values.name) {
-      values.slug = generateSlug(values.name);
-    }
+  const handleSubmit = (values) => 
+  {
+    if (!values.slug && values.name) values.slug = generateSlug(values.name);
 
     onSubmit(values);
   };

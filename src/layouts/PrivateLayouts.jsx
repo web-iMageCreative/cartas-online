@@ -56,7 +56,7 @@ export default function PrivateLayout() {
         </Stack>
       </AppShell.Navbar>
 
-      <AppShell.Main>
+      <AppShell.Main fz="sm">
         <Center display={'flex'}>
           <Outlet />
         </Center>

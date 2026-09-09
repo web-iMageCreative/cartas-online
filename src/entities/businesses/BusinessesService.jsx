@@ -1,24 +1,27 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
 export default class BusinessesServices {
-  static async getBusinessNameBySlug(slug) {
-    if (!slug) return null;
 
-    const response = await fetch(`${API_URL}/businesses/get-name-by-slug`, {
+  static async listBusinesses(userId) {
+    const response = await fetch( `${API_URL}/businesses/list`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ slug }),
+      body: JSON.stringify({ user_id: userId })
     });
+
+    if (!response.ok) {
+      throw new Error();
+    }
 
     const result = await response.json();
 
     if (!result.success) {
-      return null;
+      throw new Error(result.message);
     }
 
-    return result.data?.name || slug;
+    return result.data;
   }
   
   static async createBusiness(menuData) {
@@ -35,20 +38,22 @@ export default class BusinessesServices {
       formData.append(key, String(value));
     });
 
-    console.log("FormData para crear negocio:", formData);
-    console.log("menuData:", menuData);
-
     const response = await fetch(`${API_URL}/businesses/create`, {
       method: 'POST',
       body: formData,
     });
 
     if (!response.ok) {
-      throw new Error('Error al crear el Negocio');
+      throw new Error();
     }
 
-    return await response.json();
+    const result = await response.json();
 
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.data;
   }
 
   static async getBusinessBySlug( slug ) {
@@ -61,32 +66,41 @@ export default class BusinessesServices {
       },
       body: JSON.stringify({ slug })
     });
+    
+    if (!response.ok) {
+      throw new Error();
+    }
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error('Error al obtener los negocios:' + result.message);
+      throw new Error(result.message);
     }
 
-    return result.data[0] || slug;
+    return result.data[0];
   }
 
-  static async listBusinesses(userId) {
-    const response = await fetch( `${API_URL}/businesses/list`, {
+  static async getBusinessNameBySlug(slug) {
+    if (!slug) return null;
+
+    const response = await fetch(`${API_URL}/businesses/get-name-by-slug`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user_id: userId })
+      body: JSON.stringify({ slug }),
     });
+
+    if (!response.ok) {
+      throw new Error();
+    }
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error('Error al obtener los negocios:' + result.message);
+      throw new Error(result.message);
     }
 
-    return result.data;
+    return result.data?.name;
   }
 }
-     

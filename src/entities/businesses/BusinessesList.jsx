@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import BusinessesService from './BusinessesService';
-import { Container, Title, Stack, Paper, Group } from '@mantine/core';
+import { Container, Title, Stack, Paper} from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
 import { AuthService } from '../users/AuthService';
 

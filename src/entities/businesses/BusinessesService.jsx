@@ -32,4 +32,22 @@ export default class BusinessesServices {
     return await response.json();
 
   }
+
+   static async listBusinesses(userId) {
+    const response = await fetch( `${API_URL}/businesses/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id: userId }),
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error('Error al obtener los negocios:' + result.message);
+    }
+
+    return result.data;
+  }
 }

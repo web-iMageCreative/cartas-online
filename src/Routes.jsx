@@ -8,6 +8,7 @@ import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 // import BusinessesList from './entities/businesses/BusinessesList';
+import BusinessPage from './entities/businesses/businesses';
 import MenusCreate from './entities/menus/MenusCreate';
 import PrivateLayout from './layouts/PrivateLayouts';
 import PublicLayout from './layouts/PublicLayouts';
@@ -21,6 +22,7 @@ export default function AppRoutes() {
       <Route element={<PrivateLayout />}>
         <Route path="/dashboard"                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
         <Route path="/businesses/create"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
+        <Route path="/:business_slug" element={<ProtectedRoute><BusinessPage /></ProtectedRoute>} />
         <Route path="/:business_slug/menus/create" element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
         <Route path="/businesses/create/bussinesList"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
         <Route path="/:business_slug/menus" element= { <ProtectedRoute><MenusList /></ProtectedRoute> } />

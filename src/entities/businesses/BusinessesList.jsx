@@ -5,12 +5,13 @@ import { NotificationService } from '../../shared/NotificationService';
 import { AuthService } from '../users/AuthService';
 
 export default function BusinessesList() {
-  const [userId, setUserId] = useState(null);
   const [businesses, setBusinesses] = useState([]);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
-      await BusinessesService.listBusinesses(userId)
+      const userData = AuthService.getCurrentUser();
+      
+      await BusinessesService.listBusinesses(userData.id)
         .then((data) => {
           setBusinesses(data);
         })
@@ -21,11 +22,7 @@ export default function BusinessesList() {
         });
     };
 
-    const userData = AuthService.getCurrentUser();
-    setUserId(userData.id);
     fetchBusinesses();
-
-    
   }, []);
 
   return (
@@ -36,22 +33,18 @@ export default function BusinessesList() {
       <Stack gap="md">
         {businesses.map((business) => (
           <Paper p="lg" key={business.id}>
-            <Stack>
-              <Group>
-                <img
-                  src={business.cover_image}
-                  alt={'portada de ' + business.name}
-                />
-              </Group>
-              <Group>
-                <Title order={4} c="custom.0" mb="xs">
-                  {business.name}
-                </Title>
-                <p>{business.description}</p>
-                <p>{business.email}</p>
-                <p>{business.address}</p>
-              </Group>
-            </Stack>
+            {business.cover_image &&
+              <img
+                src={business.cover_image}
+                alt={'portada de ' + business.name}
+              />
+            }
+            <Title order={4} c="custom.0" mb="xs">
+              {business.name}
+            </Title>
+            {business.description && <p>{business.description}</p>}
+            {business.email && <p>{business.email}</p>}
+            {business.address && <p>{business.address}</p>}
           </Paper>
         ))}
       </Stack>

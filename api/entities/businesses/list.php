@@ -14,13 +14,11 @@ if (!$user_id) {
 // 3. Buscar el negocio por su ID
 $stmt = $db->prepare("SELECT * FROM businesses WHERE user_id = ?");
 $stmt->execute([trim($user_id)]);
-$business = $stmt->fetch(PDO::FETCH_ASSOC);
+$business = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (!$business) {
     Response::error('No se encuentran negocios para el usuario: ' . $user_id, 404);
 }
-
-$business_id = $business['id'];
 
 // Devuelve los negocios (incluso si el arreglo está vacío [])
 Response::success($business, 'Negocios obtenidos correctamente');

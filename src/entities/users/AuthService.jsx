@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
+﻿const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
 export class AuthService {
 
@@ -15,7 +15,7 @@ export class AuthService {
 
     if (result.success) {
       localStorage.setItem('authToken', result.data.token);
-      localStorage.setItem('userData',  JSON.stringify(result.data.user));
+      localStorage.setItem('userData', JSON.stringify(result.data.user));
     }
 
     return result;
@@ -34,13 +34,13 @@ export class AuthService {
 
     if (result.success) {
       localStorage.setItem('authToken', result.data.token);
-      localStorage.setItem('userData',  JSON.stringify(result.data.user));
+      localStorage.setItem('userData', JSON.stringify(result.data.user));
     }
 
     return result;
   }
 
-  // Login con Google - Obtener URL de autorización
+  // Login con Google - Obtener URL de autorizacion
   static async getGoogleLoginUrl() {
     const response = await fetch(`${API_URL}/auth/google-login-url`);
     const data = await response.json();
@@ -64,29 +64,26 @@ export class AuthService {
   static handleGoogleCallback() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
-    
+
     if (token) {
       localStorage.setItem('authToken', token);
       this.setToken(token);
-      // Limpiar URL
       window.history.replaceState({}, document.title, window.location.pathname);
       return true;
     }
-    
+
     return false;
   }
 
-  // Obtener token
   static getToken() {
     return localStorage.getItem('authToken');
   }
 
   static getCurrentUser() {
     const userData = localStorage.getItem('userData');
-    return userData ? JSON.parse(userData) : null; // Aquí: JSON.parse
-   }
+    return userData ? JSON.parse(userData) : null;
+  }
 
-  // Cerrar sesión
   static logout() {
     localStorage.removeItem('authToken');
     window.location.href = '/login';
@@ -119,11 +116,10 @@ export class AuthService {
   }
 };
 
-// Interceptor para peticiones fetch
 const originalFetch = window.fetch;
 window.fetch = function(url, options = {}) {
   const token = localStorage.getItem('authToken');
-  
+
   if (token) {
     options.headers = {
       ...options.headers,

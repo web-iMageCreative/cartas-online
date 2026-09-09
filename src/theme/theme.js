@@ -95,12 +95,12 @@ export const theme = createTheme({
     fontFamily: 'Poppins, sans-serif',
     fontWeight: '700',
     sizes: {
-      h1: { fontSize: rem(36), lineHeight: '1.4', fontWeight: '700' },
-      h2: { fontSize: rem(30), lineHeight: '1.5', fontWeight: '700' },
-      h3: { fontSize: rem(24), lineHeight: '1.5', fontWeight: '600' },
-      h4: { fontSize: rem(20), lineHeight: '1.5', fontWeight: '600' },
-      h5: { fontSize: rem(16), lineHeight: '1.55', fontWeight: '600' },
-      h6: { fontSize: rem(14), lineHeight: '1.6', fontWeight: '500' },
+      h1: { fontSize: rem(30), lineHeight: '1.2', fontWeight: '700' },
+      h2: { fontSize: rem(27), lineHeight: '1.2', fontWeight: '700' },
+      h3: { fontSize: rem(24), lineHeight: '1.2', fontWeight: '600' },
+      h4: { fontSize: rem(21), lineHeight: '1.2', fontWeight: '600' },
+      h5: { fontSize: rem(18), lineHeight: '1.2', fontWeight: '600' },
+      h6: { fontSize: rem(15), lineHeight: '1.2', fontWeight: '500' },
     },
     // textWrap: 'wrap', // Opcional: controla el wrap del texto
   },

@@ -15,22 +15,15 @@ export default function BusinessesList() {
           setBusinesses(data);
         })
         .catch((error) => {
-          NotificationService.error('No encontramos ningún negocio con ese slug: ' + error, {
+          NotificationService.error('No encontramos ningún negocio con ese ID: ' + error, {
             title: 'Error cargando negocios',
           });
         });
     };
 
-    AuthService.getCurrentUser()
-      .then((userData) => {
-        setUserId(userData.id);
-        fetchBusinesses();
-      })
-      .catch((error) => {
-        NotificationService.error('Error al obtener datos del usuario: ' + error, {
-          title: 'Error',
-        });
-      });
+    const userData = AuthService.getCurrentUser();
+    setUserId(userData.id);
+    fetchBusinesses();
 
     
   }, []);

@@ -8,6 +8,7 @@ import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import BusinessesList from './entities/businesses/BusinessesList';
+import BusinessPage from './entities/businesses/businesses';
 import MenusCreate from './entities/menus/MenusCreate';
 import MenusList from './entities/menus/MenusList';
 
@@ -16,16 +17,21 @@ export default function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/"                            element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
-      <Route path="/login"                       element={ <Login /> } />
-      <Route path="/register"                    element={ <Register /> } />
-      <Route path="/forgot-password"             element={ <ForgotPassword /> } />
-      <Route path="/reset-password/:hash"        element={ <ResetPassword /> } />
-      <Route path="/dashboard"                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
-      <Route path="/businesses/create"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
-      <Route path="/businesses/list"           element={ <ProtectedRoute><BusinessesList /></ProtectedRoute> } /> 
-      <Route path="/:business_slug/menus/create" element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
-      <Route path="/:business_slug/menus" element= { <ProtectedRoute><MenusList /></ProtectedRoute> } />
+      <Route element={<PrivateLayout />}>
+        <Route path="/dashboard"                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
+        <Route path="/businesses/create"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
+        <Route path="/:business_slug" element={<ProtectedRoute><BusinessPage /></ProtectedRoute>} />
+        <Route path="/:business_slug/menus/create" element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
+        <Route path="/businesses/create/bussinesList"           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
+        <Route path="/:business_slug/menus" element= { <ProtectedRoute><MenusList /></ProtectedRoute> } />
+      </Route>
+      <Route element={<PublicLayout />}>
+        <Route path="/"                            element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
+        <Route path="/login"                       element={ <Login /> } />
+        <Route path="/register"                    element={ <Register /> } />
+        <Route path="/forgot-password"             element={ <ForgotPassword /> } />
+        <Route path="/reset-password/:hash"        element={ <ResetPassword /> } />
+      </Route>
     </Routes>
   );
 }

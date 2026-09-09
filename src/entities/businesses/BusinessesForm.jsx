@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 
 const defaultBusinessValues = {
+  id: '',
   name: '',
   slug: '',
   description: '',
@@ -23,6 +24,7 @@ const defaultBusinessValues = {
   email: '',
   phone: '',
   is_active: '',
+  user_id: ''
 };
 
 export default function BusinessesForm({

@@ -1,9 +1,9 @@
+import { Paper, Title } from "@mantine/core";
 import BusinessesForm from "./BusinessesForm";
 import { useNavigate } from "react-router-dom";
 import BusinessesService from "./BusinessesService";
 import { AuthService } from "../users/AuthService";
-import { NotificationService } from '../../shared/NotificationService';
-import { useState } from "react";
+import { useState } from "react";     
 
 export default function BusinessesCreate() {
   const [loading, setLoading] = useState(false);
@@ -13,9 +13,7 @@ export default function BusinessesCreate() {
     const currentUser = AuthService.getCurrentUser();
 
     if (!currentUser || !currentUser.id) {
-      NotificationService.error( 'No hay usuario autenticado o no tiene id', {
-        title: 'Error de identificación',
-      });
+      console.error("No hay usuario autenticado o no trae id");
       return;
     }
 
@@ -24,43 +22,40 @@ export default function BusinessesCreate() {
       user_id: Number(currentUser.id),
     };
 
+    console.log("Payload para crear negocio:", payload);
+
     try {
       setLoading(true);
       const response = await BusinessesService.createBusiness(payload);
-      
-      if (response.success) {
-        NotificationService.success('El nuevo negocio ha sido añadido correctamente', {
-          title: 'Negocio creado',
-        });
-      } else {
-        NotificationService.error( response.message, {
-          title: 'Error al añadir negocio',
-        });
-      }
-
+      console.log("Negocio creado:", response);
       navigate("/dashboard");
     } catch (error) {
-      NotificationService.error( error.message, {
-        title: 'Error al añadir negocio',
-      });
+      console.error("Error creando negocio: ", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    NotificationService.info( 'Ha cancelado la creación de un nuevo negocio', {
-      title: 'Operación cancelada',
-    });
-    
-    navigate("/dashboard"); 
+      navigate("/dashboard"); // Redirige a la página de dashboard o a la lista de negocios
+      // Aquí puedes manejar la lógica de cancelación, por ejemplo, redirigir a la lista de negocios
   };
 
   return (
+    <Paper p={30}>      
+      <Title order={2} ta="center" mb="xs">
+        🍽️ Cartas Online
+      </Title>
+      <Title order={3} c="dimmed" ta="center" mb="lg">
+        Crear nuevo negocio
+      </Title>
+
       <BusinessesForm 
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isLoading={loading}
       />
+        
+    </Paper>
   );
 }

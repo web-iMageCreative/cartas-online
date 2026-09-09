@@ -1,6 +1,26 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/api';
 
 export default class BusinessesServices {
+  static async getBusinessNameBySlug(slug) {
+    if (!slug) return null;
+
+    const response = await fetch(`${API_URL}/businesses/get-name-by-slug`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ slug }),
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      return null;
+    }
+
+    return result.data?.name || slug;
+  }
+  
   static async createBusiness(menuData) {
     const formData = new FormData();
 
@@ -13,7 +33,6 @@ export default class BusinessesServices {
       }
 
       formData.append(key, String(value));
-      
     });
 
     console.log("FormData para crear negocio:", formData);
@@ -21,8 +40,7 @@ export default class BusinessesServices {
 
     const response = await fetch(`${API_URL}/businesses/create`, {
       method: 'POST',
-     //body: JSON.stringify(formData),
-       body: formData,
+      body: formData,
     });
 
     if (!response.ok) {
@@ -33,13 +51,33 @@ export default class BusinessesServices {
 
   }
 
-   static async listBusinesses(userId) {
+  static async getBusinessBySlug( slug ) {
+    if (!slug) return null;
+
+    const response = await fetch(`${API_URL}/businesses/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ slug })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error('Error al obtener los negocios:' + result.message);
+    }
+
+    return result.data[0] || slug;
+  }
+
+  static async listBusinesses(userId) {
     const response = await fetch( `${API_URL}/businesses/list`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ user_id: userId }),
+      body: JSON.stringify({ user_id: userId })
     });
 
     const result = await response.json();
@@ -51,3 +89,4 @@ export default class BusinessesServices {
     return result.data;
   }
 }
+     

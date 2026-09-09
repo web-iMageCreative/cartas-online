@@ -5,8 +5,8 @@ import { Container, Title, Paper, Stack } from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
 import BusinessesServices from '../businesses/BusinessesService';
 
-export default function MenusList() {
-  const { business_slug } = useParams();
+export default function MenusList({ businessSlug }) {
+  const { business_slug } = useParams() || businessSlug; // Use the prop if provided, otherwise fallback to useParams
   const [menus, setMenus] = useState([]);
   const [businessName, setBusinessName] = useState('');
 

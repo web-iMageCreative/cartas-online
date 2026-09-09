@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Badge, Container, Group, Paper, Stack, Text, Title } from '@mantine/core';
+import { Badge, Container, Group, Menu, Paper, Stack, Text, Title } from '@mantine/core';
 import BusinessesServices from './BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
+import MenuList from '../menus/MenusList';
 
 export default function BusinessPage() {
   const { business_slug } = useParams();
@@ -16,6 +17,7 @@ export default function BusinessPage() {
       try {
         const data = await BusinessesServices.getBusinessBySlug(business_slug);
         setBusiness(data);
+        console.log("Negocio cargado:", data);
       } catch (error) {
         NotificationService.error(error.message || 'No se pudo cargar el negocio', {
           title: 'Error al cargar negocio',
@@ -89,24 +91,7 @@ export default function BusinessPage() {
         Menú
       </Title>
 
-      {business.menus?.length ? (
-        <Stack gap="md">
-          {business.menus.map((menu) => (
-            <Paper key={menu.id} withBorder radius="md" p="lg">
-              <Title order={4} c="custom.0" mb="xs">
-                {menu.name}
-              </Title>
-              <Text c="dimmed">
-                {menu.description || 'Sin descripción'}
-              </Text>
-            </Paper>
-          ))}
-        </Stack>
-      ) : (
-        <Paper withBorder radius="md" p="lg">
-          <Text>No hay menús disponibles para este negocio.</Text>
-        </Paper>
-      )}
+      <MenuList businessSlug={business.slug} />
     </Container>
   );
 }

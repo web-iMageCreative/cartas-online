@@ -68,6 +68,6 @@ export default class BusinessesServices {
       return null;
     }
 
-    return result.data?.name || slug;
+    return result.data[0] || slug;
   }
 }

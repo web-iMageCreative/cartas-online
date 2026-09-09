@@ -1,61 +1,77 @@
 import { useEffect, useState } from 'react';
 import BusinessesService from './BusinessesService';
-import { Container, Title, Stack, Paper, Group } from '@mantine/core';
+import { Container, Title, Stack, Paper, Image, Text } from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
 import { AuthService } from '../users/AuthService';
 
+const API_HOST = import.meta.env.VITE_API_HOST || 'http://localhost';
+
 export default function BusinessesList() {
-  const [userId, setUserId] = useState(null);
   const [businesses, setBusinesses] = useState([]);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
-      await BusinessesService.listBusinesses(userId)
-        .then((data) => {
-          setBusinesses(data);
-        })
-        .catch((error) => {
-          NotificationService.error('No encontramos ningún negocio con ese ID: ' + error, {
-            title: 'Error cargando negocios',
-          });
+      try {
+        const userData = AuthService.getCurrentUser();
+
+        if (!userData || !userData.id) {
+          throw new Error('No hay sesión de usuario activa');
+        }
+
+        const response = await BusinessesService.listBusinesses(userData.id);
+
+        // Garantiza extraer siempre un arreglo, evitando que sea un objeto no mapeable
+        const list = Array.isArray(response) ? response : (response?.data || []);
+        setBusinesses(list);
+
+      } catch (error) {
+        NotificationService.error('Error cargando negocios: ' + error.message, {
+          title: 'Error de carga',
         });
+        setBusinesses([]); // Respaldo para asegurar que siempre sea un array
+      }
     };
 
-    const userData = AuthService.getCurrentUser();
-    setUserId(userData.id);
     fetchBusinesses();
-
-    
   }, []);
 
   return (
-    <Container miw="450">
+    <Container size="sm">
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Mis negocios:
       </Title>
+
       <Stack gap="md">
-        {businesses.map((business) => (
-          <Paper p="lg" key={business.id}>
-            <Stack>
-              <Group>
-                <img
-                  src={business.cover_image}
-                  alt={'portada de ' + business.name}
-                />
-              </Group>
-              <Group>
-                <Title order={4} c="custom.0" mb="xs">
-                  {business.name}
-                </Title>
-                <p>{business.description}</p>
-                <p>{business.email}</p>
-                <p>{business.address}</p>
-              </Group>
-            </Stack>
-          </Paper>
-        ))}
+        {Array.isArray(businesses) && businesses.length > 0 ? (
+          businesses.map((business) => (
+            <Paper p="lg" key={business.id} withBorder shadow="xs">
+              <Stack gap="sm">
+                {business.cover_image && (
+                  <Image
+                    src={`${API_HOST}/${business.cover_image}`}
+                    alt={`Portada de ${business.name}`}
+                    h={160}
+                    radius="md"
+                    fallbackSrc="https://placehold.co/600x400?text=Sin+Imagen"
+                  />
+                )}
+                <div>
+                  <Title order={4} c="custom.0" mb="xs">
+                    {business.name}
+                  </Title>
+                  <Text size="sm" c="dimmed" mb="xs">{business.description}</Text>
+                  <Text size="xs"><b>Email:</b> {business.email}</Text>
+                  <Text size="xs"><b>Dirección:</b> {business.address}</Text>
+                </div>
+              </Stack>
+            </Paper>
+          ))
+        ) : (
+          <Text ta="center" c="dimmed">
+            No tienes negocios registrados aún.
+          </Text>
+        )}
       </Stack>
     </Container>
   );
-
 }

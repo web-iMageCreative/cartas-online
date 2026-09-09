@@ -84,6 +84,8 @@ export default function BusinessPage() {
               <strong>Teléfono:</strong> {business.phone}
             </Text>
           )}
+              {business.logo && <img src={business.logo} alt="Logo" />}
+            {business.cover_image && <img src={business.cover_image} alt="Imagen de portada" />}
         </Stack>
       </Paper>
 

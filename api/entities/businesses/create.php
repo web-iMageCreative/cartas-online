@@ -39,7 +39,7 @@ function saveUploadedFile($fileKey) {
     $destination = $uploadPath . $fileName;
 
     if (move_uploaded_file($file['tmp_name'], $destination)) {
-        return 'public/' . $fileName;
+        return '/public/user_img/' . $fileName;
     }
 
     return null;

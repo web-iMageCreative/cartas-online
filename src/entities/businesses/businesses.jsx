@@ -30,7 +30,7 @@ export default function BusinessPage() {
 
     if (business_slug) {
       loadBusiness();
-    }
+    } 
   }, [business_slug]);
 
   if (loading) {

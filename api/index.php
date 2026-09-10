@@ -68,4 +68,8 @@ try {
     
 } catch (Exception $e) {
     Response::error($e->getMessage(), 500);
+} catch (ParseError $e) {
+    Response::error('ParseError: ' . $e->getMessage(), 500);
+} catch (Throwable $e) {
+    Response::error('ThrowError: ' . $e->getMessage(), 500);
 }

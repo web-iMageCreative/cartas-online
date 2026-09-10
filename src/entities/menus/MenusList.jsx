@@ -16,7 +16,7 @@ export default function MenusList({ businessSlug }) {
         setBusinessName(data)
       })
       .catch((error) => {
-        NotificationService.error('No se ha podido obtener el nombre del negocio: ' + error, {
+        NotificationService.error(error, {
           title: 'Error cargando Nombre del Negocio',
         });
       });
@@ -26,7 +26,7 @@ export default function MenusList({ businessSlug }) {
         setMenus(data);
       })
       .catch((error) => {
-        NotificationService.error('No encontramos menús para este negocio: ' + error, {
+        NotificationService.error(error, {
           title: 'Error cargando menús',
         });
       });

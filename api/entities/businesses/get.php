@@ -16,6 +16,4 @@ if (!$business) {
     Response::error('Negocio no encontrado', 404);
 }
 
-Response::success([
-  $business,
-], 'Nombre del negocio obtenido correctamente');
+Response::success([$business], 'Nombre del negocio obtenido correctamente');

@@ -10,17 +10,13 @@ export default class MenusServices {
       body: JSON.stringify(menuData),
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     const result = await response.json();
-
-    if (!result.success) {
+    
+    if (!response.ok || !result.success) {
       throw new Error(result.message);
     }
 
-    return result;
+    return result.data;
   }
 
   static async listMenu(business_slug) {
@@ -33,9 +29,9 @@ export default class MenusServices {
     });
 
     const result = await response.json();
-
-    if (!result.success) {
-      throw new Error('Error al obtener los menús' + result.message);
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
     }
 
     return result.data;

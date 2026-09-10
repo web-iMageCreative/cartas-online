@@ -1,11 +1,7 @@
 <?php
 
 $db = Database::getInstance()->getConnection();
-
-// 1. Capturar los datos recibidos (Soporta JSON, $_POST y $_GET)
-$input = json_decode(file_get_contents('php://input'), true);
 $user_id = $input['user_id'] ?? null;
-
 // 2. Validación de entrada
 if (!$user_id) {
     Response::error('El ID del usuario es requerido', 400);

@@ -11,13 +11,9 @@ export default class BusinessesServices {
       body: JSON.stringify({ user_id: userId })
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     const result = await response.json();
-
-    if (!result.success) {
+    
+    if (!response.ok || !result.success) {
       throw new Error(result.message);
     }
 
@@ -43,13 +39,9 @@ export default class BusinessesServices {
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     const result = await response.json();
-
-    if (!result.success) {
+    
+    if (!response.ok || !result.success) {
       throw new Error(result.message);
     }
 
@@ -66,14 +58,10 @@ export default class BusinessesServices {
       },
       body: JSON.stringify({ slug })
     });
-    
-    if (!response.ok) {
-      throw new Error();
-    }
 
     const result = await response.json();
-
-    if (!result.success) {
+    
+    if (!response.ok || !result.success) {
       throw new Error(result.message);
     }
 
@@ -91,13 +79,9 @@ export default class BusinessesServices {
       body: JSON.stringify({ slug }),
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     const result = await response.json();
-
-    if (!result.success) {
+    
+    if (!response.ok || !result.success) {
       throw new Error(result.message);
     }
 

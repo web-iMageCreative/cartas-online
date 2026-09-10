@@ -16,7 +16,7 @@ export default function BusinessesList() {
       await BusinessesService.listBusinesses(userData.id)
         .then((data) => setBusinesses(data))
         .catch((error) => NotificationService.error(error, {title: 'Error cargando negocios'}))
-        .finally(() => setLoading(true));
+        .finally(() => setLoading(false));
     };
 
     fetchBusinesses();

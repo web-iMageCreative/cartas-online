@@ -1,10 +1,10 @@
 <?php
 
 $db = Database::getInstance()->getConnection();
-
+$business_slug = $input['business_slug'] ?? null;//CAMBIO------
 // 1. Capturar los datos recibidos (Soporta JSON, $_POST y $_GET)
-$input = json_decode(file_get_contents('php://input'), true);
-$business_slug = $input['business_slug'] ?? $_POST['business_slug'] ?? $_GET['business_slug'] ?? null;
+//$input = json_decode(file_get_contents('php://input'), true);
+//$business_slug = $input['business_slug'] ?? $_POST['business_slug'] ?? $_GET['business_slug'] ?? null;
 
 // 2. Validación de entrada
 if (!$business_slug) {

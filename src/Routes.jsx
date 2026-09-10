@@ -9,6 +9,7 @@ import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import BusinessesList from './entities/businesses/BusinessesList';
 import BusinessPage from './entities/businesses/businesses';
+import MenuPage from './entities/menus/Menu';
 import MenusCreate from './entities/menus/MenusCreate';
 import MenusList from './entities/menus/MenusList';
 import PublicLayout from './layouts/PublicLayouts';

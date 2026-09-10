@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MenusServices from './MenusService';
-import { Container, Title, Paper, Stack } from '@mantine/core';
+import { Container, Title, Paper, Stack, LoadingOverlay } from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
 import BusinessesServices from '../businesses/BusinessesService';
 
@@ -9,8 +9,10 @@ export default function MenusList({ businessSlug }) {
   const { business_slug } = useParams() || businessSlug; // Use the prop if provided, otherwise fallback to useParams
   const [menus, setMenus] = useState([]);
   const [businessName, setBusinessName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(false); //CAMBIO
     BusinessesServices.getBusinessNameBySlug(business_slug)
       .then((data) => {
         setBusinessName(data)
@@ -18,7 +20,8 @@ export default function MenusList({ businessSlug }) {
       .catch((error) => {
         NotificationService.error(error, {
           title: 'Error cargando Nombre del Negocio',
-        });
+        })
+      .finally(() => setLoading(false)); 
       });
 
     MenusServices.listMenu(business_slug)
@@ -33,7 +36,8 @@ export default function MenusList({ businessSlug }) {
   }, [business_slug]);
 
   return (
-    <Container miw="450">
+    <Container miw="450" pos="relative">
+      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Menús de {businessName}
       </Title>

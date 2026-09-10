@@ -36,4 +36,25 @@ export default class MenusServices {
 
     return result.data;
   }
+
+  
+  static async getMenuById( menu_id ) {
+    if (!menu_id) return null;
+
+    const response = await fetch(`${API_URL}/menus/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: menu_id })
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.data[0];
+  }
 }

@@ -20,12 +20,12 @@ export default class MenusServices {
   }
 
   static async listMenu(business_slug) {
-    const response = await fetch( `${API_URL}/menus/list`, {
+    const response = await fetch(`${API_URL}/menus/list`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({business_slug: business_slug}),
+      body: JSON.stringify({ business_slug }),
     });
 
     const result = await response.json();

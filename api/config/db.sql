@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-08-2026 a las 12:19:41
+-- Tiempo de generación: 10-09-2026 a las 13:06:44
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -71,6 +71,16 @@ CREATE TABLE `businesses` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `businesses`
+--
+
+INSERT INTO `businesses` (`id`, `name`, `slug`, `description`, `cover_image`, `logo`, `address`, `email`, `phone`, `user_id`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(13, 'grgrgg', 'grgrgg', 'ggg', NULL, NULL, 'SDFFF', 'gdsfF', '3343244', 1, 1, '2026-09-07 11:46:25', '2026-09-07 11:46:25', NULL),
+(27, 'exito ', 'exito', '/public', NULL, 'public/img_6a9fd0b721fb79.30378987.png', NULL, NULL, NULL, 1, 1, '2026-09-08 09:09:11', '2026-09-08 09:09:11', NULL),
+(28, 'hola', 'hola', 'dadsdd', NULL, 'public/img_6aa11c9b5f4183.95046827.png', 'dsadasdasdasd', 'mariareneevega17@gmail.com', '12321312323', 1, 1, '2026-09-09 08:45:15', '2026-09-09 08:45:15', NULL),
+(29, 'maria', 'maria', 'adsdasdasd', '', '', 'dasdadasd', 'dasdadad', 'asdadasd', 1, 1, '2026-09-09 09:13:31', '2026-09-10 06:54:07', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -81,7 +91,7 @@ CREATE TABLE `categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `menu_id` bigint(20) UNSIGNED NOT NULL,
+  `menu_id` bigint(20) UNSIGNED DEFAULT NULL,
   `parent` bigint(20) UNSIGNED DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -130,6 +140,15 @@ CREATE TABLE `menus` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `menus`
+--
+
+INSERT INTO `menus` (`id`, `name`, `slug`, `description`, `business_id`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 'exito', 'exito', 'postre', 27, 1, '2026-09-08 10:57:42', '2026-09-08 10:57:42', NULL),
+(3, 'comidada', 'comida', 'dsadadsadsd', 27, 1, '2026-09-10 09:38:38', '2026-09-10 09:38:38', NULL),
+(4, 'fffff', 'fffff', 'ffffff', 27, 1, '2026-09-10 09:59:37', '2026-09-10 09:59:37', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -143,11 +162,21 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL,
   `auth_provider` enum('local','google') DEFAULT 'local',
   `google_id` varchar(255) DEFAULT NULL,
+  `recovery` varchar(32) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `fullname`, `email`, `password`, `auth_provider`, `google_id`, `recovery`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'maria', 'mariareneevega17@gmail.com', '$2y$10$GCvCn3KP1omzU.Aon4Yb.Oh1LahRWpU.df2vDZJ78De2i4za2xiJ.', 'local', NULL, '', 1, '2026-09-02 06:58:09', '2026-09-02 06:58:09', NULL),
+(2, 'maria', 'leo@gmail.com', '$2y$10$CCYAWXru6aqMTqygEBPIl.SCTFtYMbGIwBAH1FBfb1gxSmRsxoZfi', 'local', NULL, '', 1, '2026-09-02 07:01:25', '2026-09-02 07:01:25', NULL),
+(3, 'asad', 'maria2@gmail.com', '$2y$10$HQmzH2OLQuqFluXD0SJGOOv4AItm35NIeKPrRTop6a9xaRCa98Z4C', 'local', NULL, NULL, 1, '2026-09-02 07:53:50', '2026-09-02 07:53:50', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -219,7 +248,7 @@ ALTER TABLE `allergens`
 -- AUTO_INCREMENT de la tabla `businesses`
 --
 ALTER TABLE `businesses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `categories`
@@ -237,13 +266,13 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT de la tabla `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

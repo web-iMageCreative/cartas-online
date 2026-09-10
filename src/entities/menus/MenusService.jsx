@@ -10,8 +10,17 @@ export default class MenusServices {
       body: JSON.stringify(menuData),
     });
 
-    const data = await response.json();
-    return data;
+    if (!response.ok) {
+      throw new Error();
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message);
+    }
+
+    return result;
   }
 
   static async listMenu(business_slug) {

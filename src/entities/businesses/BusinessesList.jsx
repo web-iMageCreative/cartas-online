@@ -1,34 +1,32 @@
 import { useEffect, useState } from 'react';
 import BusinessesService from './BusinessesService';
-import { Container, Title, Stack, Paper} from '@mantine/core';
+import { Container, Title, Stack, Paper, LoadingOverlay} from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
 import { AuthService } from '../users/AuthService';
 
 export default function BusinessesList() {
   const [businesses, setBusinesses] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
+      setLoading(true);
       const userData = AuthService.getCurrentUser();
       
       await BusinessesService.listBusinesses(userData.id)
-        .then((data) => {
-          setBusinesses(data);
-        })
-        .catch((error) => {
-          NotificationService.error('No encontramos ningún negocio con ese ID: ' + error, {
-            title: 'Error cargando negocios',
-          });
-        });
+        .then((data) => setBusinesses(data))
+        .catch((error) => NotificationService.error(error, {title: 'Error cargando negocios'}))
+        .finally(() => setLoading(false));
     };
 
     fetchBusinesses();
   }, []);
 
   return (
-    <Container miw="450">
+    <Container miw="450" pos="relative">
+      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
-        Mis negocios:
+        Mis negocios
       </Title>
       <Stack gap="md">
         {businesses.map((business) => (

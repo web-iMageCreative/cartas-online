@@ -11,45 +11,38 @@ export default function MenusCreate() {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
-    console.log('Form submitted with values:', values);
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al backend
+    setLoading(true);
     values.business_slug = business_slug;
 
-    try {
-      setLoading(true);
-      const result = await MenusServices.createMenu(values);
-
-      console.log(result);
-
-      if (result.success) {
-        NotificationService.success('Ha añadido correctamente un nuevo menú', {
-          title: 'Nuevo Menú creado',
-        });
-
-        navigate(`/${business_slug}/menus`);
-      } else {
-        NotificationService.error(result.message, {
+    await MenusServices.createMenu(values)
+      .then(() => {
+        NotificationService.success(
+          'Ha añadido correctamente un nuevo menú', 
+          {title: 'Nuevo Menú creado'}
+        );
+      })
+      .catch((error) => {
+        NotificationService.error(error.message, {
           title: 'Error creando Menú: ',
         });
-      }
-    } catch(error) {
-      NotificationService.error(error, {
-        title: 'Error',
-      });
-    } finally {
-      setLoading(false);
-    }
+      })
+      .finally(() => setLoading(false));
   }
 
   const handleCancel = () => {
-    NotificationService.info('Ha cancelado la creación de un nuevo menú', {
-      title: 'Operación cancelada'
-    });
+    NotificationService.info(
+      'Ha cancelado la creación de un nuevo menú', 
+      {title: 'Operación cancelada'}
+    );
     
-    navigate(`/${business_slug}/menus`); // Redirige a la página de menús del negocio
+    navigate(`/${business_slug}/menus`);
   }
 
   return (
-    <MenusForm onSubmit={handleSubmit} onCancel={handleCancel} isLoading={loading} />
+    <MenusForm 
+      onSubmit={handleSubmit} 
+      onCancel={handleCancel} 
+      isLoading={loading} 
+    />
   );
 }

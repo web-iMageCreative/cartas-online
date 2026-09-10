@@ -1,9 +1,8 @@
-import { Paper, Title } from "@mantine/core";
 import BusinessesForm from "./BusinessesForm";
 import { useNavigate } from "react-router-dom";
 import BusinessesService from "./BusinessesService";
 import { AuthService } from "../users/AuthService";
-import { useState } from "react";     
+import { useState } from "react";
 
 export default function BusinessesCreate() {
   const [loading, setLoading] = useState(false);
@@ -37,25 +36,14 @@ export default function BusinessesCreate() {
   };
 
   const handleCancel = () => {
-      navigate("/dashboard"); // Redirige a la página de dashboard o a la lista de negocios
-      // Aquí puedes manejar la lógica de cancelación, por ejemplo, redirigir a la lista de negocios
+    navigate("/dashboard");
   };
 
   return (
-    <Paper p={30}>      
-      <Title order={2} ta="center" mb="xs">
-        🍽️ Cartas Online
-      </Title>
-      <Title order={3} c="dimmed" ta="center" mb="lg">
-        Crear nuevo negocio
-      </Title>
-
-      <BusinessesForm 
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        isLoading={loading}
-      />
-        
-    </Paper>
+    <BusinessesForm
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
+      isLoading={loading}
+    />
   );
 }

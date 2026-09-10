@@ -1,4 +1,4 @@
-import { Title, Stack, TextInput, Button, Paper, Container, Group } from '@mantine/core';
+import { Title, Stack, TextInput, Button, Paper, Container, Group, LoadingOverlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 export default function MenusForm({
@@ -34,7 +34,8 @@ export default function MenusForm({
   };
 
   return (
-    <Container miw="450">
+    <Container miw="450" pos="relative">
+      <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Nuevo Menú
       </Title>

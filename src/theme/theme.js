@@ -64,7 +64,7 @@ export const theme = createTheme({
   
   // Fuente principal: se usa en la mayoría de componentes [citation:3]
   //fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
-  fontFamily: 'Poppins, Inter,sans-serif',
+  fontFamily: 'Inter',
   // Fuente monoespaciada: se usa en Code, Kbd y CodeHighlight [citation:3]
   fontFamilyMonospace: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace',
   
@@ -82,11 +82,11 @@ export const theme = createTheme({
   
   // Alturas de línea para el componente Text [citation:3]
   lineHeights: {
-    xs: '1.4',
-    sm: '1.45',
-    md: '1.55',
-    lg: '1.6',
-    xl: '1.65',
+    xs: '1',
+    sm: '1.1',
+    md: '1.2',
+    lg: '1.4',
+    xl: '1.8',
   },
   
   // Estilos de los encabezados (h1-h6) [citation:3]
@@ -97,10 +97,10 @@ export const theme = createTheme({
     sizes: {
       h1: { fontSize: rem(30), lineHeight: '1.2', fontWeight: '700' },
       h2: { fontSize: rem(27), lineHeight: '1.2', fontWeight: '700' },
-      h3: { fontSize: rem(24), lineHeight: '1.2', fontWeight: '600' },
-      h4: { fontSize: rem(21), lineHeight: '1.2', fontWeight: '600' },
-      h5: { fontSize: rem(18), lineHeight: '1.2', fontWeight: '600' },
-      h6: { fontSize: rem(15), lineHeight: '1.2', fontWeight: '500' },
+      h3: { fontSize: rem(18), lineHeight: '1.2', fontWeight: '600' },
+      h4: { fontSize: rem(16), lineHeight: '1.2', fontWeight: '600' },
+      h5: { fontSize: rem(14), lineHeight: '1.2', fontWeight: '600' },
+      h6: { fontSize: rem(13), lineHeight: '1.2', fontWeight: '500' },
     },
     // textWrap: 'wrap', // Opcional: controla el wrap del texto
   },
@@ -120,6 +120,8 @@ export const theme = createTheme({
     lg: rem(24),
     xl: rem(32),
   },
+
+  defaultSpacing: 'md', 
   
   // Border-radius para la mayoría de componentes [citation:2]
   radius: {
@@ -199,7 +201,7 @@ export const theme = createTheme({
   // ============================================
   
   // Loader usado en Loader y LoadingOverlay [citation:2]
-  loader: 'oval', // 'oval' | 'bars' | 'dots'
+  loader: 'dots', // 'oval' | 'bars' | 'dots'
   
   // ============================================
   // 8. ESTILOS Y PROPS DE COMPONENTES
@@ -207,6 +209,18 @@ export const theme = createTheme({
   
   // Personalización de componentes individuales [citation:10]
  components: {
+    // Text: {
+    //   styles: () => ({
+    //     root: {
+    //       fontSize: '14px',
+    //       lineHeight: 1.2,
+    //       margin: '0 0 1rem',
+    //       '&:last-child': {
+    //         marginBottom: '0'
+    //       }
+    //     },
+    //   })
+    // },
     Box: {
       styles: (theme) => ({
         root: {
@@ -342,6 +356,13 @@ export const theme = createTheme({
     '.mantine-TextInput-input::placeholder, .mantine-PasswordInput-input::placeholder': {
       color: theme.colorScheme === 'dark' ? theme.colors.custom[2] : theme.colors.custom[6],
       opacity: 1,
+    },
+    'p, .mantine-Text-root': {
+      margin: '0',
+      lineHeight: 1.2,
+    },
+    'p:last-child': {
+      marginBottom: 0,
     },
   }),
   

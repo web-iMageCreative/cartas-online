@@ -28,6 +28,7 @@ export default function BusinessesList() {
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Mis negocios
       </Title>
+
       <Stack gap="md">
         {businesses.map((business) => (
           <Paper p="lg" key={business.id}>
@@ -48,5 +49,4 @@ export default function BusinessesList() {
       </Stack>
     </Container>
   );
-
 }

@@ -27,8 +27,7 @@ export default function CategoriesForm({
   onCancel,
   isLoading = false,
   submitLabel,
-  menuOptions = [],
-  parentCategoryOptions = [],
+  parentCategories = [],
 }) {
     
   const formattedInitialValues = {
@@ -41,19 +40,13 @@ export default function CategoriesForm({
   const form = useForm({
     initialValues: mode === 'create' ? defaultCategoryValues : formattedInitialValues,
     validate: {
-      name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
-      menu_id: (value) => (!value ? 'El menú es obligatorio' : null),
+      name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null)
     },
   });
 
   const handleSubmit = (values) => {
-    const updatedValues = {
-      ...values,
-      menu_id: values.menu_id ? Number(values.menu_id) : null,
-      parent: values.parent ? Number(values.parent) : null,
-    };
 
-    onSubmit(updatedValues);
+    onSubmit(values);
   };
 
   return (
@@ -87,25 +80,15 @@ export default function CategoriesForm({
           <Paper shadow="md" p="lg">
             <Stack gap="md">
               <Group grow align="flex-start">
+                {console.log("Parent Categories in CategoriesForm:", parentCategories)}
                 <Select
-                  label="Menú Relacionado"
-                  placeholder="Selecciona un menú"
-                  data={menuOptions}
-                  withAsterisk
-                  searchable
-                  clearable
-                  {...form.getInputProps('menu_id')}
-                  value={form.values.menu_id ? String(form.values.menu_id) : null}
-                />
-
-                <Select
-                  label="Categoría Padre (Opcional)"
+                  label="Categoría Padre"
                   placeholder="Ninguna (Categoría Principal)"
-                  data={parentCategoryOptions}
+                  data={parentCategories.map((cat) => ({ value: String(cat.id), label: cat.name }))}
                   searchable
                   clearable
-                  {...form.getInputProps('parent')}
                   value={form.values.parent ? String(form.values.parent) : null}
+                  {...form.getInputProps('parent')}
                 />
               </Group>
             </Stack>

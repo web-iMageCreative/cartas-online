@@ -14,7 +14,8 @@ import MenusCreate from './entities/menus/MenusCreate';
 import MenusList from './entities/menus/MenusList';
 import PublicLayout from './layouts/PublicLayouts';
 import PrivateLayout from './layouts/PrivateLayouts';
-import CategoriesForm from './categories/categoriesForm';
+import CategoriesForm from './entities/categories/CategoriesForm';
+import CategoriesCreate from './entities/categories/CategoriesCreate';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
@@ -29,7 +30,8 @@ export default function AppRoutes() {
         <Route path="/businesses/create/bussinesList" element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
         <Route path="/businesses/list"                element={ <ProtectedRoute><BusinessesList /></ProtectedRoute> } />
         <Route path="/:business_slug/menus"           element= { <ProtectedRoute><MenusList /></ProtectedRoute> } />
-        <Route path="/:business_slug/categories/create" element={ <ProtectedRoute><CategoriesForm /></ProtectedRoute> } />
+        <Route path="/:business_slug/menus/:menu_slug"  element={ <ProtectedRoute><MenuPage /></ProtectedRoute> } />
+        <Route path="/:business_slug/:menu_slug/categories/create" element={ <ProtectedRoute><CategoriesCreate /></ProtectedRoute> } />
       </Route>
       <Route element={<PublicLayout />}>
         <Route path="/"                               element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />

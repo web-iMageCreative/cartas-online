@@ -2,6 +2,7 @@
 
 $db = Database::getInstance()->getConnection();
 $user_id = $input['user_id'] ?? null;
+
 // 2. Validación de entrada
 if (!$user_id) {
     Response::error('El ID del usuario es requerido', 400);

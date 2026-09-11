@@ -20,12 +20,12 @@ export default class MenusServices {
   }
 
   static async listMenu(business_slug) {
-    const response = await fetch( `${API_URL}/menus/list`, {
+    const response = await fetch(`${API_URL}/menus/list`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({business_slug: business_slug}),
+      body: JSON.stringify({ business_slug }),
     });
 
     const result = await response.json();
@@ -35,5 +35,44 @@ export default class MenusServices {
     }
 
     return result.data;
+  }
+
+  
+  static async getMenuById( menu_id ) {
+    if (!menu_id) return null;
+
+    const response = await fetch(`${API_URL}/menus/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: menu_id })
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.data[0];
+  }
+
+  static async getMenuBySlug( menu_slug ) {
+    const response = await fetch(`${API_URL}/menus/get-by-slug`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ slug: menu_slug })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.data[0];
   }
 }

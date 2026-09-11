@@ -1,9 +1,8 @@
-import { useState } from  'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import MenusForm from './MenusForm';
-import MenusServices from './MenusService';
-import { NotificationService } from '../../shared/NotificationService';
-
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import MenusForm from "./MenusForm";
+import MenusServices from "./MenusService";
+import { AuthService } from "../users/AuthService";
 
 export default function MenusCreate() {
   const { business_slug } = useParams();
@@ -11,38 +10,42 @@ export default function MenusCreate() {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
-    setLoading(true);
-    values.business_slug = business_slug;
+    const currentUser = AuthService.getCurrentUser();
 
-    await MenusServices.createMenu(values)
-      .then(() => {
-        NotificationService.success(
-          'Ha añadido correctamente un nuevo menú', 
-          {title: 'Nuevo Menú creado'}
-        );
-      })
-      .catch((error) => {
-        NotificationService.error(error.message, {
-          title: 'Error creando Menú: ',
-        });
-      })
-      .finally(() => setLoading(false));
-  }
+    if (!currentUser || !currentUser.id) {
+      console.error("No hay usuario autenticado o no trae id");
+      return;
+    }
+
+    const payload = {
+      ...values,
+      business_slug,
+      user_id: Number(currentUser.id),
+    };
+
+    console.log("Payload para crear menú:", payload);
+
+    try {
+      setLoading(true);
+      const response = await MenusServices.createMenu(payload);
+      console.log("Menú creado:", response);
+      navigate(`/${business_slug}/menus`);
+    } catch (error) {
+      console.error("Error creando menú: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancel = () => {
-    NotificationService.info(
-      'Ha cancelado la creación de un nuevo menú', 
-      {title: 'Operación cancelada'}
-    );
-    
     navigate(`/${business_slug}/menus`);
-  }
+  };
 
   return (
-    <MenusForm 
-      onSubmit={handleSubmit} 
-      onCancel={handleCancel} 
-      isLoading={loading} 
+    <MenusForm
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
+      isLoading={loading}
     />
   );
 }

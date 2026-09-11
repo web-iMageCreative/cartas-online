@@ -1,7 +1,8 @@
 .mantine-TextInput-input,
 .mantine-PasswordInput-input,
 .mantine-FileInput-input,
-.mantine-Textarea-input {
+.mantine-Textarea-input,  
+.mantine-Select-input {
   color: var(--mantine-color-custom-0);
   border-color: var(--mantine-color-custom-3);
   background: var(--mantine-color-custom-4);
@@ -21,7 +22,10 @@
 .mantine-TextInput-label,
 .mantine-PasswordInput-label,
 .mantine-FileInput-label,
-.mantine-Textarea-label {
+.mantine-Textarea-label,
+.mantine-InputWrapper-label,
+.mantine-Select-label,
+.mantine-Select-label {
   color: var(--mantine-color-custom-1);
 }
 

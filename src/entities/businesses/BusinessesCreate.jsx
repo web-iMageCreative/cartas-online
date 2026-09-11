@@ -1,6 +1,7 @@
 import BusinessesForm from "./BusinessesForm";
 import { useNavigate } from "react-router-dom";
 import BusinessesService from "./BusinessesService";
+import { NotificationService } from '../../shared/NotificationService';
 import { AuthService } from "../users/AuthService";
 import { useState } from "react";
 
@@ -9,30 +10,27 @@ export default function BusinessesCreate() {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     const currentUser = AuthService.getCurrentUser();
 
     if (!currentUser || !currentUser.id) {
-      console.error("No hay usuario autenticado o no trae id");
+      NotificationService.error(
+        "No hay usuario autenticado o no trae id", 
+        {title: "Error creando negocio"}
+      );
+      
       return;
     }
 
-    const payload = {
-      ...values,
-      user_id: Number(currentUser.id),
-    };
+    values.user_id = Number(currentUser.id);
 
-    console.log("Payload para crear negocio:", payload);
-
-    try {
-      setLoading(true);
-      const response = await BusinessesService.createBusiness(payload);
-      console.log("Negocio creado:", response);
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error creando negocio: ", error);
-    } finally {
-      setLoading(false);
-    }
+    await BusinessesService.createBusiness(values)
+      .then((message) => {
+        NotificationService.success(message, {title: "Negocio creado"})
+        navigate("/dashboard");
+      })
+      .catch((error) => NotificationService.error(error, {title: "Error creando negocio"}))
+      .finally(() => setLoading(false));
   };
 
   const handleCancel = () => {

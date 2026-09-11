@@ -1,5 +1,5 @@
 import { useForm } from '@mantine/form';
-import { IconUpload, IconPhoto } from '@tabler/icons-react';
+import { IconUpload, IconPhoto, IconTrash } from '@tabler/icons-react';
 import {
   Paper,
   TextInput,
@@ -8,43 +8,36 @@ import {
   Title,
   Stack,
   Group,
-  Space,
   Container,
   FileInput,
+  Box,
+  Overlay
 } from '@mantine/core';
 
-const defaultBusinessValues = {
-  id: '',
-  name: '',
-  slug: '',
-  description: '',
-  cover_image: '', 
-  logo: '',       
-  address: '',
-  email: '',
-  phone: '',
-  is_active: '',
-  user_id: ''
+const defaultValues = {
+  id: undefined,
+  name: undefined,
+  slug: undefined,
+  description: undefined,
+  cover_image: undefined, 
+  logo: undefined,       
+  address: undefined,
+  email: undefined,
+  phone: undefined,
+  is_active: undefined,
+  user_id: undefined
 };
 
 export default function BusinessesForm({
-  initialValues = defaultBusinessValues,
+  initialValues,
   mode = 'create',
   onSubmit,
   onCancel,
   isLoading = false,
   submitLabel,
-}) {
-  // Asegurar que si initialValues trae "" en imágenes, se conviertan a null
-  const formattedInitialValues = {
-    ...defaultBusinessValues,
-    ...initialValues,
-    logo: initialValues?.logo || null,
-    cover_image: initialValues?.cover_image || null,
-  };
-
+}) { 
   const form = useForm({
-    initialValues: mode === 'create' ? defaultBusinessValues : formattedInitialValues,
+    initialValues: mode === 'create' ? defaultValues : initialValues,
     validate: {
       name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
     },
@@ -60,14 +53,24 @@ export default function BusinessesForm({
   };
 
   const handleSubmit = (values) => {
-    // Generar el slug automáticamente si no se ha definido
     const updatedValues = { ...values };
+
     if (!updatedValues.slug && updatedValues.name) {
       updatedValues.slug = generateSlug(updatedValues.name);
     }
-      
+    
     onSubmit(updatedValues);
   };
+
+  const handleDeleteImage = (image) => {
+    if (image === 'logo') {
+      form.setFieldValue('deleteLogo', true);
+      form.setFieldValue('logo', null);
+    } else {
+      form.setFieldValue('deleteCover', true);
+      form.setFieldValue('cover_image', null);
+    }
+  }
 
   return (
     <Container miw="450">
@@ -81,22 +84,17 @@ export default function BusinessesForm({
 
           <Paper shadow="md" p="lg">
             <Stack gap="md">
-              <Group grow align="flex-start">
-                <TextInput
-                  label="Nombre"
-                  placeholder="Ej: Mi Restaurante"
-                  withAsterisk
-                  {...form.getInputProps('name')}
-                />
-              </Group>
+              <TextInput
+                label="Nombre"
+                placeholder="Ej: Mi Restaurante"
+                withAsterisk
+                {...form.getInputProps('name')}
+              />
 
-              <Space />
-
-            {/* Descripción */}
               <Textarea
                 label="Descripción"
                 placeholder="Breve descripción del negocio..."
-                minRows={3}
+                rows={4}
                 {...form.getInputProps('description')}
               />
             </Stack>
@@ -108,20 +106,18 @@ export default function BusinessesForm({
               <Group grow align="flex-start">
                 <TextInput
                   label="Email"
-                  placeholder="contacto@negocio.com"
+                  placeholder="contacto@negocio.com"        
                   {...form.getInputProps('email')}
                 />
                 <TextInput
                   label="Teléfono"
-                  placeholder="+34 600 000 000"
+                  placeholder="+34 600 000 000"        
                   {...form.getInputProps('phone')}
                 />
               </Group>
-
-              {/* Dirección */}
               <TextInput
                 label="Dirección"
-                placeholder="Calle Principal, 123"
+                placeholder="Calle Principal, 123"      
                 {...form.getInputProps('address')}
               />
             </Stack>
@@ -132,24 +128,48 @@ export default function BusinessesForm({
           {/* Fila 3: Imágenes (Archivos) */}
           <Paper p="lg" shadow="md">
             <Group grow align="flex-start">
-              <FileInput
-                label="Logo"
-                placeholder="Seleccionar logo"
-                accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                leftSection={<IconUpload size={18} stroke={1.5} />}
-                clearable
-                {...form.getInputProps('logo')}
-                value={form.values.logo || null}
-              />
-              <FileInput
-                label="Portada"
-                placeholder="Seleccionar portada"
-                accept="image/png,image/jpeg,image/webp"
-                leftSection={<IconPhoto size={18} stroke={1.5} />}
-                clearable
-                {...form.getInputProps('cover_image')}
-                value={form.values.cover_image || null}
-              />
+
+              {form.values.logo ? (
+                <Box className='form-image-box'>
+                  <label className='mantine-FileInput-label'>Logo</label>
+                  <Box radius="md">
+                    <Box bg={"url(" + (form.values.logo instanceof File? URL.createObjectURL(form.values.logo) : form.values.logo) +")"}>
+                      <Button onClick={() => handleDeleteImage('logo')} href="#" c="white"><IconTrash /></Button>
+                      <Overlay></Overlay>
+                    </Box>
+                  </Box>
+                </Box>
+               ) : (
+                <FileInput
+                  label="Logo"
+                  placeholder="Seleccionar logo"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  leftSection={<IconUpload size={18} stroke={1.5} />}
+                  clearable
+                  {...form.getInputProps('logo')}
+                />
+               )}              
+
+              {form.values.cover_image ? (
+                <Box className='form-image-box'>
+                  <label className='mantine-FileInput-label'>Portada</label>
+                  <Box radius="md">
+                    <Box bg={"url(" + (form.values.cover_image instanceof File? URL.createObjectURL(form.values.cover_image) : form.values.cover_image) +")"}>
+                      <Button onClick={() => handleDeleteImage('cover_image')} href="#" c="white"><IconTrash /></Button>
+                      <Overlay></Overlay>
+                    </Box>
+                  </Box>
+                </Box>
+               ) : (
+                <FileInput
+                  label="Portada"
+                  placeholder="Seleccionar portada"
+                  accept="image/png,image/jpeg,image/webp"
+                  leftSection={<IconPhoto size={18} stroke={1.5} />}
+                  clearable
+                  {...form.getInputProps('cover_image')}
+                />
+               )}
             </Group>
           </Paper>
 

@@ -20,10 +20,10 @@ export default class BusinessesServices {
     return result.data;
   }
   
-  static async createBusiness(menuData) {
+  static async createBusiness(data) {
     const formData = new FormData();
 
-    Object.entries(menuData).forEach(([key, value]) => {
+    Object.entries(data).forEach(([key, value]) => {
       if (value === null || value === undefined || value === '') return;
 
       if (value instanceof File) {
@@ -45,7 +45,40 @@ export default class BusinessesServices {
       throw new Error(result.message);
     }
 
-    return result.data;
+    return result.message;
+  }
+
+  static async updateBusiness(data) {
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === '') return;
+
+      if (value instanceof File) {
+        formData.append(key, value);
+        return;
+      }
+
+      formData.append(key, String(value));
+    });
+
+    console.log('FormData contents:');
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    const response = await fetch(`${API_URL}/businesses/update`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.message;
   }
 
   static async getBusinessBySlug( slug ) {

@@ -8,7 +8,7 @@ if (!$user_id) {
 }
 
 // 3. Buscar el negocio por su ID
-$stmt = $db->prepare("SELECT * FROM businesses WHERE user_id = ?");
+$stmt = $db->prepare("SELECT * FROM businesses WHERE user_id = ? AND is_active = 1");
 $stmt->execute([trim($user_id)]);
 $business = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

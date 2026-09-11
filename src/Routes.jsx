@@ -15,7 +15,6 @@ import MenuPage from './entities/menus/Menu';
 import MenusCreate from './entities/menus/MenusCreate';
 import MenusList from './entities/menus/MenusList';
 import BusinessesUpdate from './entities/businesses/BusinessesUpdate';
-import CategoriesForm from './entities/categories/CategoriesForm';
 import CategoriesCreate from './entities/categories/CategoriesCreate';
 
 export default function AppRoutes() {

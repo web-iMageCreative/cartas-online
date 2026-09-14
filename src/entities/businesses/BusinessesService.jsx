@@ -81,6 +81,24 @@ export default class BusinessesServices {
     return result.message;
   }
 
+  static async deleteBusiness(id) {
+    const response = await fetch(`${API_URL}/businesses/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.message;
+  }
+
   static async getBusinessBySlug( slug ) {
     if (!slug) return null;
 

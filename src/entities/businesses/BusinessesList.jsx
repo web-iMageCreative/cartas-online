@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import BusinessesService from './BusinessesService';
-import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, UnstyledButton, Text, Box} from '@mantine/core';
+import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, Button, UnstyledButton, Text, Box} from '@mantine/core';
 import { NotificationService } from '../../shared/NotificationService';
 import { AuthService } from '../users/AuthService';
-import { IconTrash, IconEdit, IconEye, IconMail, IconPhone, IconMapPin } from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconEye, IconMail, IconPhone, IconMapPin, IconFilePlus } from '@tabler/icons-react';
 
 export default function BusinessesList() {
   const [businesses, setBusinesses] = useState([]);
@@ -26,10 +26,24 @@ export default function BusinessesList() {
   return (
     <Container maw="450" pos="relative">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
+       
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Mis negocios
       </Title>
-
+      <Button 
+        bg='custom.5'
+        mb="xl"
+        variant="outline"
+        fullWidth
+        leftSection={<IconFilePlus size={18} />}ta="center" fz="xs" component="a" href={'/businesses/create'}>Crear nuevo negocio</Button>
+      {/*
+      <Card>
+        <Card.Section>
+          <UnstyledButton ta="center" fz="xs" component="a" href={'/businesses/create'}><IconFilePlus /><br/>Crear nuevo negocio</UnstyledButton> 
+        </Card.Section>
+      </Card>
+      */}
+      
       <Stack gap="md">
         {businesses.map((business) => (
           <Card key={business.id} shadow="sm" padding="lg" withBorder>

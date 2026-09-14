@@ -12,8 +12,5 @@ $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ? AND parent IS N
 $stmt->execute([$menu_id]);
 $category = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (!$category) {
-    Response::error('Categoría no encontrada', 404);
-}
 
 Response::success([$category], 'Categoría obtenida correctamente');

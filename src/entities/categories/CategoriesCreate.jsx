@@ -20,7 +20,6 @@ useEffect(() => {
       .then(async (menu) => {
         console.log("Menu obtenido:", menu);
         setMenu(menu);
-
         await CategoriesService.getCategoriesByMenuId(menu.id)
         .then((data) => setParentCategories(data))
         .catch((error) => NotificationService.error(error, {title: 'Error cargando categorias'}))

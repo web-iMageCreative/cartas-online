@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Title, Stack, LoadingOverlay, Card, Box, Text, Group, UnstyledButton } from '@mantine/core';
-import { IconEye, IconEdit, IconTrash } from '@tabler/icons-react';
+import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, Button, UnstyledButton, Text, Box} from '@mantine/core';
+import { IconEye, IconEdit, IconTrash,IconFilePlus } from '@tabler/icons-react';
 import MenusServices from './MenusService';
 import BusinessesServices from '../businesses/BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
@@ -41,6 +41,13 @@ export default function MenusList({ businessSlug }) {
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Menús de {businessName}
       </Title>
+       <Button 
+        bg='custom.5'
+        mb="xl"
+        variant="outline"
+        fullWidth
+        leftSection={<IconFilePlus size={18} />}ta="center" fz="xs" component="a" href={`/${business_slug}/menus/create`}>Crear nuevo menu</Button>
+      
 
       <Stack gap="md">
         {menus.map((menu) => (

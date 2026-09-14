@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Badge, Container, Group, Paper, Stack, Text, Title } from '@mantine/core';
+import { Badge, Container, Group, Paper, LoadingOverlay, Card,  Avatar, Stack, Text, Title, Image, Box } from '@mantine/core';
 import BusinessesServices from './BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
 import MenuList from '../menus/MenusList';
+import { IconTrash, IconEdit, IconEye, IconMail, IconPhone, IconMapPin } from '@tabler/icons-react';
 
 export default function BusinessPage() {
   const { business_slug } = useParams();
@@ -50,49 +51,36 @@ export default function BusinessPage() {
   }
 
   return (
-    <Container size="lg" py="xl">
-      <Paper withBorder radius="md" p="xl" mb="xl">
-        <Group justify="space-between" align="flex-start" wrap="wrap">
-          <div>
-            <Title order={2} c="custom.0">{business.name}</Title>
-            <Text c="dimmed" mt="xs">{business.slug}</Text>
-          </div>
+    <Container maw="450" pos="relative">
+    <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
+    <Title order={2} c="custom.0" ta="center" mb="lg">{business.name} </Title> 
+      <Stack gap="md" mb="xl">
+          <Card key={business.id} shadow="sm" padding="lg" withBorder>
+            <Card.Section>
+              <Image
+                src={business.cover_image}
+                height={160}
+                alt="Norway"
+              />
+            </Card.Section>
 
-          <Badge
-            size="lg"
-            variant="light"
-            color={business.is_active ? 'green' : 'gray'}
-          >
-            {business.is_active ? 'Activo' : 'Inactivo'}
-          </Badge>
-        </Group>
+            <Group justify='end' mt={-40} mb={-40}>
+              <Avatar size="xl" src={business.logo} />
+            </Group>
 
-        <Stack gap="sm" mt="lg">
-          {business.description && <Text>{business.description}</Text>}
-          {business.address && (
-            <Text>
-              <strong>Dirección:</strong> {business.address}
-            </Text>
-          )}
-          {business.email && (
-            <Text>
-              <strong>Email:</strong> {business.email}
-            </Text>
-          )}
-          {business.phone && (
-            <Text>
-              <strong>Teléfono:</strong> {business.phone}
-            </Text>
-          )}
-              {business.logo && <img src={business.logo} alt="Logo" />}
-            {business.cover_image && <img src={business.cover_image} alt="Imagen de portada" />}
-        </Stack>
-      </Paper>
-
-      <Title order={3} mb="md" c="custom.0">
-        Menú
-      </Title>
-
+            <Box mt="lg" mb="lg">
+              <Text mb="sm" fw={500}>{business.name}</Text>
+              <Text mb="lg" size="sm" c="dimmed">
+                {business.description}
+              </Text>
+              <Group align='start' justify="space-between" wrap='no-wrap'>
+                <Text ta="center" fz="xs" fw={400}><IconMail /><br />{business.email}</Text>
+                <Text ta="center" fz="xs" fw={400}><IconPhone /><br />{business.phone}</Text>
+                <Text ta="center" fz="xs" fw={400}><IconMapPin /><br />{business.address}</Text>
+              </Group>
+            </Box>
+            </Card>
+      </Stack>
       <MenuList businessSlug={business.slug} />
     </Container>
   );

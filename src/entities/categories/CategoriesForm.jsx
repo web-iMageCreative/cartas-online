@@ -87,6 +87,7 @@ export default function CategoriesForm({
                   data={parentCategories.map((cat) => ({ value: String(cat.id), label: cat.name }))}
                   searchable
                   clearable
+                  disabled={parentCategories.length === 0}
                   value={form.values.parent ? String(form.values.parent) : null}
                   {...form.getInputProps('parent')}
                 />

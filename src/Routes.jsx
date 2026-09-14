@@ -1,7 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthService } from './entities/users/AuthService';
-import PublicLayout from './layouts/PublicLayouts';
-import PrivateLayout from './layouts/PrivateLayouts';
 import Login from './entities/users/Login';
 import Register from './entities/users/Register';
 import ForgotPassword from './entities/users/ForgotPassword';
@@ -14,7 +12,9 @@ import BusinessPage from './entities/businesses/businesses';
 import MenuPage from './entities/menus/Menu';
 import MenusCreate from './entities/menus/MenusCreate';
 import MenusList from './entities/menus/MenusList';
-import BusinessesUpdate from './entities/businesses/BusinessesUpdate';
+import PublicLayout from './layouts/PublicLayouts';
+import PrivateLayout from './layouts/PrivateLayouts';
+import CategoriesForm from './entities/categories/CategoriesForm';
 import CategoriesCreate from './entities/categories/CategoriesCreate';
 
 export default function AppRoutes() {
@@ -27,7 +27,7 @@ export default function AppRoutes() {
         <Route path="/businesses/create"              element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
         <Route path="/:business_slug"                 element={<ProtectedRoute><BusinessPage /></ProtectedRoute>} />
         <Route path="/:business_slug/menus/create"    element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
-        <Route path="/:business_slug/update"          element={ <ProtectedRoute><BusinessesUpdate /></ProtectedRoute> } />
+        <Route path="/businesses/create/bussinesList" element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
         <Route path="/businesses/list"                element={ <ProtectedRoute><BusinessesList /></ProtectedRoute> } />
         <Route path="/:business_slug/menus"           element= { <ProtectedRoute><MenusList /></ProtectedRoute> } />
         <Route path="/:business_slug/menus/:menu_slug"  element={ <ProtectedRoute><MenuPage /></ProtectedRoute> } />

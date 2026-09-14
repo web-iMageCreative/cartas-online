@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
 import { useParams } from 'react-router-dom';
-import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, Button, UnstyledButton, Text, Box} from '@mantine/core';
+import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, Button, UnstyledButton, Text, Box, Modal} from '@mantine/core';
 import { IconEye, IconEdit, IconTrash,IconFilePlus } from '@tabler/icons-react';
 import MenusServices from './MenusService';
 import BusinessesServices from '../businesses/BusinessesService';
@@ -13,7 +14,12 @@ export default function MenusList({ businessSlug }) {
   const [menus, setMenus] = useState([]);
   const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const [menuToDelete, setMenuToDelete] = useState(null); //cambio
+  const [opened, { open, close }] = useDisclosure(false);
+  const handleDeleteMenu = (menuId) => {
+  setMenuToDelete(menuId);
+  open();
+  }; //cambio
   useEffect(() => {
     if (!business_slug) return;
     
@@ -34,6 +40,32 @@ export default function MenusList({ businessSlug }) {
       })
       .finally(() => setLoading(false));
   }, [business_slug]);
+
+   const confirmDeleteMenu = async () => { //cambio
+     try {
+    setLoading(true);
+
+    await MenusServices.deleteMenu(menuToDelete);
+
+    NotificationService.success('Menú eliminado correctamente');
+
+    // Eliminarlo de la lista que tienes en React
+    setMenus((currentMenus) =>
+      currentMenus.filter((menu) => menu.id !== menuToDelete)
+    );
+
+    close();
+    setMenuToDelete(null);
+
+  } catch (error) {
+    NotificationService.error(error.message, {
+    title: 'Error eliminando el menú',
+  });
+  } finally {
+    setLoading(false);
+  }
+}; //cambio
+  
 
   return (
     <Container maw="450"  miw="xll" pos="relative">
@@ -63,12 +95,20 @@ export default function MenusList({ businessSlug }) {
             <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
               <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/`}><IconEye /><br/>Ver</UnstyledButton>
               <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/update`}><IconEdit /><br/>Editar</UnstyledButton>
-              <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/delete`}><IconTrash /><br/>Eliminar</UnstyledButton>
+              <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br/>Eliminar</UnstyledButton>
             </Group>
           </Card.Section>
           </Card>
         ))}
       </Stack>
+      <Modal opened={opened} onClose={close} title="Confirmar eliminación" centered>
+        <Text size="sm">¿Estás seguro de que deseas eliminar este menú?</Text>
+        <Group mt="md" justify="flex-end">
+          <Button variant="default" onClick={close}>Cancelar</Button>
+          <Button color="red" onClick={confirmDeleteMenu}>Eliminar</Button>
+        </Group>
+      </Modal>
+
     </Container>
   );
 }

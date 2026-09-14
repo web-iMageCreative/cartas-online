@@ -119,6 +119,7 @@ export const theme = createTheme({
     md: rem(16),
     lg: rem(24),
     xl: rem(32),
+    xll: rem(300),
   },
 
   defaultSpacing: 'md', 

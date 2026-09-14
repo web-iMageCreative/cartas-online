@@ -8,7 +8,7 @@ import MenuList from '../menus/MenusList';
 export default function MenuPage() {
   const { menu_id } = useParams();
   const [menu, setMenu] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadMenu = async () => {

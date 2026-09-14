@@ -1,64 +1,67 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Container, Title, Stack, LoadingOverlay, Card, Box, Text, Group, UnstyledButton } from '@mantine/core';
+import { IconEye, IconEdit, IconTrash } from '@tabler/icons-react';
 import MenusServices from './MenusService';
-import { Container, Title, Paper, Stack, LoadingOverlay } from '@mantine/core';
-import { NotificationService } from '../../shared/NotificationService';
 import BusinessesServices from '../businesses/BusinessesService';
+import { NotificationService } from '../../shared/NotificationService';
 
 export default function MenusList({ businessSlug }) {
-  const { business_slug } = useParams() || businessSlug; // Use the prop if provided, otherwise fallback to useParams
+  const params = useParams();
+  const business_slug = params?.business_slug || businessSlug;
+
   const [menus, setMenus] = useState([]);
   const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(false); //CAMBIO
-    BusinessesServices.getBusinessNameBySlug(business_slug)
-      .then((data) => {
-        setBusinessName(data)
-      })
-      .catch((error) => {
-        NotificationService.error(error, {
-          title: 'Error cargando Nombre del Negocio',
-        })
-      .finally(() => setLoading(false)); 
-      });
+    if (!business_slug) return;
+    
+    setLoading(true);
 
-    MenusServices.listMenu(business_slug)
-      .then((data) => {
-        setMenus(data);
+    Promise.all([
+      BusinessesServices.getBusinessNameBySlug(business_slug),
+      MenusServices.listMenu(business_slug)
+    ])
+      .then(([nameData, menusData]) => {
+        setBusinessName(nameData);
+        setMenus(menusData);
       })
       .catch((error) => {
         NotificationService.error(error, {
-          title: 'Error cargando menús',
+          title: 'Error cargando datos de los menús',
         });
-      });
+      })
+      .finally(() => setLoading(false));
   }, [business_slug]);
 
   return (
-    <Container miw="450" pos="relative">
+    <Container maw="450"  miw="xll" pos="relative">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Menús de {businessName}
       </Title>
+
       <Stack gap="md">
         {menus.map((menu) => (
-          <Paper p="lg" key={menu.id}>
-            <Title order={4} c="custom.0" mb="xs">
-              {menu.name}
-            </Title>
-            <p>{menu.description}</p>
-          </Paper>
+          <Card key={menu.id} shadow="sm" padding="lg" withBorder>
+            <Box mb="md">
+              <Text mb="xs" fw={500}>{menu.name}</Text>
+              <Text size="sm" c="dimmed">
+                {menu.description}
+              </Text>
+            </Box>
+
+           <Card.Section bg="custom.5">
+            <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
+              <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/`}><IconEye /><br/>Ver</UnstyledButton>
+              <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/update`}><IconEdit /><br/>Editar</UnstyledButton>
+              <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/delete`}><IconTrash /><br/>Eliminar</UnstyledButton>
+            </Group>
+          </Card.Section>
+          </Card>
         ))}
       </Stack>
     </Container>
   );
 }
-
-
-
-
-
-
-
-  

@@ -18,7 +18,7 @@ export default function MenusList({ businessSlug }) {
     if (!business_slug) return;
     
     setLoading(true);
-
+    
     Promise.all([
       BusinessesServices.getBusinessNameBySlug(business_slug),
       MenusServices.listMenu(business_slug)
@@ -61,7 +61,7 @@ export default function MenusList({ businessSlug }) {
 
            <Card.Section bg="custom.5">
             <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
-              <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/`}><IconEye /><br/>Ver</UnstyledButton>
+              <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/`}><IconEye /><br/>Ver</UnstyledButton>
               <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/update`}><IconEdit /><br/>Editar</UnstyledButton>
               <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/delete`}><IconTrash /><br/>Eliminar</UnstyledButton>
             </Group>

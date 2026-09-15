@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom';
 import { Badge, Container, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import MenusServices from './MenusService';
 import { NotificationService } from '../../shared/NotificationService';
-import MenuList from '../menus/MenusList';
 
 export default function MenuPage() {
-  const { menu_id } = useParams();
+  const { menu_slug } = useParams();
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +14,7 @@ export default function MenuPage() {
       setLoading(true);
 
       try {
-        const data = await MenusServices.getMenuById(menu_id);
+        const data = await MenusServices.getMenuBySlug(menu_slug);
         setMenu(data);
         console.log("Menú cargado:", data);
       } catch (error) {
@@ -28,10 +27,10 @@ export default function MenuPage() {
       }
     };
 
-    if (menu_id) {
+    if (menu_slug) {
       loadMenu();
     } 
-  }, [menu_id]);
+  }, [menu_slug]);
 
   if (loading) {
     return (

@@ -9,11 +9,6 @@ $name           = $input['name'] ?? null;
 $description    = $input['description'] ?? null;
 $price          = $input['price'] ?? null;
 $category_id    = $input['category_id'] ?? null;
-$subcategory_id = $input['subcategory_id'] ?? null;
-$display_order  = $input['display_order'] ?? 0;
-$is_available   = $input['is_available'] ?? 1;
-$is_active      = $input['is_active'] ?? 1;
-
 $delete_image   = (bool) ($input['deleteImage'] ?? false);
 $has_image      = isset($_FILES['image']);
 $remove_image   = !$has_image && $delete_image;

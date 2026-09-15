@@ -20,14 +20,4 @@ if ($id) {
 
     Response::success($category, 'Categoría obtenida correctamente');
 
-} elseif ($menu_id) {
-    // Consulta para obtener todas las categorías de un menú
-    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ?');
-    $stmt->execute([$menu_id]);
-    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    Response::success($categories, 'Categorías obtenidas correctamente');
-
-} else {
-    Response::error('El ID de categoría o de menú es obligatorio', 400);
 }

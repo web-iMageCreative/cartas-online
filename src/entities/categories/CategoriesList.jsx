@@ -29,25 +29,47 @@ export default function CategoriesList() {
   const { menu_slug } = useParams();
 
   useEffect(() => {
-    const fetchCategoriesData = async () => {
+    const fetchMenuData = async () => {
       setLoading(true);
-      try {
-        const menuData = await MenuService.getMenuBySlug(menu_slug);
-        setMenu(menuData);
-
-        const data = await CategoriesService.getCategoriesByMenuId(menuData.id);
-        setCategories(Array.isArray(data) ? data : []);
-      } catch (error) {
-        NotificationService.error(error, { title: 'Error cargando categorías' });
-      } finally {
-        setLoading(false);
-      }
-    };
+    
+      await MenuService.getMenuBySlug(menu_slug)
+        .then((data) => {
+          setMenu(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
 
     if (menu_slug) {
+      fetchMenuData();
+    }
+
+  }, [menu_slug]);
+
+  useEffect(() => {
+    const fetchCategoriesData = async () => {
+      setLoading(true);
+
+      await CategoriesService.getCategoriesByMenuId(menu.id)
+        .then((data) => {
+          setCategories(Array.isArray(data) ? data : []);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+
+    if (menu) {
       fetchCategoriesData();
     }
-  }, [menu_slug]);
+  }, [menu]);
 
   const handleOpen = (id) => {
     setSelectedId(id);
@@ -85,8 +107,8 @@ export default function CategoriesList() {
         ta="center"
         fz="xs"
         component="a"
-        href={`/${menu_slug}/categories/create`}
-      >/
+        href={`/menus/${menu_slug}/categories/create`}
+      >
         Crear nueva categoría
       </Button>
 
@@ -127,8 +149,7 @@ export default function CategoriesList() {
                   fz="xs"
                   component="a"
                   href={`/${menu_slug}/categories/${category.id}/update`}
-              
-                > 
+                >
                   <IconEdit /><br />Editar
                 </UnstyledButton>
                 <UnstyledButton

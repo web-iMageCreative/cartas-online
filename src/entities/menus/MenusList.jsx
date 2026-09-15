@@ -27,9 +27,9 @@ export default function MenusList({ businessSlug }) {
       setLoading(true);
 
       Promise.all([
-      BusinessesServices.getBusinessNameBySlug(business_slug),
-      MenusServices.listMenu(business_slug)
-    ])
+        BusinessesServices.getBusinessNameBySlug(business_slug),
+        MenusServices.listMenu(business_slug)
+      ])
       .then(([nameData, menusData]) => {
         setBusinessName(nameData);
         setMenus(menusData);

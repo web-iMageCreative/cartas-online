@@ -7,15 +7,12 @@ $input = $_POST;
 $name           = $input['name'] ?? null;
 $description    = $input['description'] ?? null;
 $price          = $input['price'] ?? null;
-$menu_id        = $input['menu_id'] ?? null;
+$menu_id      = $input['menu_id'] ?? null;
 $category_id    = $input['category_id'] ?? null;
-$subcategory_id = $input['subcategory_id'] ?? null;
-$display_order  = $input['display_order'] ?? 0;
-$is_available   = $input['is_available'] ?? 1;
-$is_active      = $input['is_active'] ?? 1;
 
 // Decodificar el array de IDs de alérgenos si se recibe como JSON string
-$allergens      = isset($input['allergens']) ? json_decode($input['allergens'], true) : [];
+// $allergens      = isset($input['allergens']) ? json_decode($input['allergens'], true) : [];
+
 
 if (!$name || !$price || !$menu_id) {
     Response::error('Nombre, precio y menú son obligatorios', 400);
@@ -54,36 +51,24 @@ function saveUploadedFile($fileKey) {
 $image_path = saveUploadedFile('image');
 
 try {
-    $db->beginTransaction();
 
-    $sql = "INSERT INTO items (name, description, image, price, menu_id, category_id, subcategory_id, display_order, is_available, is_active) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO items (name, description, image, price, menu_id, category_id) 
+            VALUES (?, ?, ?, ?, ?, ?)";
 
     $stmt = $db->prepare($sql);
-    $stmt->execute([
+    
+    $item = $stmt->execute([
         $name,
         $description,
         $image_path,
         $price,
         $menu_id,
-        $category_id,
-        $subcategory_id,
-        $display_order,
-        $is_available,
-        $is_active
+        $category_id
     ]);
 
-    $item_id = $db->lastInsertId();
-
-    // Insertar relaciones con alérgenos si existen
-    if (!empty($allergens) && is_array($allergens)) {
-        $allergenStmt = $db->prepare("INSERT INTO allergens_items (allergen_id, item_id) VALUES (?, ?)");
-        foreach ($allergens as $allergen_id) {
-            $allergenStmt->execute([$allergen_id, $item_id]);
-        }
+    if (!$item) {
+        throw new Exception('Error al guardar el plato');
     }
-
-    $db->commit();
     Response::success('Plato creado exitosamente');
 
 } catch (Exception $e) {

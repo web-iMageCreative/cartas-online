@@ -75,4 +75,23 @@ export default class MenusServices {
 
     return result.data[0];
   }
+  static async deleteMenu(menuId) { //cambio
+  const response = await fetch(`${API_URL}/menus/delete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: menuId
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Error al eliminar el menú');
+  }
+
+  return data;
+}
 }

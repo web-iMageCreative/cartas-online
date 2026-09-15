@@ -1,7 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthService } from './entities/users/AuthService';
-import PublicLayout from './layouts/PublicLayouts';
-import PrivateLayout from './layouts/PrivateLayouts';
 import Login from './entities/users/Login';
 import Register from './entities/users/Register';
 import ForgotPassword from './entities/users/ForgotPassword';
@@ -14,8 +12,12 @@ import BusinessPage from './entities/businesses/businesses';
 import MenuPage from './entities/menus/Menu';
 import MenusCreate from './entities/menus/MenusCreate';
 import MenusList from './entities/menus/MenusList';
-import BusinessesUpdate from './entities/businesses/BusinessesUpdate';
+import PublicLayout from './layouts/PublicLayouts';
+import PrivateLayout from './layouts/PrivateLayouts';
+import CategoriesForm from './entities/categories/CategoriesForm';
 import CategoriesCreate from './entities/categories/CategoriesCreate';
+import CategoriesList from './entities/categories/CategoriesList';
+import CategoriesUpdate from './entities/categories/CategoriesUpdate';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();

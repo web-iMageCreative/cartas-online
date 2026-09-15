@@ -50,7 +50,7 @@ export default function PrivateLayout() {
           <Button variant="subtle" justify="flex-start" onClick={() => navigate('/dashboard')}>
             Dashboard
           </Button>
-          <Button variant="subtle" justify="flex-start" onClick={() => navigate('/businesses/list')}>
+          <Button variant="subtle" justify="flex-start" onClick={() => navigate('/businesses/')}>
             Negocios
           </Button>
         </Stack>

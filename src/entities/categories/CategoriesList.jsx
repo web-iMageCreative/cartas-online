@@ -85,7 +85,7 @@ export default function CategoriesList() {
         ta="center"
         fz="xs"
         component="a"
-        href={`/menus/${menu_slug}/categories/create`}
+        href={`/${menu_slug}/categories/create`}
       >/
         Crear nueva categoría
       </Button>
@@ -126,7 +126,8 @@ export default function CategoriesList() {
                   ta="center"
                   fz="xs"
                   component="a"
-                  href={`/menus/${menu_slug}/categories/${category.id}/update`}
+                  href={`/${menu_slug}/categories/${category.id}/update`}
+              
                 > 
                   <IconEdit /><br />Editar
                 </UnstyledButton>

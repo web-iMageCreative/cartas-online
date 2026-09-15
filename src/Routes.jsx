@@ -19,6 +19,7 @@ import PrivateLayout from './layouts/PrivateLayouts';
 import CategoriesCreate from './entities/categories/CategoriesCreate';
 import CategoriesList from './entities/categories/CategoriesList';
 import CategoriesUpdate from './entities/categories/CategoriesUpdate';
+import ItemsCreate from './entities/items/ItemsCreate';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
@@ -37,6 +38,7 @@ export default function AppRoutes() {
         <Route path="/:business_slug/menus/:menu_slug/update"      element={ <ProtectedRoute><MenusUpdate /></ProtectedRoute> } />
         <Route path="/:menu_slug/categories/create"                element={ <ProtectedRoute><CategoriesCreate /></ProtectedRoute> } />
         <Route path="/:menu_slug/categories/:category_id/update"   element={ <ProtectedRoute><CategoriesUpdate /></ProtectedRoute> } />
+        <Route path="/:menu_slug/items/create"                     element={ <ProtectedRoute><ItemsCreate /></ProtectedRoute> } />
       </Route>
       <Route element={<PublicLayout />}>
         <Route path="/"                                            element={ <Navigate to={token ? "/dashboard" : "/login"} replace /> } />

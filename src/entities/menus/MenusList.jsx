@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { useParams } from 'react-router-dom';
-import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, Button, UnstyledButton, Text, Box, Modal} from '@mantine/core';
+import { Container, Title, Stack, LoadingOverlay, Card, Group, Button, UnstyledButton, Text, Box, Modal} from '@mantine/core';
 import { IconEye, IconEdit, IconTrash,IconFilePlus } from '@tabler/icons-react';
 import MenusServices from './MenusService';
 import BusinessesServices from '../businesses/BusinessesService';
@@ -22,10 +22,11 @@ export default function MenusList({ businessSlug }) {
   }; //cambio
   useEffect(() => {
     if (!business_slug) return;
-    
-    setLoading(true);
-    
-    Promise.all([
+
+    const fetchMenus = async () => {
+      setLoading(true);
+
+      Promise.all([
       BusinessesServices.getBusinessNameBySlug(business_slug),
       MenusServices.listMenu(business_slug)
     ])
@@ -39,6 +40,10 @@ export default function MenusList({ businessSlug }) {
         });
       })
       .finally(() => setLoading(false));
+    }
+    
+    fetchMenus();
+    
   }, [business_slug]);
 
    const confirmDeleteMenu = async () => { //cambio
@@ -101,6 +106,7 @@ export default function MenusList({ businessSlug }) {
           </Card>
         ))}
       </Stack>
+
       <Modal opened={opened} onClose={close} title="Confirmar eliminación" centered>
         <Text size="sm">¿Estás seguro de que deseas eliminar este menú?</Text>
         <Group mt="md" justify="flex-end">

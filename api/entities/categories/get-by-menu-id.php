@@ -9,9 +9,9 @@ $id = $input['id'] ?? null;
 
 if ($id) {
     // Consulta para obtener una categoría específica por ID
-    $stmt = $db->prepare('SELECT * FROM categories WHERE id = ?');
+    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ?');
     $stmt->execute([$id]);
-    $category = $stmt->fetch(PDO::FETCH_ASSOC);
+    $category = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     Response::success($category, 'Categoría obtenida correctamente');
 }

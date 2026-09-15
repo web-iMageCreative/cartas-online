@@ -7,7 +7,7 @@ export default class CategoriesService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id: id }),
     });
 
     const result = await response.json();
@@ -20,7 +20,7 @@ export default class CategoriesService {
   }
 
   static async getCategoriesByMenuId(menu_id) {
-    const response = await fetch(`${API_URL}/categories/get`, {
+    const response = await fetch(`${API_URL}/categories/get-by-menu-id`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

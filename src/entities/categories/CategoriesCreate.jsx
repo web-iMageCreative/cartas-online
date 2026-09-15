@@ -13,26 +13,31 @@ export default function CategoriesCreate() {
   const [menu, setMenu] = useState(null); 
   
 useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchMenuData = async () => {
       setLoading(true);
       
       await MenuService.getMenuBySlug(menu_slug)
-      .then(async (menu) => {
-        console.log("Menu obtenido:", menu);
-        setMenu(menu);
-        await CategoriesService.getCategoriesByMenuId(menu.id)
+        .then(async (menu) => setMenu(menu))
+        .catch((error) => NotificationService.error(error, {title: "Error al obtener el menú"}))
+        .finally(() => setLoading(false));
+    };
+
+    fetchMenuData();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategoriesData = async () => {
+      setLoading(true);
+
+      await CategoriesService.getCategoriesByMenuId(menu.id)
         .then((data) => setParentCategories(data))
         .catch((error) => NotificationService.error(error, {title: 'Error cargando categorias'}))
         .finally(() => setLoading(false));
-      })
-      .catch((error) => {
-        NotificationService.error(error, {title: "Error al obtener el menú"});
-        return;
-      })
-      .finally(() => setLoading(false));
-    };
+    }
 
-    fetchCategories();
+    if (menu) {
+      fetchCategoriesData();
+    }
   }, []);
 
   const handleSubmit = async (values) => {
@@ -60,11 +65,13 @@ useEffect(() => {
   };
 
   return (
+    <>
     <CategoriesForm
       onSubmit={handleSubmit}
       onCancel={handleCancel}
       isLoading={loading}
       parentCategories={parentCategories}
     />
+    </>
   );
 }

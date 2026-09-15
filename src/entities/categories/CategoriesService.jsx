@@ -25,7 +25,7 @@ export default class CategoriesService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ menu_id }),
+      body: JSON.stringify({ id: menu_id }),
     });
 
     const result = await response.json();

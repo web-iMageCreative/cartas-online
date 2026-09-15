@@ -1,27 +1,40 @@
 import ItemsForm from "./ItemsForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ItemsServices from "./ItemsService";
-import { AuthService } from "../users/AuthService";
+import MenusServices from "../menus/MenusService";
 
 export default function ItemsCreate() {
 
-  const { business_slug } = useParams();
+  const { menu_slug } = useParams();
+  const [ menuId, setMenuId ] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (values) => {
-    const currentUser = AuthService.getCurrentUser();
+  useEffect(() => {
+    const fetchMenuId = async () => {
+      setLoading(true);
 
-    if (!currentUser || !currentUser.id) {
-      console.error("No hay usuario autenticado o no trae id");
-      return;
+      await MenusServices.getMenuBySlug(menu_slug)
+        .then((menuData) => {
+          setMenuId(menuData.id);
+        })
+        .catch((error) => {
+          console.error("Error al obtener la id del menú por slug: ", error);
+        })
+        .finally(() => setLoading(false));
     }
+
+    fetchMenuId();
+  },[]);
+
+  const handleSubmit = async (values) => {
+    if (!menuId) return;
+    setLoading(true);
 
     const payload = {
       ...values,
-      business_slug,
-      user_id: Number(currentUser.id),
+      menu_id: menuId
     };
 
     console.log("Payload para crear menú:", payload);
@@ -39,7 +52,7 @@ export default function ItemsCreate() {
   };
 
   const handleCancel = () => {
-    navigate(`/${business_slug}/menus`);
+    navigate(`/${menu_slug}/menus`);
   };
 
     return (

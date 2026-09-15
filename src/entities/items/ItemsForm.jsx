@@ -21,13 +21,7 @@ const defaultValues = {
   image: undefined, 
   price: undefined,       
   menu_id: undefined,
-  category_id: undefined,
-  subcategory_id: undefined,
-  display_order: undefined,
-  is_active: undefined,
-  created_at: undefined,
-  updated_at: undefined,
-  deleted_at: undefined
+  category_id: undefined
 };
 
 export default function ItemsForm({
@@ -42,15 +36,14 @@ export default function ItemsForm({
     initialValues: mode === 'create' ? defaultValues : initialValues,
     validate: {
       name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
+      price: (value) => (value.trim().length === 0 ? 'El precio es obligatorio' : null),
     },
   });
 
   
 
   const handleSubmit = (values) => {
-    const updatedValues = { ...values };
-
-    onSubmit(updatedValues);
+    onSubmit(values);
   };
 
  const handleDeleteImage = (image) => {

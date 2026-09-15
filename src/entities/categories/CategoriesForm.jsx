@@ -80,11 +80,10 @@ export default function CategoriesForm({
           <Paper shadow="md" p="lg">
             <Stack gap="md">
               <Group grow align="flex-start">
-                {console.log("Parent Categories in CategoriesForm:", parentCategories)}
                 <Select
                   label="Categoría Padre"
                   placeholder="Ninguna (Categoría Principal)"
-                  data={parentCategories.map((cat) => ({ value: String(cat.id), label: cat.name }))}
+                  data={ parentCategories ? parentCategories.map((cat) => ({ value: String(cat.id), label: cat.name })) : ""}
                   searchable
                   clearable
                   disabled={parentCategories.length === 0}

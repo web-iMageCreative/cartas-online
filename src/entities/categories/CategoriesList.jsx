@@ -56,6 +56,7 @@ export default function CategoriesList() {
 
       await CategoriesService.getCategoriesByMenuId(menu.id)
         .then((data) => {
+          console.log(data);
           setCategories(Array.isArray(data) ? data : []);
         })
         .catch((error) => {

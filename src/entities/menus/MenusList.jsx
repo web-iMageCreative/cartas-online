@@ -94,7 +94,7 @@ export default function MenusList({ businessSlug }) {
            <Card.Section bg="custom.5">
             <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
               <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/`}><IconEye /><br/>Ver</UnstyledButton>
-              <UnstyledButton ta="center" fz="xs" component="a" href={`/menu/${menu.slug}/update`}><IconEdit /><br/>Editar</UnstyledButton>
+              <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/update`}><IconEdit /><br/>Editar</UnstyledButton>
               <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br/>Eliminar</UnstyledButton>
             </Group>
           </Card.Section>

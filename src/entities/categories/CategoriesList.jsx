@@ -86,7 +86,7 @@ export default function CategoriesList() {
         fz="xs"
         component="a"
         href={`/menus/${menu_slug}/categories/create`}
-      >
+      >/
         Crear nueva categoría
       </Button>
 

@@ -9,16 +9,16 @@ import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import BusinessesList from './entities/businesses/BusinessesList';
 import BusinessPage from './entities/businesses/businesses';
+import BusinessesUpdate from './entities/businesses/BusinessesUpdate';
 import MenuPage from './entities/menus/Menu';
 import MenusCreate from './entities/menus/MenusCreate';
-// import MenusUpdate from './entities/menus/MenusUpdate';
+import MenusUpdate from './entities/menus/MenusUpdate';
 import MenusList from './entities/menus/MenusList';
 import PublicLayout from './layouts/PublicLayouts';
 import PrivateLayout from './layouts/PrivateLayouts';
 import CategoriesCreate from './entities/categories/CategoriesCreate';
 import CategoriesList from './entities/categories/CategoriesList';
 import CategoriesUpdate from './entities/categories/CategoriesUpdate';
-import BusinessesUpdate from './entities/businesses/BusinessesUpdate';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
@@ -34,8 +34,7 @@ export default function AppRoutes() {
         <Route path="/:business_slug/menus"                        element={ <ProtectedRoute><MenusList /></ProtectedRoute> } />
         <Route path="/:business_slug/menus/:menu_slug/"            element={ <ProtectedRoute><MenuPage /></ProtectedRoute> } />
         <Route path="/:business_slug/menus/create"                 element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
-        {/* <Route path="/:business_slug/menus/:menu_slug/update"      element={ <ProtectedRoute><MenusUpdate /></ProtectedRoute> } /> */}
-        <Route path="/:menu_slug/categories"                       element={ <ProtectedRoute><CategoriesList /></ProtectedRoute> } />
+        <Route path="/:business_slug/menus/:menu_slug/update"      element={ <ProtectedRoute><MenusUpdate /></ProtectedRoute> } />
         <Route path="/:menu_slug/categories/create"                element={ <ProtectedRoute><CategoriesCreate /></ProtectedRoute> } />
         <Route path="/:menu_slug/categories/:category_id/update"   element={ <ProtectedRoute><CategoriesUpdate /></ProtectedRoute> } />
       </Route>

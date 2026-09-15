@@ -10,7 +10,7 @@ export default function MenusForm({
   submitLabel = 'Crear Menú',
 }) {
   const form = useForm({
-    initialValues: mode === 'edit' ? initialValues : { name: '', slug: '', description: ''},
+    initialValues: mode === 'update' ? initialValues : { name: undefined, slug: undefined, description: undefined, business_id: undefined },
     validate: {
       name: (value) => (value.length < 2 ? 'El nombre debe tener al menos 2 caracteres' : null),
       description: (value) => (value.length < 2 ? 'la descripción es obligatoria' : null),

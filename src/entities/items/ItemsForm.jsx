@@ -1,7 +1,7 @@
-import { useForm, useEffect } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import ItemsService from './ItemsService';
 import { IconUpload, IconTrash } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Paper,
   TextInput,

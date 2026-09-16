@@ -93,3 +93,7 @@
 .form-image-box:hover .mantine-Overlay-root {
   background-color: #00131ddd;
 }
+
+.mantine-Checkbox-body {
+  align-items: center;
+}

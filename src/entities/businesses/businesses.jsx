@@ -16,17 +16,9 @@ export default function BusinessPage() {
       setLoading(true);
 
       await BusinessesServices.getBusinessBySlug(business_slug)
-        .then((data) => {
-          setBusiness(data);
-        })
-        .catch((error) => {
-          NotificationService.error(error.message, { title: 'Error al cargar negocio' });
-
-          setBusiness(null);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        .then((data) => setBusiness(data))
+        .catch((error) => NotificationService.error(error.message, { title: 'Error al cargar negocio' }))
+        .finally(() => setLoading(false));
     };
 
     if (business_slug) loadBusiness();

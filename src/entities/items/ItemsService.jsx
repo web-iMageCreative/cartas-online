@@ -122,4 +122,21 @@ export default class ItemsService {
 
     return result.message;
   }
+
+  static async getAllergens() {
+    const response = await fetch(`${API_URL}/allergens/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.data;
+  }
 }

@@ -317,20 +317,19 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
-
 INSERT INTO allergens (name, icon) VALUES 
-("Altramuces", "/assets/imgs/allergens/altramuces.svg"),
-("Apio", "/assets/imgs/allergens/apio.svg"),
-("Cacahuete", "/assets/imgs/allergens/cacahuete.svg"),
-("Cascara", "/assets/imgs/allergens/cascara.svg"),
-("Crustaceo", "/assets/imgs/allergens/crustaceo.svg"),
-("Gluten", "/assets/imgs/allergens/gluten.svg"),
-("Huevo", "/assets/imgs/allergens/huevo.svg"),
-("Lacteos", "/assets/imgs/allergens/lacteos.svg"),
-("Moluscos", "/assets/imgs/allergens/moluscos.svg"),
-("Mostaza", "/assets/imgs/allergens/mostaza.svg"),
-("Pescado", "/assets/imgs/allergens/pescado.svg"),
-("Puntero", "/assets/imgs/allergens/puntero.svg"),
-("Sesamo", "/assets/imgs/allergens/sesamo.svg"),
-("Soja", "/assets/imgs/allergens/soja.svg"),
-("Sulfitos", "/assets/imgs/allergens/sulfitos.svg");
+("Altramuces", "/src/assets/imgs/allergens/altramuces.svg"),
+("Apio", "/src/assets/imgs/allergens/apio.svg"),
+("Cacahuete", "/src/assets/imgs/allergens/cacahuete.svg"),
+("Cascara", "/src/assets/imgs/allergens/cascara.svg"),
+("Crustaceo", "/src/assets/imgs/allergens/crustaceo.svg"),
+("Gluten", "/src/assets/imgs/allergens/gluten.svg"),
+("Huevo", "/src/assets/imgs/allergens/huevo.svg"),
+("Lacteos", "/src/assets/imgs/allergens/lacteos.svg"),
+("Moluscos", "/src/assets/imgs/allergens/moluscos.svg"),
+("Mostaza", "/src/assets/imgs/allergens/mostaza.svg"),
+("Pescado", "/src/assets/imgs/allergens/pescado.svg"),
+("Puntero", "/src/assets/imgs/allergens/puntero.svg"),
+("Sesamo", "/src/assets/imgs/allergens/sesamo.svg"),
+("Soja", "/src/assets/imgs/allergens/soja.svg"),
+("Sulfitos", "/src/assets/imgs/allergens/sulfitos.svg");

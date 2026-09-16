@@ -8,7 +8,7 @@ import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import BusinessesList from './entities/businesses/BusinessesList';
-import BusinessPage from './entities/businesses/businesses';
+import BusinessPage from './entities/businesses/Businesses';
 import BusinessesUpdate from './entities/businesses/BusinessesUpdate';
 import MenuPage from './entities/menus/Menu';
 import MenusCreate from './entities/menus/MenusCreate';

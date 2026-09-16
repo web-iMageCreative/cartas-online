@@ -115,6 +115,20 @@ export default function ItemsForm({
             </Group>
           </Paper>
 
+          <Paper p="lg" style={{columnCount: '2'}}>
+            
+            {allergens && allergens.map((allergen) => (
+              <Checkbox mb="md"
+              key={allergen.id}
+              label={
+                  <>
+                  <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
+                  </>
+              } />
+              
+            ))}
+          </Paper>
+
           {/* Acciones del formulario */}
           <Paper className="form-actions" shadow="md" p="lg">
             <Button

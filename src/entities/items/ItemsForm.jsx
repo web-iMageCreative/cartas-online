@@ -24,7 +24,8 @@ const defaultValues = {
   image: undefined, 
   price: undefined,       
   menu_id: undefined,
-  category_id: undefined
+  category_id: undefined,
+  allergens: []
 };
 
 export default function ItemsForm({
@@ -40,7 +41,7 @@ export default function ItemsForm({
   useEffect(() => {
     const fetchAllergens = async () => {
       await ItemsService.getAllergens()
-        .then((data) => setAllergens(data))
+        .then((data) => {setAllergens(data)})
         .catch((error) => console.log(error))
     }
 
@@ -130,18 +131,29 @@ export default function ItemsForm({
             </Group>
           </Paper>
 
-          <Paper p="lg" style={{columnCount: '2'}}>
-            
-            {allergens && allergens.map((allergen) => (
-              <Checkbox mb="md"
-              key={allergen.id}
-              label={
-                  <>
-                  <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
-                  </>
-              } />
-              
-            ))}
+          <Paper p="lg">
+            <Checkbox.Group
+              label="Alérgenos"
+              description="Marca los Alérgenos de este Item"
+              {...form.getInputProps('allergens')}
+            >
+
+              <Box mt="md" style={{columnCount: '2'}}>
+
+              {allergens && allergens.map((allergen) => (
+                <Checkbox mb="md"
+                key={String(allergen.id)}
+                value={String(allergen.id)}
+                label={
+                    <>
+                    <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
+                    </>
+                } />
+              ))}
+
+              </Box>
+
+            </Checkbox.Group>
           </Paper>
 
           {/* Acciones del formulario */}

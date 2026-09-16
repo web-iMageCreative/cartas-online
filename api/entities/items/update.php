@@ -58,10 +58,6 @@ try {
         'description = ?',
         'price = ?',
         'category_id = ?',
-        'subcategory_id = ?',
-        'display_order = ?',
-        'is_available = ?',
-        'is_active = ?',
         'updated_at = NOW()'
     ];
 
@@ -70,10 +66,6 @@ try {
         $description,
         $price,
         $category_id,
-        $subcategory_id,
-        $display_order,
-        $is_available,
-        $is_active
     ];
 
     if ($has_image) {

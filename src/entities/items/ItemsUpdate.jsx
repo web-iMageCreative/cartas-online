@@ -6,6 +6,7 @@ import { NotificationService } from "../../shared/NotificationService";
 
 export default function ItemsUpdate() {
   const { item_id } = useParams();
+  const { menu_slug } = useParams();
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ export default function ItemsUpdate() {
 
       await ItemsService.getItemById(item_id)
         .then((data) => {
+          data.allergens.map((d) => String(d));
+          data.allergens = data.allergens.map((d) => String(d));
           setInitialValues(data);
         })
         .catch((error) =>
@@ -38,7 +41,7 @@ export default function ItemsUpdate() {
     await ItemsService.updateItem(values)
       .then((message) => {
         NotificationService.success(message, { title: "Artículo editado" });
-        navigate("/dashboard");
+        navigate(`/${menu_slug}/items/${item_id}/update`);
       })
       .catch((error) =>
         NotificationService.error(

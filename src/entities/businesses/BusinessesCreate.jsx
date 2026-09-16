@@ -27,14 +27,14 @@ export default function BusinessesCreate() {
     await BusinessesService.createBusiness(values)
       .then((message) => {
         NotificationService.success(message, {title: "Negocio creado"})
-        navigate("/dashboard");
+        navigate("/businesses");
       })
       .catch((error) => NotificationService.error(error, {title: "Error creando negocio"}))
       .finally(() => setLoading(false));
   };
 
   const handleCancel = () => {
-    navigate("/dashboard");
+    navigate("/businesses");
   };
 
   return (

@@ -316,3 +316,21 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+INSERT INTO allergens (name, icon) VALUES 
+("Altramuces", "/assets/imgs/allergens/altramuces.svg"),
+("Apio", "/assets/imgs/allergens/apio.svg"),
+("Cacahuete", "/assets/imgs/allergens/cacahuete.svg"),
+("Cascara", "/assets/imgs/allergens/cascara.svg"),
+("Crustaceo", "/assets/imgs/allergens/crustaceo.svg"),
+("Gluten", "/assets/imgs/allergens/gluten.svg"),
+("Huevo", "/assets/imgs/allergens/huevo.svg"),
+("Lacteos", "/assets/imgs/allergens/lacteos.svg"),
+("Moluscos", "/assets/imgs/allergens/moluscos.svg"),
+("Mostaza", "/assets/imgs/allergens/mostaza.svg"),
+("Pescado", "/assets/imgs/allergens/pescado.svg"),
+("Puntero", "/assets/imgs/allergens/puntero.svg"),
+("Sesamo", "/assets/imgs/allergens/sesamo.svg"),
+("Soja", "/assets/imgs/allergens/soja.svg"),
+("Sulfitos", "/assets/imgs/allergens/sulfitos.svg");

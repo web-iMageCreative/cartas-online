@@ -1,5 +1,5 @@
 import { useForm } from '@mantine/form';
-import { IconUpload, IconTrash } from '@tabler/icons-react';
+import { IconUpload, IconPhoto, IconTrash } from '@tabler/icons-react';
 import {
   Paper,
   TextInput,
@@ -11,11 +11,8 @@ import {
   Container,
   FileInput,
   Box,
-  Overlay,
-  Checkbox
+  Overlay
 } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import ItemsService from './ItemsService';
 
 const defaultValues = {
   id: undefined,
@@ -34,19 +31,7 @@ export default function ItemsForm({
   onCancel,
   isLoading = false,
   submitLabel,
-}) {
-  const [allergens, setAllergens] = useState(null);
-
-  useEffect(() => {
-    const fetchAllergens = async () => {
-      await ItemsService.getAllergens()
-        .then((data) => setAllergens(data))
-        .catch((error) => console.log(error))
-    }
-
-    fetchAllergens();
-  }, []);
-
+}) { 
   const form = useForm({
     initialValues: mode === 'create' ? defaultValues : initialValues,
     validate: {
@@ -128,20 +113,6 @@ export default function ItemsForm({
                 />
                )}              
             </Group>
-          </Paper>
-
-          <Paper p="lg">
-            
-            {allergens && allergens.map((allergen) => (
-              <Checkbox mb="md"
-              key={allergen.id}
-              label={
-                  <>
-                  <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
-                  </>
-              } />
-              
-            ))}
           </Paper>
 
           {/* Acciones del formulario */}

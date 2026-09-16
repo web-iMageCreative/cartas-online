@@ -2,7 +2,8 @@
 .mantine-PasswordInput-input,
 .mantine-FileInput-input,
 .mantine-Textarea-input,  
-.mantine-Select-input {
+.mantine-Select-input,
+.mantine-Checkbox-input {
   color: var(--mantine-color-custom-0);
   border-color: var(--mantine-color-custom-3);
   background: var(--mantine-color-custom-4);

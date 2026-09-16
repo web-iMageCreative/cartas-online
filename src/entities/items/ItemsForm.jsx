@@ -130,7 +130,7 @@ export default function ItemsForm({
             </Group>
           </Paper>
 
-          <Paper p="lg">
+          <Paper p="lg" style={{columnCount: '2'}}>
             
             {allergens && allergens.map((allergen) => (
               <Checkbox mb="md"

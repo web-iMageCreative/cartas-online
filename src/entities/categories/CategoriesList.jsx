@@ -28,27 +28,30 @@ export default function CategoriesList() {
   const [opened, { open, close }] = useDisclosure(false);
   const { menu_slug } = useParams();
 
-  useEffect(() => {
-    const fetchMenuData = async () => {
-      setLoading(true);
-    
-      await MenuService.getMenuBySlug(menu_slug)
-        .then((data) => {
-          setMenu(data);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+ useEffect(() => {
+  const fetchCategoriesData = async () => {
+    setLoading(true);
 
-    if (menu_slug) {
-      fetchMenuData();
-    }
+    try {
+      const menuData = await MenuService.getMenuBySlug(menu_slug);
+      setMenu(menuData);
 
-  }, [menu_slug]);
+      if (menuData?.id) {
+        const categoriesData = await CategoriesService.getCategoriesByMenuId(menuData.id);
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+      }
+    } catch (error) {
+      console.error(error);
+      NotificationService.error(error, { title: 'Error al cargar las categorías' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (menu_slug) {
+    fetchCategoriesData();
+  }
+}, [menu_slug]);
 
   useEffect(() => {
     const fetchCategoriesData = async () => {

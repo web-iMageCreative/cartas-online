@@ -35,7 +35,7 @@ $stmt->execute($queryParams);
 $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Adjuntar el listado de IDs de alérgenos a cada plato devuelto
-foreach ($items as &$item) {
+foreach ($items as $item) {
     $stmtAllergens = $db->prepare('SELECT allergen_id FROM allergens_items WHERE item_id = ?');
     $stmtAllergens->execute([$item['id']]);
     $item['allergens'] = $stmtAllergens->fetchAll(PDO::FETCH_COLUMN);

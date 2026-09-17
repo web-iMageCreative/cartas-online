@@ -253,7 +253,7 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
           </Stack>
 
           {item.image && (
-            <Avatar src={item.image} alt={item.name} radius="sm" size="md" />
+            <Avatar src={item.image} alt={item.name} radius="sm" size="xl" />
           )}
 
           <Box style={{ overflow: 'hidden' }}>

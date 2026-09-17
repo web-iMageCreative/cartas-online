@@ -1,40 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDisclosure } from '@mantine/hooks';
-import {
-  Container,
-  Title,
-  Stack,
-  LoadingOverlay,
-  Group,
-  Button,
-  Text,
-  Box,
-  Modal,
+import { 
+  Container, 
+  Title, 
+  Stack, 
+  LoadingOverlay, 
+  Group, 
+  Text, 
+  Box, 
   Paper,
-  ActionIcon,
   Badge,
-  Avatar,
+  Avatar
 } from '@mantine/core';
-import {
-  IconTrash,
-  IconEdit,
-  IconPlus,
-  IconArrowUp,
-  IconArrowDown
-} from '@tabler/icons-react';
 import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
 
-export default function ItemsList() {
+export default function ItemsReadList() {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
-  const [opened, { open, close }] = useDisclosure(false);
   const { menu_slug } = useParams();
 
   useEffect(() => {
@@ -56,8 +43,8 @@ export default function ItemsList() {
       } catch (error) {
         console.error(error);
         NotificationService.error(
-          error.message || error,
-          { title: 'Error al cargar los artículos' }
+          error.message || error, 
+          { title: 'Error al cargar la carta' }
         );
       } finally {
         setLoading(false);
@@ -68,28 +55,6 @@ export default function ItemsList() {
       fetchData();
     }
   }, [menu_slug]);
-
-  const handleOpenDelete = (id) => {
-    setSelectedId(id);
-    open();
-  };
-
-  const handleDelete = async () => {
-    setLoading(true);
-    try {
-      await ItemsService.deleteItem(selectedId);
-      setItems((prev) => prev.filter((item) => item.id !== selectedId));
-      NotificationService.success('Artículo eliminado con éxito', { title: 'Éxito' });
-      close();
-    } catch (error) {
-      NotificationService.error(
-        error.message || error,
-        { title: 'Error eliminando artículo' }
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const rootCategories = categories.filter(
     (cat) => !cat.parent_id || Number(cat.parent_id) === 0
@@ -118,36 +83,18 @@ export default function ItemsList() {
     );
   };
 
-  const changeOrder = (direction, itemId) => {
-    console.log('Cambiar orden:', direction, 'Item:', itemId);
-  };
-
   return (
     <Container maw={480} miw={300} pos="relative" py="md">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
 
       <Title order={3} c="white" ta="center" mb="lg">
-        Artículos {menu?.name ? `- ${menu.name}` : ''}
+        {menu?.name || 'Carta'}
       </Title>
-
-      <Button
-        bg="custom.5"
-        mb="xl"
-        variant="filled"
-        fullWidth
-        leftSection={<IconPlus size={18} />}
-        ta="center"
-        fz="xs"
-        component="a"
-        href={`/${menu_slug}/items/create`}
-      >
-        Crear nuevo artículo
-      </Button>
 
       <Stack gap="xl">
         {rootCategories.length === 0 && items.length === 0 && !loading && (
           <Text ta="center" size="sm" c="dimmed">
-            No hay categorías ni artículos registrados.
+            No hay categorías ni artículos disponibles.
           </Text>
         )}
 
@@ -167,11 +114,11 @@ export default function ItemsList() {
                 )}
               </Box>
 
-              {/* Ítems directos de la categoría principal */}
+              {/* Ítems directos */}
               {directItems.length > 0 && (
                 <Stack gap="xs" mb="md">
                   {directItems.map((item) => (
-                    <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} />
+                    <ItemCard key={item.id} item={item} />
                   ))}
                 </Stack>
               )}
@@ -184,7 +131,6 @@ export default function ItemsList() {
 
                     return (
                       <Box key={subcategory.id}>
-                        {/* Titular Subcategoría */}
                         <Box mb="xs">
                           <Text fw={600} fz="sm" c="teal.3">
                             ↳ {subcategory.name}
@@ -194,16 +140,15 @@ export default function ItemsList() {
                           )}
                         </Box>
 
-                        {/* Ítems de la Subcategoría */}
                         {subcatItems.length > 0 ? (
                           <Stack gap="xs">
                             {subcatItems.map((item) => (
-                              <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} />
+                              <ItemCard key={item.id} item={item} />
                             ))}
                           </Stack>
                         ) : (
                           <Text fz="xs" c="dimmed" fs="italic" ml="xs">
-                            Sin artículos en esta subcategoría
+                            Sin artículos disponibles
                           </Text>
                         )}
                       </Box>
@@ -215,34 +160,27 @@ export default function ItemsList() {
           );
         })}
       </Stack>
-
-      <Modal opened={opened} onClose={close} title="Confirmar eliminación" centered>
-        <Text size="sm">¿Estás seguro de que deseas eliminar este artículo?</Text>
-        <Group mt="md" justify="flex-end">
-          <Button variant="default" onClick={close}>Cancelar</Button>
-          <Button color="red" onClick={handleDelete}>Eliminar</Button>
-        </Group>
-      </Modal>
     </Container>
   );
 }
 
-// Componente reutilizable para la tarjeta de artículo
-function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
+// Componente de tarjeta exclusivo para lectura
+function ItemCard({ item }) {
   return (
-    <Paper
-      radius="xl"
-      pr="xs"
-      style={{overflow: 'hidden'}}
+    <Paper 
+      p="xs" 
+      radius="md" 
+      style={{ 
+        backgroundColor: 'rgba(10, 25, 35, 0.6)', 
+        border: '1px solid rgba(255, 255, 255, 0.08)' 
+      }}
     >
-      <Group justify="space-between" gap={15} align="center" wrap="nowrap">
+      <Group justify="space-between" align="center" wrap="nowrap">
         <Group gap="xs" wrap="nowrap">
           {item.image && (
-            <Avatar src={item.image} alt={item.name} radius="0" size="xl" />
+            <Avatar src={item.image} alt={item.name} radius="sm" size="md" />
           )}
-        </Group>
 
-        <Group gap="xs" wrap="nowrap">
           <Box style={{ overflow: 'hidden' }}>
             <Group gap="xs" align="center">
               <Text fw={600} size="sm" c="white" truncate>{item.name}</Text>
@@ -253,35 +191,6 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
             )}
           </Box>
         </Group>
-
-        <Group gap={6} wrap="nowrap" justify="flex-end">
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            component="a"
-            href={`/${menu_slug}/items/${item.id}/update`}
-            title="Editar"
-          >
-            <IconEdit size={16} />
-          </ActionIcon>
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={() => handleOpenDelete(item.id)}
-            title="Eliminar"
-          >
-            <IconTrash size={16} />
-          </ActionIcon>
-        </Group>
-        {/* Botones de orden vertical compacto */}
-          <Stack gap='md'>
-            <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
-              <IconArrowUp size="1rem" />
-            </ActionIcon>
-            <ActionIcon size="sm" variant="light" onClick={() => changeOrder(-1, item.id)}>
-              <IconArrowDown size="1rem" />
-            </ActionIcon>
-          </Stack>
       </Group>
     </Paper>
   );

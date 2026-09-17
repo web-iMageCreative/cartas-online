@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { useParams } from 'react-router-dom';
 import { Container, Title, Stack, LoadingOverlay, Card, Group, Button, UnstyledButton, Text, Box, Modal } from '@mantine/core';
-import { IconEye, IconEdit, IconTrash, IconFilePlus, IconSitemap } from '@tabler/icons-react';
+import { IconEye, IconEdit, IconTrash, IconFilePlus, IconSitemap, IconDownload } from '@tabler/icons-react';
 import MenusServices from './MenusService';
 import BusinessesServices from '../businesses/BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
+import { QRCode, useQRCodeDownload } from '@gfazioli/mantine-qr-code';
 
 export default function MenusList({ businessSlug }) {
   const params = useParams();
+  const { ref, download } = useQRCodeDownload();
   const business_slug = params?.business_slug || businessSlug;
 
   const [menus, setMenus] = useState([]);
@@ -70,6 +72,13 @@ export default function MenusList({ businessSlug }) {
       .finally(() => setLoading(false));
   };
 
+  const handleDownloadPNG = (name) => {
+    download({
+      name: name,
+      mimeType: 'image/png',
+    });
+  };
+
 
   return (
     <Container maw="450" miw="xll" pos="relative">
@@ -88,16 +97,29 @@ export default function MenusList({ businessSlug }) {
       <Stack gap="md">
         {menus.map((menu) => (
           <Card key={menu.id} shadow="sm" padding="lg" withBorder>
-            <Box mb="md">
-              <Text mb="xs" fw={500}>{menu.name}</Text>
-              <Text size="sm" c="dimmed">
-                {menu.description}
-              </Text>
-            </Box>
+            <Card.Section>
+              <Group justify="flex-start">
+                <QRCode
+                  ref={ref}
+                  value={`/${menu.slug}/items`} 
+                  size="xs" 
+                  color="custom.3" 
+                  dotStyle="square"
+                  download=""
+                />
+                <Box>
+                  <Text mb="xs" fw={500}>{menu.name}</Text>
+                  <Text size="sm" c="dimmed">
+                    {menu.description}
+                  </Text>
+                </Box>
+              </Group>
+            </Card.Section>
 
             <Card.Section bg="custom.5">
-              <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
+              <Group justify="space-around" my="md" mx="xl">
                 <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/`}><IconEye /><br />Ver</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDownloadPNG(menu.name)}><IconDownload /><br />Descargar QR</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" component="a" href={`/${menu.slug}/categories`}><IconSitemap /><br />Categorías</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/update`}><IconEdit /><br />Editar</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br />Eliminar</UnstyledButton>

@@ -10,12 +10,14 @@ import {
   Container,
   Select,
 } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import CategoriesService from './CategoriesService';
 
 const defaultCategoryValues = {
   id: '',
   name: '',
   description: '',
-  menu_id: '',
+  menu_id: null,
   parent: null,
 };
 
@@ -26,14 +28,16 @@ export default function CategoriesForm({
   onCancel,
   isLoading = false,
   submitLabel,
-  parentCategories = [],
+  menuId
 }) {
   const formattedInitialValues = {
     ...defaultCategoryValues,
     ...initialValues,
-    menu_id: initialValues?.menu_id ? String(initialValues.menu_id) : null,
+    menu_id: initialValues?.menu_id ? String(initialValues.menu_id) : menuId,
     parent: initialValues?.parent ? String(initialValues.parent) : null,
   };
+
+  const [ parentCategories, setParentCategories] = useState([]);
 
   const form = useForm({
     initialValues: mode === 'create' ? defaultCategoryValues : formattedInitialValues,
@@ -41,6 +45,32 @@ export default function CategoriesForm({
       name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null)
     },
   });
+
+  useEffect(() => {
+    const fetchParents = async () => {
+      await CategoriesService.getCategoriesByMenuId(formattedInitialValues.menu_id)
+        .then((data) => {
+          const categoriesList = Array.isArray(data) ? data : [data];
+
+          if (mode === 'update') {
+            const parents = categoriesList.filter(
+              (cat) => String(cat.id) !== String(initialValues.id)
+            );
+            setParentCategories(parents);
+          } else {
+            setParentCategories(categoriesList);
+          }
+
+        })
+        .catch((error) => {
+          console.log("Error cargando categorias Padre: ", error );
+        })
+    }
+
+    if (initialValues) {
+      fetchParents();
+    }
+  }, [initialValues]);
 
   const handleSubmit = (values) => {
     onSubmit(values);
@@ -77,16 +107,18 @@ export default function CategoriesForm({
           <Paper shadow="md" p="lg">
             <Stack gap="md">
               <Group grow align="flex-start">
-                <Select
-                  label="Categoría Padre"
-                  placeholder="Ninguna (Categoría Principal)"
-                  data={ parentCategories ? parentCategories.map((cat) => ({ value: String(cat.id), label: cat.name })) : ""}
-                  searchable
-                  clearable
-                  disabled={parentCategories.length === 0}
-                  value={form.values.parent ? String(form.values.parent) : null}
-                  {...form.getInputProps('parent')}
-                />
+                {parentCategories && (
+                  <Select
+                    label="Categoría Padre"
+                    placeholder="Ninguna (Categoría Principal)"
+                    data={ parentCategories ? parentCategories.map((cat) => ({ value: String(cat.id), label: cat.name })) : ""}
+                    searchable
+                    clearable
+                    disabled={parentCategories.length === 0}
+                    value={form.values.parent ? String(form.values.parent) : null}
+                    {...form.getInputProps('parent')}
+                  />
+                )}
               </Group>
             </Stack>
           </Paper>

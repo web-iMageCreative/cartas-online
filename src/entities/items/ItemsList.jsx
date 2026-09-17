@@ -1,29 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
-import { 
-  Container, 
-  Title, 
-  Stack, 
+import {
+  Container,
+  Title,
+  Stack,
   LoadingOverlay,
-  Group, 
-  Button, 
-  UnstyledButton, 
-  Text, 
-  Box, 
+  Group,
+  Button,
+  Text,
+  Box,
   Modal,
   Paper,
   ActionIcon,
   Badge,
   Avatar,
-  Divider
 } from '@mantine/core';
-import { 
+import {
   IconTrash,
   IconEdit,
   IconPlus,
   IconArrowUp,
-  IconArrowDown 
+  IconArrowDown
 } from '@tabler/icons-react';
 import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
@@ -58,7 +56,7 @@ export default function ItemsList() {
       } catch (error) {
         console.error(error);
         NotificationService.error(
-          error.message || error, 
+          error.message || error,
           { title: 'Error al cargar los artículos' }
         );
       } finally {
@@ -85,7 +83,7 @@ export default function ItemsList() {
       close();
     } catch (error) {
       NotificationService.error(
-        error.message || error, 
+        error.message || error,
         { title: 'Error eliminando artículo' }
       );
     } finally {
@@ -232,30 +230,19 @@ export default function ItemsList() {
 // Componente reutilizable para la tarjeta de artículo
 function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
   return (
-    <Paper 
-      p="xs" 
-      radius="md" 
-      style={{ 
-        backgroundColor: 'rgba(10, 25, 35, 0.6)', 
-        border: '1px solid rgba(255, 255, 255, 0.08)' 
-      }}
+    <Paper
+      radius="xl"
+      pr="xs"
+      style={{overflow: 'hidden'}}
     >
-      <Group justify="space-between" align="center" wrap="nowrap">
+      <Group justify="space-between" gap={15} align="center" wrap="nowrap">
         <Group gap="xs" wrap="nowrap">
-          {/* Botones de orden vertical compacto */}
-          <Stack gap={2}>
-            <ActionIcon size="xs" variant="subtle" color="gray" onClick={() => changeOrder(1, item.id)}>
-              <IconArrowUp size="0.75rem" />
-            </ActionIcon>
-            <ActionIcon size="xs" variant="subtle" color="gray" onClick={() => changeOrder(-1, item.id)}>
-              <IconArrowDown size="0.75rem" />
-            </ActionIcon>
-          </Stack>
-
           {item.image && (
-            <Avatar src={item.image} alt={item.name} radius="sm" size="md" />
+            <Avatar src={item.image} alt={item.name} radius="0" size="xl" />
           )}
+        </Group>
 
+        <Group gap="xs" wrap="nowrap">
           <Box style={{ overflow: 'hidden' }}>
             <Group gap="xs" align="center">
               <Text fw={600} size="sm" c="white" truncate>{item.name}</Text>
@@ -268,24 +255,33 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
         </Group>
 
         <Group gap={6} wrap="nowrap" justify="flex-end">
-          <ActionIcon 
-            variant="subtle" 
-            color="blue" 
-            component="a" 
+          <ActionIcon
+            variant="subtle"
+            color="blue"
+            component="a"
             href={`/${menu_slug}/items/${item.id}/update`}
             title="Editar"
           >
             <IconEdit size={16} />
           </ActionIcon>
-          <ActionIcon 
-            variant="subtle" 
-            color="red" 
+          <ActionIcon
+            variant="subtle"
+            color="red"
             onClick={() => handleOpenDelete(item.id)}
             title="Eliminar"
           >
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
+        {/* Botones de orden vertical compacto */}
+          <Stack gap='md'>
+            <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
+              <IconArrowUp size="1rem" />
+            </ActionIcon>
+            <ActionIcon size="sm" variant="light" onClick={() => changeOrder(-1, item.id)}>
+              <IconArrowDown size="1rem" />
+            </ActionIcon>
+          </Stack>
       </Group>
     </Paper>
   );

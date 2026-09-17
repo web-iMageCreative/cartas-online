@@ -54,6 +54,34 @@ if (!$name) {
     Response::error('El nombre es obligatorio', 400);
 }
 
+function ensureUniqueSlug($db, $slug) {
+    if (!$slug) {
+        return $slug;
+    }
+
+    $candidate = $slug;
+    $stmt = $db->prepare("SELECT 1 FROM businesses WHERE slug = ? LIMIT 1");
+
+    while (true) {
+        $stmt->execute([$candidate]);
+        $exists = $stmt->fetchColumn();
+
+        if ($exists === false) {
+            return $candidate;
+        }
+
+        if (preg_match('/^(.*)-(\d+)$/', $candidate, $m)) {
+            $base = $m[1];
+            $num = intval($m[2]) + 1;
+            $candidate = $base . '-' . $num;
+        } else {
+            $candidate = $candidate . '-2';
+        }
+    }
+}
+
+$slug = ensureUniqueSlug($db, $slug);
+
 // Inserción en la BD
 $sql = "INSERT INTO businesses (name, slug, description, address, email, phone, user_id, logo, cover_image, is_active) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

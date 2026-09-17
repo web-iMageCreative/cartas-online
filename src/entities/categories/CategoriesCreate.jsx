@@ -9,10 +9,9 @@ export default function CategoriesCreate() {
   const navigate = useNavigate();
   const { menu_slug } = useParams();
   const [loading, setLoading] = useState(false);
-  const [parentCategories, setParentCategories] = useState([]); //CAMBIO
   const [menu, setMenu] = useState(null); 
   
-useEffect(() => {
+  useEffect(() => {
     const fetchMenuData = async () => {
       setLoading(true);
       
@@ -23,21 +22,6 @@ useEffect(() => {
     };
 
     fetchMenuData();
-  }, []);
-
-  useEffect(() => {
-    const fetchCategoriesData = async () => {
-      setLoading(true);
-
-      await CategoriesService.getCategoriesByMenuId(menu.id)
-        .then((data) => setParentCategories(data))
-        .catch((error) => NotificationService.error(error, {title: 'Error cargando categorias'}))
-        .finally(() => setLoading(false));
-    }
-
-    if (menu) {
-      fetchCategoriesData();
-    }
   }, []);
 
   const handleSubmit = async (values) => {
@@ -66,12 +50,12 @@ useEffect(() => {
 
   return (
     <>
-    {parentCategories && (
+    {menu && (
       <CategoriesForm
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isLoading={loading}
-        parentCategories={parentCategories}
+        menuId={menu.id}
       />
     )}
     </>

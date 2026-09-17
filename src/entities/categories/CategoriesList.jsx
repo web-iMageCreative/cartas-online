@@ -5,17 +5,23 @@ import {
   Container, 
   Title, 
   Stack, 
-  LoadingOverlay, 
-  Card, 
+  LoadingOverlay,
   Group, 
   Button, 
   UnstyledButton, 
   Text, 
   Box, 
   Modal,
-  Badge 
+  Paper,
+  ActionIcon
 } from '@mantine/core';
-import { IconTrash, IconEdit, IconFolderPlus, IconFolder } from '@tabler/icons-react';
+import { 
+  IconTrash,
+  IconEdit,
+  IconFolderPlus,
+  IconArrowUp,
+  IconArrowDown 
+} from '@tabler/icons-react';
 import CategoriesService from './CategoriesService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
@@ -75,6 +81,10 @@ export default function CategoriesList() {
     }
   }, [menu]);
 
+  const changeOrder = (direction) => {
+    console.log(direction);
+  }
+
   const handleOpen = (id) => {
     setSelectedId(id);
     open();
@@ -95,7 +105,7 @@ export default function CategoriesList() {
   };
 
   return (
-    <Container maw="450" pos="relative">
+    <Container maw={450} miw={300} pos="relative">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
 
       <Title order={3} c="custom.0" ta="center" mb="lg">
@@ -124,30 +134,18 @@ export default function CategoriesList() {
         )}
 
         {categories.map((category) => (
-          <Card key={category.id} shadow="sm" padding="lg" withBorder radius="md">
-            <Box mb="sm">
-              <Group justify="space-between" align="center" mb="xs">
-                <Group gap="xs">
-                  <IconFolder size={20} color="var(--mantine-color-custom-0)" />
-                  <Text fw={600} size="md">
-                    {category.name}
-                  </Text>
-                </Group>
-                
-                {category.parent && (
-                  <Badge variant="light" color="gray" size="sm">
-                    Subcategoría
-                  </Badge>
-                )}
-              </Group>
-
-              <Text size="sm" c="dimmed">
-                {category.description || 'Sin descripción'}
-              </Text>
-            </Box>
-
-            <Card.Section bg="custom.5">
-              <Group justify="space-around" mt="sm" mb="sm" ml="xl" mr="xl">
+          <>
+          <Paper pl="xs" py="xs" pr="md">
+            <Group justify="space-between">
+              <Stack gap="xs">
+                <ActionIcon variant="light" onClick={() => changeOrder(1)}><IconArrowUp size="1rem" /></ActionIcon>
+                <ActionIcon variant="light" onClick={() => changeOrder(-1)}><IconArrowDown size="1rem" /></ActionIcon>
+              </Stack>
+              <Box>
+                <Title order={3}>{category.name}</Title>
+                <Text fz="xs">{category.description}</Text>
+              </Box>
+              <Group justify="flex-end">
                 <UnstyledButton
                   ta="center"
                   fz="xs"
@@ -164,8 +162,47 @@ export default function CategoriesList() {
                   <IconTrash /><br />Eliminar
                 </UnstyledButton>
               </Group>
-            </Card.Section>
-          </Card>
+            </Group>
+          </Paper>
+
+          {category.subcategories.length !== 0 && (
+            <Stack gap="sm" ml="md" style={{borderLeft: "1px solid #fff"}}>
+
+              {category.subcategories.map((subcategory) => (
+                <Paper py="xs" pl="xs" pr="md" ml="md" bg="custom.3">
+                  <Group justify="space-between">
+                    <Stack gap="xs">
+                      <ActionIcon variant="light" onClick={() => changeOrder(1)}><IconArrowUp size="1rem"/></ActionIcon>
+                      <ActionIcon variant="light" onClick={() => changeOrder(-1)}><IconArrowDown size="1rem"/></ActionIcon>
+                    </Stack>
+                    <Box>
+                      <Title order={3}>{subcategory.name}</Title>
+                      <Text fz="xs">{subcategory.description}</Text>
+                    </Box>
+                    <Group justify="flex-end">
+                      <UnstyledButton
+                        ta="center"
+                        fz="xs"
+                        component="a"
+                        href={`/${menu_slug}/categories/${subcategory.id}/update`}
+                      >
+                        <IconEdit /><br />Editar
+                      </UnstyledButton>
+                      <UnstyledButton
+                        ta="center"
+                        fz="xs"
+                        onClick={() => handleOpen(subcategory.id)}
+                      >
+                        <IconTrash /><br />Eliminar
+                      </UnstyledButton>
+                    </Group>
+                  </Group>
+                </Paper>
+              ))}
+
+            </Stack>
+          )}
+          </>          
         ))}
       </Stack>
 

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import MenusForm from "./MenusForm";
 import MenusServices from "./MenusService";
 import { AuthService } from "../users/AuthService";
+import { NotificationService } from "../../shared/NotificationService";
 
 export default function MenusCreate() {
   const { business_slug } = useParams();
@@ -10,6 +11,8 @@ export default function MenusCreate() {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
+    setLoading(true);
+
     const currentUser = AuthService.getCurrentUser();
 
     if (!currentUser || !currentUser.id) {
@@ -23,18 +26,13 @@ export default function MenusCreate() {
       user_id: Number(currentUser.id),
     };
 
-    console.log("Payload para crear menú:", payload);
-
-    try {
-      setLoading(true);
-      const response = await MenusServices.createMenu(payload);
-      console.log("Menú creado:", response);
-      navigate(`/${business_slug}/menus`);
-    } catch (error) {
-      console.error("Error creando menú: ", error);
-    } finally {
-      setLoading(false);
-    }
+    await MenusServices.createMenu(payload)
+      .then((data) => {
+        NotificationService.success(data, {title: "Menú creado:"});
+        navigate(`/${business_slug}/menus`);
+      })
+      .catch((error) => NotificationService.error(error, {title: "Error al crear menú"}))
+      .finally(() => setLoading(false));
   };
 
   const handleCancel = () => {

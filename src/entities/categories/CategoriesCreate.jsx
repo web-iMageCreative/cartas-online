@@ -6,9 +6,9 @@ import MenuService from "../menus/MenusService";
 import { useState, useEffect } from "react";
 
 export default function CategoriesCreate() {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { menu_slug } = useParams();
+  const [loading, setLoading] = useState(false);
   const [parentCategories, setParentCategories] = useState([]); //CAMBIO
   const [menu, setMenu] = useState(null); 
   
@@ -66,12 +66,14 @@ useEffect(() => {
 
   return (
     <>
-    <CategoriesForm
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-      isLoading={loading}
-      parentCategories={parentCategories}
-    />
+    {parentCategories && (
+      <CategoriesForm
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        isLoading={loading}
+        parentCategories={parentCategories}
+      />
+    )}
     </>
   );
 }

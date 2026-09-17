@@ -26,8 +26,7 @@ export default function MenusForm({
       .replace(/^-+|-+$/g, '');
   };
 
-  const handleSubmit = (values) => 
-  {
+  const handleSubmit = (values) => {
     if (!values.slug && values.name) values.slug = generateSlug(values.name);
 
     onSubmit(values);

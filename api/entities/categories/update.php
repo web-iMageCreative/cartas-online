@@ -2,25 +2,23 @@
 
 $db = Database::getInstance()->getConnection();
 
-$id      = $input['id'] ?? $params['id'] ?? null;
-$menu_id = $input['menu_id'] ?? null;
+$id =          $input['id'] ?? null;
+$name =        $input['name'] ?? null;
+$description = $input['description'] ?? null;
+$menu_id =     $input['menu_id'] ?? null;
+$parent =   $input['parent'] ?? null;
 
-if ($id) {
-    $stmt = $db->prepare('SELECT * FROM categories WHERE id = ?');
-    $stmt->execute([$id]);
-    $category = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = $db->prepare('UPDATE categories SET name = ?, description = ?, menu_id = ?, parent = ?, updated_at = NOW() WHERE id = ?');
+$category = $stmt->execute([
+    $name,
+    $description,
+    $menu_id,
+    $parent,
+    $id,
+]);
 
-    if (!$category) {
-        Response::error('Categoría no encontrada', 404);
-    }
-
-    Response::success($category, 'Categoría obtenida correctamente');
-} elseif ($menu_id) {
-    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ?');
-    $stmt->execute([$menu_id]);
-    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    Response::success($categories, 'Categorías obtenidas correctamente');
-} else {
-    Response::error('El ID de categoría o de menú es obligatorio', 400);
+if (!$category) {
+    Response::error('Ha sido imposible editar la categoría', 404);
 }
+
+Response::success($category, 'Categoría editada correctamente');

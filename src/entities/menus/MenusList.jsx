@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { useParams } from 'react-router-dom';
-import { Container, Title, Stack, LoadingOverlay, Card, Group, Button, UnstyledButton, Text, Box, Modal} from '@mantine/core';
-import { IconEye, IconEdit, IconTrash,IconFilePlus } from '@tabler/icons-react';
+import { Container, Title, Stack, LoadingOverlay, Card, Group, Button, UnstyledButton, Text, Box, Modal } from '@mantine/core';
+import { IconEye, IconEdit, IconTrash, IconFilePlus, IconSitemap } from '@tabler/icons-react';
 import MenusServices from './MenusService';
 import BusinessesServices from '../businesses/BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
@@ -16,10 +16,12 @@ export default function MenusList({ businessSlug }) {
   const [loading, setLoading] = useState(false);
   const [menuToDelete, setMenuToDelete] = useState(null); //cambio
   const [opened, { open, close }] = useDisclosure(false);
+
   const handleDeleteMenu = (menuId) => {
-  setMenuToDelete(menuId);
-  open();
-  }; //cambio
+    setMenuToDelete(menuId);
+    open();
+  };
+
   useEffect(() => {
     if (!business_slug) return;
 
@@ -29,62 +31,59 @@ export default function MenusList({ businessSlug }) {
       Promise.all([
         BusinessesServices.getBusinessNameBySlug(business_slug),
         MenusServices.listMenu(business_slug)
-      ])
-      .then(([nameData, menusData]) => {
-        setBusinessName(nameData);
-        setMenus(menusData);
+      ]).then(([nameData, menusData]) => {
+          setBusinessName(nameData);
+          setMenus(menusData);
+        })
+        .catch((error) => {
+          NotificationService.error(error, {
+            title: 'Error cargando datos de los menús',
+          });
+        })
+        .finally(() => setLoading(false));
+    }
+
+    fetchMenus();
+
+  }, [business_slug]);
+
+
+  const confirmDeleteMenu = async () => {
+    setLoading(true);
+
+    await MenusServices.deleteMenu(menuToDelete)
+      .then(() => {
+        NotificationService.success('Menú eliminado correctamente');
+    
+        setMenus((currentMenus) =>
+          currentMenus.filter((menu) => menu.id !== menuToDelete)
+        );
+
+        close();
+        setMenuToDelete(null);
       })
       .catch((error) => {
-        NotificationService.error(error, {
-          title: 'Error cargando datos de los menús',
+        NotificationService.error(error.message, {
+          title: 'Error eliminando el menú',
         });
       })
       .finally(() => setLoading(false));
-    }
-    
-    fetchMenus();
-    
-  }, [business_slug]);
+  };
 
-   const confirmDeleteMenu = async () => { //cambio
-     try {
-    setLoading(true);
-
-    await MenusServices.deleteMenu(menuToDelete);
-
-    NotificationService.success('Menú eliminado correctamente');
-
-    // Eliminarlo de la lista que tienes en React
-    setMenus((currentMenus) =>
-      currentMenus.filter((menu) => menu.id !== menuToDelete)
-    );
-
-    close();
-    setMenuToDelete(null);
-
-  } catch (error) {
-    NotificationService.error(error.message, {
-    title: 'Error eliminando el menú',
-  });
-  } finally {
-    setLoading(false);
-  }
-}; //cambio
-  
 
   return (
-    <Container maw="450"  miw="xll" pos="relative">
+    <Container maw="450" miw="xll" pos="relative">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Menús de {businessName}
       </Title>
-       <Button 
+      <Button
         bg='custom.5'
         mb="xl"
         variant="outline"
         fullWidth
-        leftSection={<IconFilePlus size={18} />}ta="center" fz="xs" component="a" href={`/${business_slug}/menus/create`}>Crear nuevo menu</Button>
-      
+        leftSection={<IconFilePlus size={18} />} ta="center" fz="xs" component="a" href={`/${business_slug}/menus/create`}>Crear nuevo menu</Button>
+
 
       <Stack gap="md">
         {menus.map((menu) => (
@@ -96,13 +95,14 @@ export default function MenusList({ businessSlug }) {
               </Text>
             </Box>
 
-           <Card.Section bg="custom.5">
-            <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
-              <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/`}><IconEye /><br/>Ver</UnstyledButton>
-              <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/update`}><IconEdit /><br/>Editar</UnstyledButton>
-              <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br/>Eliminar</UnstyledButton>
-            </Group>
-          </Card.Section>
+            <Card.Section bg="custom.5">
+              <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
+                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/`}><IconEye /><br />Ver</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" href={`/${menu.slug}/categories`}><IconSitemap /><br />Categorías</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/update`}><IconEdit /><br />Editar</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br />Eliminar</UnstyledButton>
+              </Group>
+            </Card.Section>
           </Card>
         ))}
       </Stack>

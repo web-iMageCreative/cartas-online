@@ -6,63 +6,71 @@ import { NotificationService } from "../../shared/NotificationService";
 
 export default function CategoriesUpdate() {
   const { category_id } = useParams();
-
   const [initialValues, setInitialValues] = useState(null);
   const [parentCategories, setParentCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategoryAndParents = async () => {
+    const fetchCategory = async () => {
       setLoading(true);
 
-      try {
-        // 1. Obtener la categoría actual por su ID
-        const category = await CategoriesService.getCategoryById(category_id);
-        setInitialValues(category);
+      await CategoriesService.getCategoryById(category_id)
+        .then((data) => setInitialValues(data))
+        .catch((error) => {
+          NotificationService.error(
+            error.message,
+            { title: "Error cargando categoria" }
+          )
+        })
+        .finally(() => setLoading(false));
+    }
 
-        // 2. Cargar las categorías hermanas/padres del mismo menú
-        if (category && category.menu_id) {
-          const categoriesData = await CategoriesService.getCategoriesByMenuId(category.menu_id);
-          const categoriesList = Array.isArray(categoriesData) ? categoriesData : [categoriesData];
+    fetchCategory();
+  }, [category_id]);
 
+  useEffect(() => {
+    const fetchParents = async () => {
+      setLoading(true);
+
+      await CategoriesService.getCategoriesByMenuId(initialValues.menu_id)
+        .then((data) => {
+          const categoriesList = Array.isArray(data) ? data : [data];
           const parents = categoriesList.filter(
             (cat) => String(cat.id) !== String(category_id)
           );
+
           setParentCategories(parents);
-        }
-
-      } catch (error) {
-        // Se pasa error.message como string para evitar el crash de React
-        NotificationService.error(
-          error.message || "Error al cargar la categoría",
-          { title: "Error" }
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (category_id) {
-      fetchCategoryAndParents();
+        })
+        .catch((error) => {
+          NotificationService.error(
+            error.message,
+            { title: "Error cargando categorias Padre" }
+          )
+        })
+        .finally(() => setLoading(false))
     }
-  }, [category_id]);
+
+    if (initialValues) {
+      fetchParents();
+    }
+  }, [initialValues]);
 
   const handleSubmit = async (values) => {
     setLoading(true);
 
-    try {
-      const message = await CategoriesService.updateCategory(values);
-      NotificationService.success(message, { title: "Categoría editada" });
-      navigate("/dashboard");
-    } catch (error) {
-      NotificationService.error(
-        error.message || "Error al editar categoría",
-        { title: "Error al editar" }
-      );
-    } finally {
-      setLoading(false);
-    }
+    await CategoriesService.updateCategory(values)
+      .then((data) => {
+        NotificationService.success(data, { title: "Categoría editada" });
+        navigate("/dashboard");
+      })
+      .catch ((error) => {
+        NotificationService.error(
+          error.message || "Error al editar categoría",
+          { title: "Error al editar" }
+        );
+      })
+      .finally (() => setLoading(false));
   };
 
   const handleCancel = () => {
@@ -75,7 +83,7 @@ export default function CategoriesUpdate() {
 
   return (
     <>
-      {initialValues && (
+      {initialValues && parentCategories && (
         <CategoriesForm
           initialValues={initialValues}
           onSubmit={handleSubmit}

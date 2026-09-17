@@ -12,6 +12,23 @@ if ($id) {
     $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ?');
     $stmt->execute([$id]);
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $ordered_categories = [];
 
-    Response::success($categories, 'Categoría obtenida correctamente');
+    foreach ($categories as $category) {
+        if ( ! $category['parent'] ) {
+            // $ordered_categories[] = $category;
+            $childs = [];
+
+            foreach($categories as $child) {
+                if ($child['parent'] == $category['id']) {
+                    $childs[] = $child;
+                }
+            }
+
+            $category['subcategories'] = $childs;
+            $ordered_categories[] = $category;
+        }
+    }
+
+    Response::success($ordered_categories, 'Categoría obtenida correctamente');
 }

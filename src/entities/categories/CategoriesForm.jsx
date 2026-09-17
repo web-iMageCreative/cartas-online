@@ -17,7 +17,6 @@ const defaultCategoryValues = {
   description: '',
   menu_id: '',
   parent: null,
-  is_active: '',
 };
 
 export default function CategoriesForm({
@@ -29,7 +28,6 @@ export default function CategoriesForm({
   submitLabel,
   parentCategories = [],
 }) {
-    
   const formattedInitialValues = {
     ...defaultCategoryValues,
     ...initialValues,
@@ -45,7 +43,6 @@ export default function CategoriesForm({
   });
 
   const handleSubmit = (values) => {
-
     onSubmit(values);
   };
 

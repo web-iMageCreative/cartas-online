@@ -139,4 +139,25 @@ export default class ItemsService {
 
     return result.data;
   }
+
+
+  static async getCategories(menuSlug) {
+    if (!menuSlug) return [];
+
+    const response = await fetch(`${API_URL}/items/get-categories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ menu_slug: menuSlug })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Error al obtener categorías');
+    }
+
+    return result.data;
+  }
 }

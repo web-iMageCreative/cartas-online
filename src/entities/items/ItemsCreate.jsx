@@ -57,6 +57,7 @@ export default function ItemsCreate() {
 
     return (
         <ItemsForm
+          menuSlug={menu_slug}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           isLoading={loading}

@@ -14,15 +14,16 @@ import {
   FileInput,
   Box,
   Overlay,
-  Checkbox
+  Checkbox,
+  Select
 } from '@mantine/core';
 
 const defaultValues = {
   id: undefined,
   name: undefined,
   description: undefined,
-  image: undefined, 
-  price: undefined,       
+  image: undefined,
+  price: undefined,
   menu_id: undefined,
   category_id: undefined,
   allergens: []
@@ -35,18 +36,53 @@ export default function ItemsForm({
   onCancel,
   isLoading = false,
   submitLabel,
+  menuSlug
 }) {
   const [allergens, setAllergens] = useState(null);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   useEffect(() => {
     const fetchAllergens = async () => {
       await ItemsService.getAllergens()
-        .then((data) => {setAllergens(data)})
+        .then((data) => { setAllergens(data) })
         .catch((error) => console.log(error))
     }
 
+    const fetchCategories = async () => {
+      try {
+        const categories = await ItemsService.getCategories(menuSlug);
+
+        // Separar padres e hijas según la columna parent
+        const parents = categories.filter(c => c.parent === null || c.parent === undefined);
+        const children = categories.filter(c => c.parent !== null && c.parent !== undefined);
+
+        // Agrupar por padre con sub-ítems
+        const formattedData = parents.map((parent) => {
+          const subCategories = children.filter((child) => String(child.parent) === String(parent.id));
+
+          return {
+            group: parent.name, // Nombre de la categoría padre como encabezado de grupo
+            items: [
+              { value: String(parent.id), label: `${parent.name} (Principal)` },
+              ...subCategories.map((sub) => ({
+                value: String(sub.id),
+                label: `└ ${sub.name}`, // Muestra las subcategorías con sangría visual
+              })),
+            ],
+          };
+        });
+        console.log("Categorías formateadas para el Select:", formattedData);
+        setCategoryOptions(formattedData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchAllergens();
+    fetchCategories();
+
   }, []);
+
 
   const form = useForm({
     initialValues: mode === 'create' ? defaultValues : initialValues,
@@ -56,18 +92,18 @@ export default function ItemsForm({
     },
   });
 
-  
+
 
   const handleSubmit = (values) => {
     onSubmit(values);
   };
 
- const handleDeleteImage = (image) => {
-  if (image === 'image') {
-    form.setFieldValue('deleteImage', true);
-    form.setFieldValue('image', null);
-  }
-};
+  const handleDeleteImage = (image) => {
+    if (image === 'image') {
+      form.setFieldValue('deleteImage', true);
+      form.setFieldValue('image', null);
+    }
+  };
 
   return (
     <Container miw="450">
@@ -102,8 +138,26 @@ export default function ItemsForm({
               />
             </Stack>
           </Paper>
+          <Stack gap="md">
+            <Paper shadow="md" p="lg">
+              <Group grow align="flex-start">
+                <Select
+                  label="Categoría"
+                  placeholder="Selecciona una categoría"
+                  data={categoryOptions}
+                  searchable
+                  clearable
+                  disabled={categoryOptions.length === 0}
+                  value={form.values.category_id ? String(form.values.category_id) : null}
+                  onChange={(value) => {
+                    form.setFieldValue('category_id', value);
+                  }}
+                />
+              </Group>
+            </Paper>
+          </Stack>
 
-         
+
           {/* Fila 3: Imágenes (Archivos) */}
           <Paper p="lg" shadow="md">
             <Group grow align="flex-start">
@@ -112,13 +166,13 @@ export default function ItemsForm({
                 <Box className='form-image-box'>
                   <label className='mantine-FileInput-label'>imagen</label>
                   <Box radius="md">
-                    <Box bg={"url(" + (form.values.image instanceof File? URL.createObjectURL(form.values.image) : form.values.image) +")"}>
+                    <Box bg={"url(" + (form.values.image instanceof File ? URL.createObjectURL(form.values.image) : form.values.image) + ")"}>
                       <Button onClick={() => handleDeleteImage('image')} href="#" c="white"><IconTrash /></Button>
                       <Overlay></Overlay>
                     </Box>
                   </Box>
                 </Box>
-               ) : (
+              ) : (
                 <FileInput
                   label="imagen"
                   placeholder="Seleccionar imagen"
@@ -127,7 +181,7 @@ export default function ItemsForm({
                   clearable
                   {...form.getInputProps('image')}
                 />
-               )}              
+              )}
             </Group>
           </Paper>
 
@@ -138,18 +192,18 @@ export default function ItemsForm({
               {...form.getInputProps('allergens')}
             >
 
-              <Box mt="md" style={{columnCount: '2'}}>
+              <Box mt="md" style={{ columnCount: '2' }}>
 
-              {allergens && allergens.map((allergen) => (
-                <Checkbox mb="md"
-                key={String(allergen.id)}
-                value={String(allergen.id)}
-                label={
-                    <>
-                    <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
-                    </>
-                } />
-              ))}
+                {allergens && allergens.map((allergen) => (
+                  <Checkbox mb="md"
+                    key={String(allergen.id)}
+                    value={String(allergen.id)}
+                    label={
+                      <>
+                        <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
+                      </>
+                    } />
+                ))}
 
               </Box>
 

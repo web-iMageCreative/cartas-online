@@ -22,6 +22,7 @@ import CategoriesUpdate from './entities/categories/CategoriesUpdate';
 import ItemsCreate from './entities/items/ItemsCreate';
 import ItemsUpdate from './entities/items/ItemsUpdate';
 import ItemsList from './entities/items/ItemsList';
+import ItemsReadList from './entities/items/ItemsReadList';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
@@ -44,6 +45,7 @@ export default function AppRoutes() {
         <Route path="/:menu_slug/items/create"                     element={ <ProtectedRoute><ItemsCreate /></ProtectedRoute> } />
         <Route path="/:menu_slug/items/:item_id/update"            element={ <ProtectedRoute><ItemsUpdate /></ProtectedRoute> } />
         <Route path="/:menu_slug/items" element={ <ProtectedRoute><ItemsList /></ProtectedRoute> } />
+        <Route path="/:menu_slug/items/read" element={ <ProtectedRoute><ItemsReadList /></ProtectedRoute> } />
       </Route>
       <Route element={<PublicLayout />}>
         <Route path="/"                                            element={ <Navigate to={token ? "/dashboard" : "/login"} replace /> } />

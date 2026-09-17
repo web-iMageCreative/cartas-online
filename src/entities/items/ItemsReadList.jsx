@@ -10,7 +10,8 @@ import {
   Box, 
   Paper,
   Badge,
-  Avatar
+  Avatar,
+  Tooltip
 } from '@mantine/core';
 import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
@@ -34,8 +35,8 @@ export default function ItemsReadList() {
         if (menuData?.id) {
           const [categoriesData, itemsData] = await Promise.all([
             CategoriesService.getCategoriesByMenuId(menuData.id),
-            ItemsService.getItemsByMenu(menuData.id)
-          ]);
+            ItemsService.getPublicMenuItemsByMenu(menuData.id)
+          ]); console.log(itemsData);
 
           setCategories(Array.isArray(categoriesData) ? categoriesData : []);
           setItems(Array.isArray(itemsData) ? itemsData : []);
@@ -84,17 +85,25 @@ export default function ItemsReadList() {
   };
 
   return (
-    <Container maw={480} miw={300} pos="relative" py="md">
-      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
+    <Container maw={500} miw={300} pos="relative" py="xl">
+      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0.1, blur: 3 }} />
 
-      <Title order={3} c="white" ta="center" mb="lg">
-        {menu?.name || 'Carta'}
-      </Title>
+      {/* Título Principal Restaurante */}
+      {menu?.name && (
+        <Box mb="xl" ta="center">
+          <Title order={2} c="white" fw={700} style={{ letterSpacing: '1px', textTransform: 'uppercase' }}>
+            {menu.name}
+          </Title>
+          <Text fz="xs" c="dimmed" mt={4} style={{ letterSpacing: '2px', textTransform: 'uppercase' }}>
+            Nuestra Carta
+          </Text>
+        </Box>
+      )}
 
-      <Stack gap="xl">
+      <Stack gap="2rem">
         {rootCategories.length === 0 && items.length === 0 && !loading && (
           <Text ta="center" size="sm" c="dimmed">
-            No hay categorías ni artículos disponibles.
+            No hay platos disponibles en esta carta actualmente.
           </Text>
         )}
 
@@ -104,36 +113,36 @@ export default function ItemsReadList() {
 
           return (
             <Box key={category.id}>
-              {/* Encabezado Categoría Principal */}
-              <Box mb="xs" pb="xs" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.15)' }}>
-                <Title order={4} c="white" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {/* Categoría Principal Estilizada */}
+              <Box mb="md" pb="xs" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.2)' }}>
+                <Title order={3} c="teal.3" style={{ textTransform: 'uppercase', letterSpacing: '1px' }}>
                   {category.name}
                 </Title>
                 {category.description && (
-                  <Text fz="xs" c="dimmed">{category.description}</Text>
+                  <Text fz="xs" c="dimmed" mt={2}>{category.description}</Text>
                 )}
               </Box>
 
               {/* Ítems directos */}
               {directItems.length > 0 && (
-                <Stack gap="xs" mb="md">
+                <Stack gap="sm" mb="lg">
                   {directItems.map((item) => (
-                    <ItemCard key={item.id} item={item} />
+                    <MenuCard key={item.id} item={item} />
                   ))}
                 </Stack>
               )}
 
-              {/* Subcategorías y sus ítems */}
+              {/* Subcategorías */}
               {subcategories.length > 0 && (
-                <Stack gap="md" ml="xs" pl="sm" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.3)' }}>
+                <Stack gap="lg" ml="xs" pl="md" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.25)' }}>
                   {subcategories.map((subcategory) => {
                     const subcatItems = getSubcategoryItems(subcategory.id);
 
                     return (
                       <Box key={subcategory.id}>
                         <Box mb="xs">
-                          <Text fw={600} fz="sm" c="teal.3">
-                            ↳ {subcategory.name}
+                          <Text fw={600} fz="sm" c="cyan.2" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            {subcategory.name}
                           </Text>
                           {subcategory.description && (
                             <Text fz="xs" c="dimmed">{subcategory.description}</Text>
@@ -141,14 +150,14 @@ export default function ItemsReadList() {
                         </Box>
 
                         {subcatItems.length > 0 ? (
-                          <Stack gap="xs">
+                          <Stack gap="sm">
                             {subcatItems.map((item) => (
-                              <ItemCard key={item.id} item={item} />
+                              <MenuCard key={item.id} item={item} />
                             ))}
                           </Stack>
                         ) : (
-                          <Text fz="xs" c="dimmed" fs="italic" ml="xs">
-                            Sin artículos disponibles
+                          <Text fz="xs" c="dimmed" fs="italic">
+                            Sin opciones en esta sección
                           </Text>
                         )}
                       </Box>
@@ -164,33 +173,65 @@ export default function ItemsReadList() {
   );
 }
 
-// Componente de tarjeta exclusivo para lectura
-function ItemCard({ item }) {
+// Tarjeta de Ítem con formato tipo carta digital
+function MenuCard({ item }) {
   return (
     <Paper 
-      p="xs" 
-      radius="md" 
+      radius="lg" 
+      p="sm" 
       style={{ 
-        backgroundColor: 'rgba(10, 25, 35, 0.6)', 
-        border: '1px solid rgba(255, 255, 255, 0.08)' 
+        backgroundColor: 'rgba(15, 23, 42, 0.75)', 
+        border: '1px solid rgba(255, 255, 255, 0.07)',
+        backdropFilter: 'blur(8px)'
       }}
     >
-      <Group justify="space-between" align="center" wrap="nowrap">
-        <Group gap="xs" wrap="nowrap">
-          {item.image && (
-            <Avatar src={item.image} alt={item.name} radius="sm" size="md" />
+      <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
+        {/* Foto de la receta/plato si existe */}
+        {item.image && (
+          <Avatar 
+            src={item.image} 
+            alt={item.name} 
+            radius="md" 
+            size={64} 
+            style={{ flexShrink: 0 }}
+          />
+        )}
+
+        {/* Info principal: Nombre, Descripción e Iconos de Alérgenos */}
+        <Box style={{ flex: 1, overflow: 'hidden' }}>
+          <Group justify="space-between" align="baseline" wrap="nowrap" gap="xs">
+            <Text fw={600} size="sm" c="white" truncate>
+              {item.name}
+            </Text>
+            {/* Precio destacado */}
+            <Badge 
+              variant="filled" 
+              color="teal" 
+              size="md" 
+              radius="sm"
+              style={{ fontWeight: 700 }}
+            >
+              {item.price} €
+            </Badge>
+          </Group>
+
+          {item.description && (
+            <Text fz="xs" c="dimmed" lh="1.3" mt={4} style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+              {item.description}
+            </Text>
           )}
 
-          <Box style={{ overflow: 'hidden' }}>
-            <Group gap="xs" align="center">
-              <Text fw={600} size="sm" c="white" truncate>{item.name}</Text>
-              <Badge color="teal" variant="light" size="xs">{item.price} €</Badge>
+          {/* Listado de iconos de Alérgenos si vienen incluidos en el objeto item */}
+          {Array.isArray(item.allergens) && item.allergens.length > 0 && (
+            <Group gap={6} mt="xs">
+              {item.allergens.map((allergen) => (
+                <Tooltip key={allergen.id} label={allergen.name} withArrow position="bottom">
+                  <img src={allergen.icon} alt={allergen.name} width="16" height="16" style={{ opacity: 0.8 }} />
+                </Tooltip>
+              ))}
             </Group>
-            {item.description && (
-              <Text fz="xs" c="dimmed" truncate>{item.description}</Text>
-            )}
-          </Box>
-        </Group>
+          )}
+        </Box>
       </Group>
     </Paper>
   );

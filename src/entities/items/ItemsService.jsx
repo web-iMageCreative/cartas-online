@@ -19,6 +19,23 @@ export default class ItemsService {
 
     return result.data;
   }
+  static async getPublicMenuItemsByMenu(menuId) {
+    const response = await fetch(`${API_URL}/public-menu/get`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: menuId })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message);
+    }
+
+    return result.data;
+  }
 
   static async getItemById(id) {
     const response = await fetch(`${API_URL}/items/get`, {

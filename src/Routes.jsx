@@ -53,6 +53,7 @@ export default function AppRoutes() {
         <Route path="/register"                                    element={ <Register /> } />
         <Route path="/forgot-password"                             element={ <ForgotPassword /> } />
         <Route path="/reset-password/:hash"                        element={ <ResetPassword /> } />
+        <Route path="/:menu_slug/items/read" element={ <ItemsReadList /> } />
       </Route>
     </Routes>
   );

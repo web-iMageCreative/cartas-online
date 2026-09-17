@@ -64,6 +64,7 @@ export default function ItemsUpdate() {
     <>
       {initialValues && (
         <ItemsForm
+          menuSlug={menu_slug}
           initialValues={initialValues}
           onSubmit={handleSubmit}
           onCancel={handleCancel}

@@ -7,7 +7,6 @@ import { NotificationService } from "../../shared/NotificationService";
 export default function CategoriesUpdate() {
   const { category_id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
-  const [parentCategories, setParentCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -28,33 +27,6 @@ export default function CategoriesUpdate() {
 
     fetchCategory();
   }, [category_id]);
-
-  useEffect(() => {
-    const fetchParents = async () => {
-      setLoading(true);
-
-      await CategoriesService.getCategoriesByMenuId(initialValues.menu_id)
-        .then((data) => {
-          const categoriesList = Array.isArray(data) ? data : [data];
-          const parents = categoriesList.filter(
-            (cat) => String(cat.id) !== String(category_id)
-          );
-
-          setParentCategories(parents);
-        })
-        .catch((error) => {
-          NotificationService.error(
-            error.message,
-            { title: "Error cargando categorias Padre" }
-          )
-        })
-        .finally(() => setLoading(false))
-    }
-
-    if (initialValues) {
-      fetchParents();
-    }
-  }, [initialValues]);
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -83,14 +55,13 @@ export default function CategoriesUpdate() {
 
   return (
     <>
-      {initialValues && parentCategories && (
+      {initialValues && (
         <CategoriesForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           isLoading={loading}
           mode="update"
-          parentCategories={parentCategories}
         />
       )}
     </>

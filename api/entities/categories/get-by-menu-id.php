@@ -9,14 +9,13 @@ $id = $input['id'] ?? null;
 
 if ($id) {
     // Consulta para obtener una categoría específica por ID
-    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ?');
+    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ? ORDER BY display_order DESC');
     $stmt->execute([$id]);
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $ordered_categories = [];
 
     foreach ($categories as $category) {
         if ( ! $category['parent'] ) {
-            // $ordered_categories[] = $category;
             $childs = [];
 
             foreach($categories as $child) {

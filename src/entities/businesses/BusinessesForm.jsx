@@ -39,7 +39,8 @@ export default function BusinessesForm({
   const form = useForm({
     initialValues: mode === 'create' ? defaultValues : initialValues,
     validate: {
-      name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
+      name: (value) => { !(value === undefined) && value.trim().length === 0 ? 'El nombre es obligatorio' : null;
+      }
     },
   });
 

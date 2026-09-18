@@ -89,6 +89,7 @@ export default function ItemsForm({
     validate: {
       name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
       price: (value) => (value.trim().length === 0 ? 'El precio es obligatorio' : null),
+      category_id: (value) => (value.trim().length === 0 ? 'La categoría es obligatoria es obligatorio' : null)
     },
   });
 
@@ -154,6 +155,7 @@ export default function ItemsForm({
                   data={categoryOptions}
                   searchable
                   clearable
+                  withAsterisk
                   disabled={categoryOptions.length === 0}
                   value={form.values.category_id ? String(form.values.category_id) : null}
                   onChange={(value) => {

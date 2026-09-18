@@ -43,7 +43,7 @@ export default function BusinessPage() {
           <Card.Section pos="relative">
             <Group justify='center' align='center'>
               <Image
-                src={business.cover_image || business.cover_image.trim() ? business.cover_image : '/src/assets/imgs/business-dummy.jpg'}
+                src={business.cover_image || '/src/assets/imgs/business-dummy.jpg'}
                 height={160}
                 alt={business.name || 'Portada'}
               />

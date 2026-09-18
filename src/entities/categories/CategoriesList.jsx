@@ -27,12 +27,13 @@ import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
 
 export default function CategoriesList() {
+  const { business_slug, menu_slug, category_id} = useParams();
   const [categories, setCategories] = useState([]);
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [opened, { open, close }] = useDisclosure(false);
-  const { menu_slug } = useParams();
+  //const { menu_slug } = useParams();
 
  useEffect(() => {
   const fetchCategoriesData = async () => {
@@ -121,7 +122,7 @@ export default function CategoriesList() {
         ta="center"
         fz="xs"
         component="a"
-        href={`/menus/${menu_slug}/categories/create`}
+        href={`/${business_slug}/${menu_slug}/categorias/crear`}
       >
         Crear nueva categoría
       </Button>
@@ -150,7 +151,7 @@ export default function CategoriesList() {
                   ta="center"
                   fz="xs"
                   component="a"
-                  href={`/${menu_slug}/categories/${category.id}/update`}
+                  href={`/${business_slug}/${menu_slug}/categorias/editar/${category.id}`}
                 >
                   <IconEdit /><br />Editar
                 </UnstyledButton>
@@ -184,7 +185,7 @@ export default function CategoriesList() {
                         ta="center"
                         fz="xs"
                         component="a"
-                        href={`/${menu_slug}/categories/${subcategory.id}/update`}
+                        href={`/${business_slug}/${menu_slug}/categorias/editar/${category_id}`}
                       >
                         <IconEdit /><br />Editar
                       </UnstyledButton>

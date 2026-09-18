@@ -36,6 +36,7 @@ export default function ItemsList() {
   const [selectedId, setSelectedId] = useState(null);
   const [opened, { open, close }] = useDisclosure(false);
   const { menu_slug } = useParams();
+  const { business_slug } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,7 +128,7 @@ export default function ItemsList() {
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
 
       <Title order={3} c="white" ta="center" mb="lg">
-        Artículos {menu?.name ? `- ${menu.name}` : ''}
+        Productos {menu?.name ? `- ${menu.name}` : ''}
       </Title>
 
       <Button
@@ -139,9 +140,9 @@ export default function ItemsList() {
         ta="center"
         fz="xs"
         component="a"
-        href={`/${menu_slug}/items/create`}
+        href={`/${business_slug}/${menu_slug}/productos/crear`}
       >
-        Crear nuevo artículo
+        Crear nuevo producto
       </Button>
 
       <Stack gap="xl">
@@ -171,7 +172,7 @@ export default function ItemsList() {
               {directItems.length > 0 && (
                 <Stack gap="xs" mb="md">
                   {directItems.map((item) => (
-                    <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} />
+                    <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
                   ))}
                 </Stack>
               )}
@@ -198,7 +199,7 @@ export default function ItemsList() {
                         {subcatItems.length > 0 ? (
                           <Stack gap="xs">
                             {subcatItems.map((item) => (
-                              <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} />
+                              <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
                             ))}
                           </Stack>
                         ) : (
@@ -228,7 +229,7 @@ export default function ItemsList() {
 }
 
 // Componente reutilizable para la tarjeta de artículo
-function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
+function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug, business_slug }) {
   return (
     <Paper
       radius="xl"
@@ -242,9 +243,9 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
           )}
         </Group>
 
-        <Group gap="xs" wrap="nowrap">
+        <Group gap="xs" wrap="nowrap" justify='flex-start'>
           <Box style={{ overflow: 'hidden' }}>
-            <Group gap="xs" align="center">
+            <Group gap="xs" align="center" justify='flex-start'>
               <Text fw={600} size="sm" c="white" truncate>{item.name}</Text>
               <Badge color="teal" variant="light" size="xs">{item.price} €</Badge>
             </Group>
@@ -259,7 +260,7 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
             variant="subtle"
             color="blue"
             component="a"
-            href={`/${menu_slug}/items/${item.id}/update`}
+            href={`/${business_slug}/${menu_slug}/productos/editar/${item.id}`}
             title="Editar"
           >
             <IconEdit size={16} />
@@ -274,7 +275,7 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug }) {
           </ActionIcon>
         </Group>
         {/* Botones de orden vertical compacto */}
-          <Stack gap='md'>
+          <Stack gap='md' style={{justify: 'flex-end' }}>
             <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
               <IconArrowUp size="1rem" />
             </ActionIcon>

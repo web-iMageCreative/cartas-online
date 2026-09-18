@@ -47,10 +47,10 @@ export default function PrivateLayout() {
 
       <AppShell.Navbar p="md">
         <Stack gap="sm">
-          <Button variant="subtle" justify="flex-start" onClick={() => navigate('/dashboard')}>
+          <Button variant="subtle" justify="flex-start" onClick={() => navigate('/inicio')}>
             Dashboard
           </Button>
-          <Button variant="subtle" justify="flex-start" onClick={() => navigate('/businesses/')}>
+          <Button variant="subtle" justify="flex-start" onClick={() => navigate('/negocios/')}>
             Negocios
           </Button>
         </Stack>

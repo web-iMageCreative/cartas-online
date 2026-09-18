@@ -30,25 +30,79 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<PrivateLayout />}>
-        <Route path="/dashboard"                                   element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } />
-        <Route path="/businesses"                                  element={ <ProtectedRoute><BusinessesList /></ProtectedRoute> } />
-        <Route path="/businesses/create"                           element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } />
-        <Route path="/:business_slug"                              element={ <ProtectedRoute><BusinessPage /></ProtectedRoute>} />
-        <Route path="/:business_slug/update"                       element={ <ProtectedRoute><BusinessesUpdate /></ProtectedRoute> } />
-        <Route path="/:business_slug/menus"                        element={ <ProtectedRoute><MenusList /></ProtectedRoute> } />
-        <Route path="/:business_slug/menus/:menu_slug/"            element={ <ProtectedRoute><MenuPage /></ProtectedRoute> } />
-        <Route path="/:business_slug/menus/create"                 element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } />
-        <Route path="/:business_slug/menus/:menu_slug/update"      element={ <ProtectedRoute><MenusUpdate /></ProtectedRoute> } />
-        <Route path="/:menu_slug/categories/create"                element={ <ProtectedRoute><CategoriesCreate /></ProtectedRoute> } />
-        <Route path="/:menu_slug/categories"          element={ <ProtectedRoute><CategoriesList /></ProtectedRoute> } />
-        <Route path="/:menu_slug/categories/:category_id/update"   element={ <ProtectedRoute><CategoriesUpdate /></ProtectedRoute> } />
-        <Route path="/:menu_slug/items/create"                     element={ <ProtectedRoute><ItemsCreate /></ProtectedRoute> } />
-        <Route path="/:menu_slug/items/:item_id/update"            element={ <ProtectedRoute><ItemsUpdate /></ProtectedRoute> } />
-        <Route path="/:menu_slug/items" element={ <ProtectedRoute><ItemsList /></ProtectedRoute> } />
-        <Route path="/:menu_slug/items/read" element={ <ProtectedRoute><ItemsReadList /></ProtectedRoute> } />
+
+        <Route path="/Inicio/"
+          element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } 
+        />
+
+
+        <Route path="/negocios/"
+          element={ <ProtectedRoute><BusinessesList /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/"
+          element={ <ProtectedRoute><BusinessPage /></ProtectedRoute>} 
+        />
+
+        <Route path="/negocios/crear/"
+          element={ <ProtectedRoute><BusinessesCreate /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/editar/"
+          element={ <ProtectedRoute><BusinessesUpdate /></ProtectedRoute> } 
+        />
+
+
+        <Route path="/:business_slug/menus/"
+          element={ <ProtectedRoute><MenusList /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/:menu_slug/"
+          element={ <ProtectedRoute><MenuPage /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/menus/crear/"
+          element={ <ProtectedRoute><MenusCreate /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/:menu_slug/editar/"
+          element={ <ProtectedRoute><MenusUpdate /></ProtectedRoute> } 
+        />
+
+
+        <Route path="/:business_slug/:menu_slug/categorias/"
+          element={ <ProtectedRoute><CategoriesList /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/:menu_slug/categorias/crear/"
+          element={ <ProtectedRoute><CategoriesCreate /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/:menu_slug/categorias/editar/:category_id/"
+          element={ <ProtectedRoute><CategoriesUpdate /></ProtectedRoute> } 
+        />
+
+
+        <Route path="/:business_slug/:menu_slug/productos/"
+          element={ <ProtectedRoute><ItemsList /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/:menu_slug/productos/crear/"
+          element={ <ProtectedRoute><ItemsCreate /></ProtectedRoute> } 
+        />
+
+        <Route path="/:business_slug/:menu_slug/productos/editar/:item_id/"
+          element={ <ProtectedRoute><ItemsUpdate /></ProtectedRoute> } 
+        />
+
+        
+        <Route path="/:business_slug/carta/:menu_slug/"
+          element={ <ProtectedRoute><ItemsReadList /></ProtectedRoute> } 
+        />
+
       </Route>
       <Route element={<PublicLayout />}>
-        <Route path="/"                                            element={ <Navigate to={token ? "/dashboard" : "/login"} replace /> } />
+        <Route path="/"                                            element={ <Navigate to={token ? "/inicio" : "/login"} replace /> } />
         <Route path="/login"                                       element={ <Login /> } />
         <Route path="/register"                                    element={ <Register /> } />
         <Route path="/forgot-password"                             element={ <ForgotPassword /> } />

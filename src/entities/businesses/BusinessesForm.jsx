@@ -65,10 +65,10 @@ export default function BusinessesForm({
   const handleDeleteImage = (image) => {
     if (image === 'logo') {
       form.setFieldValue('deleteLogo', true);
-      form.setFieldValue('logo', null);
+      form.setFieldValue('logo', undefined);
     } else {
       form.setFieldValue('deleteCover', true);
-      form.setFieldValue('cover_image', null);
+      form.setFieldValue('cover_image', undefined);
     }
   }
 
@@ -133,7 +133,7 @@ export default function BusinessesForm({
                 <Box className='form-image-box'>
                   <label className='mantine-FileInput-label'>Logo</label>
                   <Box radius="md">
-                    <Box bg={"url(" + (form.values.logo instanceof File? URL.createObjectURL(form.values.logo) : form.values.logo) +")"}>
+                    <Box bg={"url(" + (form.values.logo instanceof File ? URL.createObjectURL(form.values.logo) : form.values.logo) +")"}>
                       <Button onClick={() => handleDeleteImage('logo')} href="#" c="white"><IconTrash /></Button>
                       <Overlay></Overlay>
                     </Box>

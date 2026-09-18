@@ -101,14 +101,14 @@ export default function ItemsForm({
   const handleDeleteImage = (image) => {
     if (image === 'image') {
       form.setFieldValue('deleteImage', true);
-      form.setFieldValue('image', null);
+      form.setFieldValue('image', undefined);
     }
   };
 
   return (
     <Container miw="450">
       <Title order={3} c="custom.0" ta="center" mb="lg">
-        {mode === 'create' ? 'Nuevo Artículo' : 'Editar Artículo'}
+        {mode === 'create' ? 'Nuevo Producto' : 'Editar Producto - ' + initialValues.name}
       </Title>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

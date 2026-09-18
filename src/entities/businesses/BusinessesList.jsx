@@ -61,7 +61,7 @@ export default function BusinessesList() {
         ta="center" 
         fz="xs" 
         component="a" 
-        href="/businesses/create"
+        href="/negocios/crear"
       >
         Crear nuevo negocio
       </Button>
@@ -69,16 +69,19 @@ export default function BusinessesList() {
       <Stack gap="md">
         {businesses.map((business) => (
           <Card key={business.id} shadow="sm" padding="lg" withBorder>
-            <Card.Section>
-              <Image
-                src={business.cover_image || null}
-                height={160}
-                alt={business.name || 'Portada'}
-              />
+            <Card.Section pos="relative">
+              <Group justify='center' align='center'>
+                <Image
+                  src={business.cover_image || '/src/assets/imgs/business-dummy.jpg'}
+                  height={160}
+                  alt={business.name || 'Portada'}
+                />
+                { ! business.cover_image && ( <Text style={{textTransform: 'uppercase', letterSpacing:'5px'}} c="custom.1" pos="absolute">{business.name}</Text> )}
+              </Group>
             </Card.Section>
 
             <Group justify="end" mt={-40} mb={-40}>
-              <Avatar size="xl" src={business.logo || null} />
+              {business.logo ? (<Avatar size="xl" src={business.logo} />) : (<Avatar color="custom.2" size="xl" styles={{ placeholder: { fontSize: '1rem' } }} name={business.name} />)}
             </Group>
 
             <Box mt="lg" mb="lg">
@@ -92,11 +95,11 @@ export default function BusinessesList() {
                 <Text ta="center" fz="xs" fw={400}><IconMapPin /><br />{business.address}</Text>
               </Group>
             </Box>
-
+            
             <Card.Section bg="custom.5">
               <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
                 <UnstyledButton ta="center" fz="xs" component="a" href={'/' + business.slug + '/'}><IconEye /><br/>Ver</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" href={'/' + business.slug + '/update'}><IconEdit /><br/>Editar</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" href={'/' + business.slug + '/editar'}><IconEdit /><br/>Editar</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" onClick={() => handleOpen(business.id)}><IconTrash /><br/>Eliminar</UnstyledButton>
               </Group>
             </Card.Section>          

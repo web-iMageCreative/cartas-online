@@ -34,7 +34,7 @@ export default function BusinessesUpdate() {
     await BusinessesService.updateBusiness(values)
       .then((message) => {
         NotificationService.success(message, {title: "Negocio editado"})
-        navigate("/dashboard");
+        navigate(`/negocios/`);
       })
       .catch((error) => NotificationService.error(error, {title: "Error al editar negocio"}))
       .finally(() => setLoading(false));
@@ -45,7 +45,7 @@ export default function BusinessesUpdate() {
       'Ha cancelado la creación de un nuevo negocio', 
       {title: 'Operación cancelada'}
     );
-    navigate("/dashboard"); 
+    navigate(`/negocios/`); 
   }
 
   return (

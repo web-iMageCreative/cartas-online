@@ -29,14 +29,14 @@ export default function MenusCreate() {
     await MenusServices.createMenu(payload)
       .then((data) => {
         NotificationService.success(data, {title: "Menú creado:"});
-        navigate(`/${business_slug}/menus`);
+        navigate(`/${business_slug}/`);
       })
       .catch((error) => NotificationService.error(error, {title: "Error al crear menú"}))
       .finally(() => setLoading(false));
   };
 
   const handleCancel = () => {
-    navigate(`/${business_slug}/menus`);
+    navigate(`/${business_slug}/`);
   };
 
   return (

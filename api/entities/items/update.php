@@ -9,7 +9,7 @@ $name           = $input['name'] ?? null;
 $description    = $input['description'] ?? null;
 $price          = $input['price'] ?? null;
 $category_id    = $input['category_id'] ?? null;
-$delete_image   = (bool) ($input['deleteImage'] ?? false);
+$delete_image   = filter_var($input['deleteImage'], FILTER_VALIDATE_BOOLEAN) ?? null;
 $has_image      = isset($_FILES['image']);
 $remove_image   = !$has_image && $delete_image;
 

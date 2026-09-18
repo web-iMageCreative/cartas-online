@@ -15,8 +15,8 @@ $phone        = $input['phone'] ?? null;
 $user_id      = $input['user_id'] ?? null;
 $is_active    = $input['is_active'] ?? 1;
 
-$delete_logo  = (bool) $input['deleteLogo'] ?? null;
-$delete_cover = (bool) $input['deleteCover'] ?? null;
+$delete_logo  = filter_var($input['deleteLogo'], FILTER_VALIDATE_BOOLEAN) ?? null;
+$delete_cover = filter_var($input['deleteCover'], FILTER_VALIDATE_BOOLEAN) ?? null;
 $has_logo     = isset($_FILES['logo']);
 $has_cover    = isset($_FILES['cover_image']);
 $remove_logo  = !$has_logo && $delete_logo;
@@ -105,9 +105,9 @@ $params[] = $id;
 // Inserción en la BD
 $sql = "UPDATE businesses SET " . implode(", ", $fields) . " WHERE id = ?";
 $stmt = $db->prepare($sql);
-$executed = $stmt->execute($params);
+$updated = $stmt->execute($params);
 
-if ($executed) {
+if ($updated) {
     Response::success('Negocio editado exitosamente');
 } else {
     Response::error('Error al editar en la base de datos', 500);

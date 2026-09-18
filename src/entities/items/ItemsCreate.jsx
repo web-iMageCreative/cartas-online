@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ItemsServices from "./ItemsService";
 import MenusServices from "../menus/MenusService";
+import { NotificationService } from "../../shared/NotificationService";
 
 export default function ItemsCreate() {
-
   const { menu_slug } = useParams();
+  const { business_slug } = useParams();
   const [ menuId, setMenuId ] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -39,16 +40,15 @@ export default function ItemsCreate() {
 
     console.log("Payload para crear menú:", payload);
 
-    try {
-      setLoading(true);
-      const response = await ItemsServices.createItem(payload);
-      console.log("Ítem creado:", response);
-      navigate(`/${business_slug}/items`);
-    } catch (error) {
-      console.error("Error creando menú: ", error);
-    } finally {
-      setLoading(false);
-    }
+    await ItemsServices.createItem(payload)
+      .then((message) => {
+        NotificationService.success(message, {title: 'Producto creado'});
+        navigate(`/${business_slug}/items`);
+      })
+      .catch((error) => {
+        NotificationService.error(error, {title: 'Error creando producto'})
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleCancel = () => {

@@ -22,7 +22,9 @@ foreach($items as $item) {
 }
 
 // Obtener los IDs de alérgenos asociados para cargar en el formulario de edición
-$stmtAllergens = $db->prepare('SELECT * FROM allergens_items ai JOIN allergens a ON ai.allergen_id = a.id WHERE item_id IN (' . implode(',', $items_id) . ')');
+$stmtAllergens = $db->prepare(
+    'SELECT * FROM allergens_items ai JOIN allergens a ON ai.allergen_id = a.id WHERE item_id IN (' . implode(',', $items_id) . ')'
+);
 $stmtAllergens->execute();
 $allergens= $stmtAllergens->fetchAll(PDO::FETCH_ASSOC);
 

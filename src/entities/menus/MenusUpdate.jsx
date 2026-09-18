@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function MenusUpdate() {
   const { menu_slug } = useParams();
+  const { business_slug } = useParams();
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function MenusUpdate() {
     await MenusService.updateMenu(values)
       .then((message) => {
         NotificationService.success(message, {title: "Menú editado"})
-        navigate("/dashboard");
+        navigate(`/${business_slug}/`);
       })
       .catch((error) => NotificationService.error(error, {title: "Error al editar menú"}))
       .finally(() => setLoading(false));
@@ -42,7 +43,7 @@ export default function MenusUpdate() {
       'Ha cancelado la creación de un nuevo menú', 
       {title: 'Operación cancelada'}
     );
-    navigate("/dashboard"); 
+    navigate(`/${business_slug}/`);
   }
 
   return (

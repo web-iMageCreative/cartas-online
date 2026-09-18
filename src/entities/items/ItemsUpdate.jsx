@@ -7,6 +7,7 @@ import { NotificationService } from "../../shared/NotificationService";
 export default function ItemsUpdate() {
   const { item_id } = useParams();
   const { menu_slug } = useParams();
+  const { business_slug } = useParams();
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function ItemsUpdate() {
         .then((data) => {
           data.allergens.map((d) => String(d));
           data.allergens = data.allergens.map((d) => String(d));
+          data.deleteImage = false;
           setInitialValues(data);
         })
         .catch((error) =>
@@ -41,7 +43,7 @@ export default function ItemsUpdate() {
     await ItemsService.updateItem(values)
       .then((message) => {
         NotificationService.success(message, { title: "Artículo editado" });
-        navigate(`/${menu_slug}/items/${item_id}/update`);
+        navigate(`/${business_slug}/${menu_slug}/productos`);
       })
       .catch((error) =>
         NotificationService.error(
@@ -57,7 +59,7 @@ export default function ItemsUpdate() {
       "Ha cancelado la edición del artículo",
       { title: "Operación cancelada" }
     );
-    navigate("/dashboard");
+    navigate(`/${business_slug}/${menu_slug}/productos`);
   };
 
   return (

@@ -36,7 +36,7 @@ export default function MenusForm({
     <Container miw="450" pos="relative">
       <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
-        Nuevo Menú
+        {mode === 'create' ? 'Nuevo Menú' : 'Editar Menú - ' + initialValues.name}
       </Title>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>

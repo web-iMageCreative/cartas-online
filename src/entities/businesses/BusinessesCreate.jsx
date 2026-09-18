@@ -27,14 +27,15 @@ export default function BusinessesCreate() {
     await BusinessesService.createBusiness(values)
       .then((message) => {
         NotificationService.success(message, {title: "Negocio creado"})
-        navigate("/businesses");
+        navigate("/negocios");
       })
       .catch((error) => NotificationService.error(error, {title: "Error creando negocio"}))
       .finally(() => setLoading(false));
   };
 
   const handleCancel = () => {
-    navigate("/businesses");
+    NotificationService.info('Ha salido sin guardar los cambios', {title: "Opereción cancelada"})
+    navigate("/negocios");
   };
 
   return (

@@ -91,7 +91,7 @@ export default function MenusList({ businessSlug }) {
         mb="xl"
         variant="outline"
         fullWidth
-        leftSection={<IconFilePlus size={18} />} ta="center" fz="xs" component="a" href={`/${business_slug}/menus/create`}>Crear nuevo menu</Button>
+        leftSection={<IconFilePlus size={18} />} ta="center" fz="xs" component="a" href={`/${business_slug}/menus/crear`}>Crear nuevo menu</Button>
 
 
       <Stack gap="md">
@@ -101,7 +101,7 @@ export default function MenusList({ businessSlug }) {
               <Group justify="flex-start">
                 <QRCode
                   ref={ref}
-                  value={`/${menu.slug}/items`} 
+                  value={`/${business_slug}/${menu.slug}/productos`} 
                   size="xs" 
                   color="custom.3" 
                   dotStyle="square"
@@ -118,10 +118,10 @@ export default function MenusList({ businessSlug }) {
 
             <Card.Section bg="custom.5">
               <Group justify="space-around" my="md" mx="xl">
-                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/`}><IconEye /><br />Ver</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDownloadPNG(menu.name)}><IconDownload /><br />Descargar QR</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" href={`/${menu.slug}/categories`}><IconSitemap /><br />Categorías</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/menus/${menu.slug}/update`}><IconEdit /><br />Editar</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/${menu.slug}/productos`}><IconEye /><br />Ver</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDownloadPNG(menu.name)}><IconDownload /><br />Código QR</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/${menu.slug}/categorias`}><IconSitemap /><br />Categorías</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/${menu.slug}/editar`}><IconEdit /><br />Editar</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br />Eliminar</UnstyledButton>
               </Group>
             </Card.Section>

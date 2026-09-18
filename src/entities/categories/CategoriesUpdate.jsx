@@ -5,7 +5,7 @@ import CategoriesService from "./CategoriesService";
 import { NotificationService } from "../../shared/NotificationService";
 
 export default function CategoriesUpdate() {
-  const { category_id } = useParams();
+  const { business_slug, menu_slug, category_id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

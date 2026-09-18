@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 export default function CategoriesCreate() {
   const navigate = useNavigate();
-  const { menu_slug } = useParams();
+  const { business_slug, menu_slug } = useParams();
   const [loading, setLoading] = useState(false);
   const [menu, setMenu] = useState(null); 
   

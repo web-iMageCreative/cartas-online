@@ -12,8 +12,8 @@ export default function MenusForm({
   const form = useForm({
     initialValues: mode === 'update' ? initialValues : { name: undefined, slug: undefined, description: undefined, business_id: undefined },
     validate: {
-      name: (value) => (value.length < 2 ? 'El nombre debe tener al menos 2 caracteres' : null),
-      description: (value) => (value.length < 2 ? 'la descripción es obligatoria' : null),
+      name: (value) => value === undefined || value.trim().length == 0 ? 'El nombre es obligatorio' : null,
+      // description: (value) => value === undefined || value.trim().length == 0 ? 'la descripción es obligatoria' : null,
     },
   });
 

@@ -87,9 +87,9 @@ export default function ItemsForm({
   const form = useForm({
     initialValues: mode === 'create' ? defaultValues : initialValues,
     validate: {
-      name: (value) => (value.trim().length === 0 ? 'El nombre es obligatorio' : null),
-      price: (value) => (value.trim().length === 0 ? 'El precio es obligatorio' : null),
-      category_id: (value) => (value.trim().length === 0 ? 'La categoría es obligatoria es obligatorio' : null)
+      name: (value) => value === undefined || value.trim().length === 0 ? 'El nombre es obligatorio' : null,
+      price: (value) => value === undefined || value.trim().length === 0 ? 'El precio es obligatorio' : null,
+      category_id: (value) => !value ? 'La categoría es obligatoria' : null
     },
   });
 
@@ -161,6 +161,7 @@ export default function ItemsForm({
                   onChange={(value) => {
                     form.setFieldValue('category_id', value);
                   }}
+                  {...form.getInputProps('category_id')}
                 />
               </Group>
             </Paper>

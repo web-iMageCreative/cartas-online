@@ -92,9 +92,15 @@ export default function ItemsForm({
     },
   });
 
-
+  const handlePriceChange = (e) => {
+    const raw = e.target.value;
+    const formatted = raw.replace(/\./g, ',');
+    form.setFieldValue('price', formatted);
+    return formatted;
+  }
 
   const handleSubmit = (values) => {
+    values.price = values.price.replace(/,/g, '.')
     onSubmit(values);
   };
 
@@ -135,6 +141,7 @@ export default function ItemsForm({
                 placeholder="Ej: 10.99"
                 withAsterisk
                 {...form.getInputProps('price')}
+                onChange={handlePriceChange}
               />
             </Stack>
           </Paper>

@@ -95,11 +95,6 @@ export default function AppRoutes() {
           element={ <ProtectedRoute><ItemsUpdate /></ProtectedRoute> } 
         />
 
-        
-        <Route path="/:business_slug/carta/:menu_slug/"
-          element={ <ProtectedRoute><ItemsReadList /></ProtectedRoute> } 
-        />
-
       </Route>
       <Route element={<PublicLayout />}>
         <Route path="/"                                            element={ <Navigate to={token ? "/inicio" : "/login"} replace /> } />
@@ -107,7 +102,9 @@ export default function AppRoutes() {
         <Route path="/register"                                    element={ <Register /> } />
         <Route path="/forgot-password"                             element={ <ForgotPassword /> } />
         <Route path="/reset-password/:hash"                        element={ <ResetPassword /> } />
-        <Route path="/:menu_slug/items/read" element={ <ItemsReadList /> } />
+        <Route path="/:business_slug/carta/:menu_slug/"
+          element={ <ItemsReadList /> } 
+        />
       </Route>
     </Routes>
   );

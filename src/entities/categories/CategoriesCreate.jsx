@@ -33,7 +33,7 @@ export default function CategoriesCreate() {
       await CategoriesService.createCategories(values)
       .then((response) => {
         NotificationService.success(response, {title: "Categoría creada"});
-        navigate("/dashboard");
+        navigate(`/${business_slug}/${menu_slug}/categorias`);
       })
       .catch((error) => {
         NotificationService.error(error, {title: "Error"});
@@ -45,7 +45,7 @@ export default function CategoriesCreate() {
 
   const handleCancel = () => {
     NotificationService.info("Operación cancelada por el usuario", {title: "Operación cancelada"});
-    navigate("/dashboard");
+    navigate(`/${business_slug}/${menu_slug}/categorias`);
   };
 
   return (

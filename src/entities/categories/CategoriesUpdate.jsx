@@ -34,7 +34,7 @@ export default function CategoriesUpdate() {
     await CategoriesService.updateCategory(values)
       .then((data) => {
         NotificationService.success(data, { title: "Categoría editada" });
-        navigate("/dashboard");
+        navigate(`/${business_slug}/${menu_slug}/categorias`);
       })
       .catch ((error) => {
         NotificationService.error(
@@ -50,7 +50,7 @@ export default function CategoriesUpdate() {
       "Ha cancelado la edición de la categoría",
       { title: "Operación cancelada" }
     );
-    navigate("/dashboard");
+    navigate(`/${business_slug}/${menu_slug}/categorias`);
   };
 
   return (

@@ -43,7 +43,7 @@ export default function ItemsCreate() {
     await ItemsServices.createItem(payload)
       .then((message) => {
         NotificationService.success(message, {title: 'Producto creado'});
-        navigate(`/${business_slug}/items`);
+        navigate(`/${business_slug}/${menu_slug}/productos`);
       })
       .catch((error) => {
         NotificationService.error(error, {title: 'Error creando producto'})
@@ -52,7 +52,7 @@ export default function ItemsCreate() {
   };
 
   const handleCancel = () => {
-    navigate(`/${menu_slug}/menus`);
+    navigate(`/${business_slug}/${menu_slug}/productos`);
   };
 
     return (

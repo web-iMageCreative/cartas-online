@@ -11,7 +11,8 @@ import {
   Paper,
   Badge,
   Avatar,
-  Tooltip
+  Tooltip,
+  Accordion
 } from '@mantine/core';
 import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
@@ -36,7 +37,8 @@ export default function ItemsReadList() {
           const [categoriesData, itemsData] = await Promise.all([
             CategoriesService.getCategoriesByMenuId(menuData.id),
             ItemsService.getPublicMenuItemsByMenu(menuData.id)
-          ]); console.log(itemsData);
+          ]);
+          console.log(itemsData);
 
           setCategories(Array.isArray(categoriesData) ? categoriesData : []);
           setItems(Array.isArray(itemsData) ? itemsData : []);
@@ -58,7 +60,7 @@ export default function ItemsReadList() {
   }, [menu_slug]);
 
   const rootCategories = categories.filter(
-    (cat) => !cat.parent_id || Number(cat.parent_id) === 0
+    (cat) => !cat.parent_id || cat.parent_id === 0 || String(cat.parent_id) === '0' || String(cat.parent_id) === 'null'
   );
 
   const getSubcategories = (category) => {
@@ -77,12 +79,87 @@ export default function ItemsReadList() {
   };
 
   const getSubcategoryItems = (subcatId) => {
-    return items.filter(
-      (item) =>
-        String(item.category_id) === String(subcatId) ||
-        String(item.subcategory_id) === String(subcatId)
+  return items.filter((item) => {
+    const matchSubcat = String(item.subcategory_id) === String(subcatId);
+    const matchCat = String(item.category_id) === String(subcatId);
+    return matchSubcat || matchCat;
+  });
+};
+
+  // Mapeo de categorías principales en formato <Accordion.Item>
+  const accordionItems = rootCategories.map((category) => {
+    const directItems = getDirectCategoryItems(category.id);
+    const subcategories = getSubcategories(category);
+
+    return (
+      <Accordion.Item key={category.id} value={String(category.id)}>
+        <Accordion.Control>
+          <Box>
+            <Text fw={700} size="md" c="teal.3" style={{ textTransform: 'uppercase', letterSpacing: '1px' }}>
+              {category.name}
+            </Text>
+            {category.description && (
+              <Text fz="xs" c="dimmed" mt={2}>{category.description}</Text>
+            )}
+          </Box>
+        </Accordion.Control>
+
+        <Accordion.Panel>
+          <Stack gap="md" pt="xs">
+            {/* Ítems directos de la categoría */}
+            {directItems.length > 0 && (
+              <Stack gap="sm">
+                {directItems.map((item) => (
+                  <MenuCard key={item.id} item={item} />
+                ))}
+              </Stack>
+            )}
+
+            {/* Subcategorías dentro del panel */}
+            {subcategories.length > 0 && (
+              <Stack gap="lg" ml="xs" pl="md" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.25)' }}>
+                {subcategories.map((subcategory) => {
+                  const subcatItems = getSubcategoryItems(subcategory.id);
+
+                  return (
+                    <Box key={subcategory.id}>
+                      <Box mb="xs">
+                        <Text fw={600} fz="sm" c="cyan.2" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          {subcategory.name}
+                        </Text>
+                        {subcategory.description && (
+                          <Text fz="xs" c="dimmed">{subcategory.description}</Text>
+                        )}
+                      </Box>
+
+                      {subcatItems.length > 0 ? (
+                        <Stack gap="sm">
+                          {subcatItems.map((item) => (
+                            <MenuCard key={item.id} item={item} />
+                          ))}
+                        </Stack>
+                      ) : (
+                        <Text fz="xs" c="dimmed" fs="italic">
+                          Sin opciones en esta sección
+                        </Text>
+                      )}
+                    </Box>
+                  );
+                })}
+              </Stack>
+            )}
+
+            {/* Mensaje si la categoría no tiene elementos */}
+            {directItems.length === 0 && subcategories.length === 0 && (
+              <Text fz="xs" c="dimmed" fs="italic" ta="center">
+                Sin platos asignados a esta categoría.
+              </Text>
+            )}
+          </Stack>
+        </Accordion.Panel>
+      </Accordion.Item>
     );
-  };
+  });
 
   return (
     <Container maw={500} miw={300} pos="relative" py="xl">
@@ -100,81 +177,50 @@ export default function ItemsReadList() {
         </Box>
       )}
 
-      <Stack gap="2rem">
-        {rootCategories.length === 0 && items.length === 0 && !loading && (
-          <Text ta="center" size="sm" c="dimmed">
-            No hay platos disponibles en esta carta actualmente.
-          </Text>
-        )}
-
-        {rootCategories.map((category) => {
-          const directItems = getDirectCategoryItems(category.id);
-          const subcategories = getSubcategories(category);
-
-          return (
-            <Box key={category.id}>
-              {/* Categoría Principal Estilizada */}
-              <Box mb="md" pb="xs" style={{ borderBottom: '2px solid rgba(255, 255, 255, 0.2)' }}>
-                <Title order={3} c="teal.3" style={{ textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  {category.name}
-                </Title>
-                {category.description && (
-                  <Text fz="xs" c="dimmed" mt={2}>{category.description}</Text>
-                )}
-              </Box>
-
-              {/* Ítems directos */}
-              {directItems.length > 0 && (
-                <Stack gap="sm" mb="lg">
-                  {directItems.map((item) => (
-                    <MenuCard key={item.id} item={item} />
-                  ))}
-                </Stack>
-              )}
-
-              {/* Subcategorías */}
-              {subcategories.length > 0 && (
-                <Stack gap="lg" ml="xs" pl="md" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.25)' }}>
-                  {subcategories.map((subcategory) => {
-                    const subcatItems = getSubcategoryItems(subcategory.id);
-
-                    return (
-                      <Box key={subcategory.id}>
-                        <Box mb="xs">
-                          <Text fw={600} fz="sm" c="cyan.2" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            {subcategory.name}
-                          </Text>
-                          {subcategory.description && (
-                            <Text fz="xs" c="dimmed">{subcategory.description}</Text>
-                          )}
-                        </Box>
-
-                        {subcatItems.length > 0 ? (
-                          <Stack gap="sm">
-                            {subcatItems.map((item) => (
-                              <MenuCard key={item.id} item={item} />
-                            ))}
-                          </Stack>
-                        ) : (
-                          <Text fz="xs" c="dimmed" fs="italic">
-                            Sin opciones en esta sección
-                          </Text>
-                        )}
-                      </Box>
-                    );
-                  })}
-                </Stack>
-              )}
-            </Box>
-          );
-        })}
-      </Stack>
+      {rootCategories.length === 0 && items.length === 0 && !loading ? (
+        <Text ta="center" size="sm" c="dimmed">
+          No hay platos disponibles en esta carta actualmente.
+        </Text>
+      ) : (
+        /* Acordeón Mantine sin fondo gris y plegado automático */
+        <Accordion 
+          type="single" 
+          order={3} 
+          variant="separated" 
+          radius="md"
+          styles={{
+            item: {
+              backgroundColor: 'transparent',
+              border: '1px solid var(--mantine-color-custom-1)',
+            },
+            control: {
+              backgroundColor: 'transparent',
+            },
+            panel: {
+              backgroundColor: 'transparent',
+            },
+            chevron: {
+              color: 'white',
+            }
+          }}
+        >
+          {accordionItems}
+        </Accordion>
+      )}
     </Container>
   );
 }
 
 // Tarjeta de Ítem con formato tipo carta digital
 function MenuCard({ item }) {
+  const getImageSource = (img) => {
+    if (!img) return null;
+    if (img instanceof File) return URL.createObjectURL(img);
+    return img;
+  };
+
+  const imageSrc = getImageSource(item.image);
+
   return (
     <Paper 
       radius="lg" 
@@ -186,10 +232,10 @@ function MenuCard({ item }) {
       }}
     >
       <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
-        {/* Foto de la receta/plato si existe */}
-        {item.image && (
+        {/* Foto de la receta/plato */}
+        {imageSrc && (
           <Avatar 
-            src={item.image} 
+            src={imageSrc} 
             alt={item.name} 
             radius="md" 
             size={64} 
@@ -216,16 +262,27 @@ function MenuCard({ item }) {
           </Group>
 
           {item.description && (
-            <Text fz="xs" c="dimmed" lh="1.3" mt={4} style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            <Text 
+              fz="xs" 
+              c="dimmed" 
+              lh="1.3" 
+              mt={4} 
+              style={{ 
+                display: '-webkit-box', 
+                WebkitLineClamp: 2, 
+                WebkitBoxOrient: 'vertical', 
+                overflow: 'hidden' 
+              }}
+            >
               {item.description}
             </Text>
           )}
 
-          {/* Listado de iconos de Alérgenos si vienen incluidos en el objeto item */}
+          {/* Listado de alérgenos */}
           {Array.isArray(item.allergens) && item.allergens.length > 0 && (
             <Group gap={6} mt="xs">
               {item.allergens.map((allergen) => (
-                <Tooltip key={allergen.id} label={allergen.name} withArrow position="bottom">
+                <Tooltip key={allergen.id || allergen.name} label={allergen.name} withArrow position="bottom">
                   <img src={allergen.icon} alt={allergen.name} width="16" height="16" style={{ opacity: 0.8 }} />
                 </Tooltip>
               ))}

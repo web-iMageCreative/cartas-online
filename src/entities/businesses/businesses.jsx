@@ -40,16 +40,25 @@ export default function BusinessPage() {
       <Title order={2} c="custom.0" ta="center" mb="lg">{business.name} </Title>
       <Stack gap="md" mb="xl">
         <Card key={business.id} shadow="sm" padding="lg" withBorder>
-          <Card.Section>
-            <Image
-              src={business.cover_image}
-              height={160}
-              alt="Norway"
-            />
+          <Card.Section pos="relative">
+            <Group justify='center' align='center'>
+              <Image
+                src={business.cover_image && business.cover_image.trim() ? business.cover_image : '/src/assets/imgs/business-dummy.jpg'}
+                height={160}
+                alt={business.name || 'Portada'}
+              />
+              {!(business.cover_image && business.cover_image.trim()) && (
+              <Text style={{textTransform: 'uppercase', letterSpacing:'5px'}} c="custom.1" pos="absolute">{business.name}</Text>
+              )}
+            </Group>
           </Card.Section>
 
           <Group justify='end' mt={-40} mb={-40}>
-            <Avatar size="xl" src={business.logo} />
+            {business.logo && business.logo.trim() ? (
+              <Avatar size="xl" src={business.logo} />
+            ) : (
+              <Avatar color="custom.2" size="xl" styles={{ placeholder: { fontSize: '1rem' } }} name={business.name} />
+            )}
           </Group>
 
           <Box mt="lg" mb="lg">

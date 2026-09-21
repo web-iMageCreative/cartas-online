@@ -18,6 +18,12 @@ foreach ($items as &$item) {
     $stmtAllergens->execute([ $item['id'] ]);
     $item['allergens'] = $stmtAllergens->fetchAll(PDO::FETCH_COLUMN);
 }
-unset($item);
+
+foreach ($items as &$item) {
+    $stmtVariations = $db->prepare('SELECT * FROM item_variations WHERE item_id = ?');
+    $stmtVariations->execute([ $item['id'] ]);
+    $item['variations'] = $stmtVariations->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 Response::success($items, 'Lista de platos obtenida correctamente');

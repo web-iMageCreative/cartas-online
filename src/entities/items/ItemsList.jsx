@@ -36,8 +36,7 @@ export default function ItemsList() {
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [opened, { open, close }] = useDisclosure(false);
-  const { menu_slug } = useParams();
-  const { business_slug } = useParams();
+  const { menu_slug, business_slug } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -229,33 +228,59 @@ export default function ItemsList() {
   );
 }
 
-// Componente reutilizable para la tarjeta de artículo
+// Componente reutilizable para la tarjeta de artículo condicionado por variaciones
 function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug, business_slug }) {
+  
+const hasVariations = Array.isArray(item.variations) && item.variations.length > 0;
+
   return (
-    <Paper
-      radius="xl"
-      pr="xs"
-      style={{overflow: 'hidden'}}
-    >
+    <Paper radius="xl" pr="xs" style={{ overflow: 'hidden' }}>
       <Group justify="space-between" gap={15} align="center" wrap="nowrap">
+        {/* Imagen / Avatar */}
         <Group gap="xs" wrap="nowrap">
           {item.image && (
             <Avatar src={item.image} alt={item.name} radius="0" size="xl" />
           )}
         </Group>
 
-        <Group gap="xs" wrap="nowrap" justify='flex-start'>
-          <Box style={{ overflow: 'hidden' }}>
-            <Group gap="xs" align="center" justify='flex-start'>
+        {/* Información del Item */}
+        <Group gap="xs" wrap="nowrap" justify="flex-start" style={{ flex: 1, overflow: 'hidden' }}>
+          <Box style={{ width: '100%', overflow: 'hidden' }}>
+            <Group gap="xs" align="center" justify="flex-start">
               <Text fw={600} size="sm" c="white" truncate>{item.name}</Text>
-              <Badge color="teal" variant="light" size="xs">{item.price} €</Badge>
+              
+              {/* Si NO tiene variaciones, muestra el precio estándar */}
+              {!hasVariations && item.price !== undefined && item.price !== null && (
+                <Badge color="teal" variant="light" size="xs">{item.price} €</Badge>
+              )}
             </Group>
+
             {item.description && (
-              <Text fz="xs" c="dimmed" truncate>{item.description}</Text>
+              <Text fz="xs" c="dimmed" truncate>
+                {item.description}
+              </Text>
+            )}
+
+            {/* CONDICIONAL: Si tiene variaciones, se renderizan aquí abajo */}
+            {hasVariations && (
+              <Group gap={4} mt={4} wrap="wrap">
+                {item.variations.map((variant, index) => (
+                  <Badge 
+                    key={variant.id || index} 
+                    color="teal.3" 
+                    variant="outline" 
+                    size="xs"
+                    style={{ textTransform: 'none' }}
+                  >
+                    {variant.name}: {variant.price} €
+                  </Badge>
+                ))}
+              </Group>
             )}
           </Box>
         </Group>
 
+        {/* Acciones Editar y Eliminar */}
         <Group gap={6} wrap="nowrap" justify="flex-end">
           <ActionIcon
             variant="subtle"
@@ -275,15 +300,16 @@ function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug, business_slu
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
-        {/* Botones de orden vertical compacto */}
-          <Stack gap='md' style={{justify: 'flex-end' }}>
-            <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
-              <IconArrowUp size="1rem" />
-            </ActionIcon>
-            <ActionIcon size="sm" variant="light" onClick={() => changeOrder(-1, item.id)}>
-              <IconArrowDown size="1rem" />
-            </ActionIcon>
-          </Stack>
+
+        {/* Botones de orden vertical */}
+        <Stack gap="xs" style={{ justifyContent: 'center' }}>
+          <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
+            <IconArrowUp size="1rem" />
+          </ActionIcon>
+          <ActionIcon size="sm" variant="light" onClick={() => changeOrder(-1, item.id)}>
+            <IconArrowDown size="1rem" />
+          </ActionIcon>
+        </Stack>
       </Group>
     </Paper>
   );

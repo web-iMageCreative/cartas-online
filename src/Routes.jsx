@@ -23,6 +23,7 @@ import ItemsCreate from './entities/items/ItemsCreate';
 import ItemsUpdate from './entities/items/ItemsUpdate';
 import ItemsList from './entities/items/ItemsList';
 import ItemsReadList from './entities/items/ItemsReadList';
+import MenuReadList from './entities/menus/MenuReadList';
 
 export default function AppRoutes() {
   const token = AuthService.getToken();
@@ -105,6 +106,9 @@ export default function AppRoutes() {
         <Route path="/:business_slug/carta/:menu_slug/"
           element={ <ItemsReadList /> } 
         />
+        <Route path="/:business_slug/carta/"
+          element={ <MenuReadList /> }
+          />
       </Route>
     </Routes>
   );

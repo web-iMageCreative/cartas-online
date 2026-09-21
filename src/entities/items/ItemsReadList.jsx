@@ -18,13 +18,16 @@ import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
+import { ReturnButton } from '../../shared/return-button';
 
 export default function ItemsReadList() {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { menu_slug } = useParams();
+  
+  // Extraemos ambas variables de los parámetros de la URL
+  const { business_slug, menu_slug } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +41,6 @@ export default function ItemsReadList() {
             CategoriesService.getCategoriesByMenuId(menuData.id),
             ItemsService.getPublicMenuItemsByMenu(menuData.id)
           ]);
-          console.log(itemsData);
 
           setCategories(Array.isArray(categoriesData) ? categoriesData : []);
           setItems(Array.isArray(itemsData) ? itemsData : []);
@@ -79,90 +81,16 @@ export default function ItemsReadList() {
   };
 
   const getSubcategoryItems = (subcatId) => {
-  return items.filter((item) => {
-    const matchSubcat = String(item.subcategory_id) === String(subcatId);
-    const matchCat = String(item.category_id) === String(subcatId);
-    return matchSubcat || matchCat;
-  });
-};
-
-  // Mapeo de categorías principales en formato <Accordion.Item>
-  const accordionItems = rootCategories.map((category) => {
-    const directItems = getDirectCategoryItems(category.id);
-    const subcategories = getSubcategories(category);
-
-    return (
-      <Accordion.Item key={category.id} value={String(category.id)}>
-        <Accordion.Control>
-          <Box>
-            <Text fw={700} size="md" c="teal.3" style={{ textTransform: 'uppercase', letterSpacing: '1px' }}>
-              {category.name}
-            </Text>
-            {category.description && (
-              <Text fz="xs" c="dimmed" mt={2}>{category.description}</Text>
-            )}
-          </Box>
-        </Accordion.Control>
-
-        <Accordion.Panel>
-          <Stack gap="md" pt="xs">
-            {/* Ítems directos de la categoría */}
-            {directItems.length > 0 && (
-              <Stack gap="sm">
-                {directItems.map((item) => (
-                  <MenuCard key={item.id} item={item} />
-                ))}
-              </Stack>
-            )}
-
-            {/* Subcategorías dentro del panel */}
-            {subcategories.length > 0 && (
-              <Stack gap="lg" ml="xs" pl="md" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.25)' }}>
-                {subcategories.map((subcategory) => {
-                  const subcatItems = getSubcategoryItems(subcategory.id);
-
-                  return (
-                    <Box key={subcategory.id}>
-                      <Box mb="xs">
-                        <Text fw={600} fz="sm" c="cyan.2" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                          {subcategory.name}
-                        </Text>
-                        {subcategory.description && (
-                          <Text fz="xs" c="dimmed">{subcategory.description}</Text>
-                        )}
-                      </Box>
-
-                      {subcatItems.length > 0 ? (
-                        <Stack gap="sm">
-                          {subcatItems.map((item) => (
-                            <MenuCard key={item.id} item={item} />
-                          ))}
-                        </Stack>
-                      ) : (
-                        <Text fz="xs" c="dimmed" fs="italic">
-                          Sin opciones en esta sección
-                        </Text>
-                      )}
-                    </Box>
-                  );
-                })}
-              </Stack>
-            )}
-
-            {/* Mensaje si la categoría no tiene elementos */}
-            {directItems.length === 0 && subcategories.length === 0 && (
-              <Text fz="xs" c="dimmed" fs="italic" ta="center">
-                Sin platos asignados a esta categoría.
-              </Text>
-            )}
-          </Stack>
-        </Accordion.Panel>
-      </Accordion.Item>
-    );
-  });
+    return items.filter((item) => {
+      const matchSubcat = String(item.subcategory_id) === String(subcatId);
+      const matchCat = String(item.category_id) === String(subcatId);
+      return matchSubcat || matchCat;
+    });
+  };
 
   return (
     <Container maw={500} miw={300} pos="relative" py="xl">
+      <ReturnButton url={`/${business_slug}/carta/`} /> 
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0.1, blur: 3 }} />
 
       {/* Título Principal Restaurante */}
@@ -182,7 +110,6 @@ export default function ItemsReadList() {
           No hay platos disponibles en esta carta actualmente.
         </Text>
       ) : (
-        /* Acordeón Mantine sin fondo gris y plegado automático */
         <Accordion 
           type="single" 
           order={3} 
@@ -204,22 +131,104 @@ export default function ItemsReadList() {
             }
           }}
         >
-          {accordionItems}
+          {rootCategories.map((category) => {
+            const directItems = getDirectCategoryItems(category.id);
+            const subcategories = getSubcategories(category);
+
+            return (
+              <Accordion.Item key={category.id} value={String(category.id)}>
+                <Accordion.Control>
+                  <Box>
+                    <Text fw={700} size="md" c="teal.3" style={{ textTransform: 'uppercase', letterSpacing: '1px' }}>
+                      {category.name}
+                    </Text>
+                    {category.description && (
+                      <Text fz="xs" c="dimmed" mt={2}>{category.description}</Text>
+                    )}
+                  </Box>
+                </Accordion.Control>
+
+                <Accordion.Panel>
+                  <Stack gap="md" pt="xs">
+                    {/* Ítems directos de la categoría */}
+                    {directItems.length > 0 && (
+                      <Stack gap="sm">
+                        {directItems.map((item) => (
+                          <MenuCard key={item.id} item={item} />
+                        ))}
+                      </Stack>
+                    )}
+
+                    {/* Subcategorías dentro del panel */}
+                    {subcategories.length > 0 && (
+                      <Stack gap="lg" ml="xs" pl="md" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.25)' }}>
+                        {subcategories.map((subcategory) => {
+                          const subcatItems = getSubcategoryItems(subcategory.id);
+
+                          return (
+                            <Box key={subcategory.id}>
+                              <Box mb="xs">
+                                <Text fw={600} fz="sm" c="cyan.2" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                  {subcategory.name}
+                                </Text>
+                                {subcategory.description && (
+                                  <Text fz="xs" c="dimmed">{subcategory.description}</Text>
+                                )}
+                              </Box>
+
+                              {subcatItems.length > 0 ? (
+                                <Stack gap="sm">
+                                  {subcatItems.map((item) => (
+                                    <MenuCard key={item.id} item={item} />
+                                  ))}
+                                </Stack>
+                              ) : (
+                                <Text fz="xs" c="dimmed" fs="italic">
+                                  Sin opciones en esta sección
+                                </Text>
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </Stack>
+                    )}
+
+                    {/* Mensaje si la categoría no tiene elementos */}
+                    {directItems.length === 0 && subcategories.length === 0 && (
+                      <Text fz="xs" c="dimmed" fs="italic" ta="center">
+                        Sin platos asignados a esta categoría.
+                      </Text>
+                    )}
+                  </Stack>
+                </Accordion.Panel>
+              </Accordion.Item>
+            );
+          })}
         </Accordion>
       )}
     </Container>
   );
 }
 
-// Tarjeta de Ítem con formato tipo carta digital
+// Tarjeta de Ítem optimizada
 function MenuCard({ item }) {
-  const getImageSource = (img) => {
-    if (!img) return null;
-    if (img instanceof File) return URL.createObjectURL(img);
-    return img;
-  };
+  const [imageSrc, setImageSrc] = useState(null);
 
-  const imageSrc = getImageSource(item.image);
+  useEffect(() => {
+    if (!item.image) {
+      setImageSrc(null);
+      return;
+    }
+
+    if (item.image instanceof File) {
+      const objectUrl = URL.createObjectURL(item.image);
+      setImageSrc(objectUrl);
+
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+
+    setImageSrc(item.image);
+  }, [item.image]);
 
   return (
     <Paper 
@@ -232,7 +241,6 @@ function MenuCard({ item }) {
       }}
     >
       <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
-        {/* Foto de la receta/plato */}
         {imageSrc && (
           <Avatar 
             src={imageSrc} 
@@ -243,13 +251,11 @@ function MenuCard({ item }) {
           />
         )}
 
-        {/* Info principal: Nombre, Descripción e Iconos de Alérgenos */}
         <Box style={{ flex: 1, overflow: 'hidden' }}>
           <Group justify="space-between" align="baseline" wrap="nowrap" gap="xs">
             <Text fw={600} size="sm" c="white" truncate>
               {item.name}
             </Text>
-            {/* Precio destacado */}
             <Badge 
               variant="filled" 
               color="teal" 
@@ -278,7 +284,6 @@ function MenuCard({ item }) {
             </Text>
           )}
 
-          {/* Listado de alérgenos */}
           {Array.isArray(item.allergens) && item.allergens.length > 0 && (
             <Group gap={6} mt="xs">
               {item.allergens.map((allergen) => (

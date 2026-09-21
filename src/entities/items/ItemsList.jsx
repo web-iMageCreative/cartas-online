@@ -27,6 +27,7 @@ import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
+import { ReturnButton } from '../../shared/return-button';
 
 export default function ItemsList() {
   const [categories, setCategories] = useState([]);
@@ -126,7 +127,7 @@ export default function ItemsList() {
   return (
     <Container maw={480} miw={300} pos="relative" py="md">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
-
+       <ReturnButton url={`/${business_slug}/`}/> 
       <Title order={3} c="white" ta="center" mb="lg">
         Productos {menu?.name ? `- ${menu.name}` : ''}
       </Title>

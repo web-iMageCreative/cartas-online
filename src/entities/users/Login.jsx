@@ -23,7 +23,7 @@ export default function Login() {
 
   const checkToken = () => {
     const token = AuthService.getToken();
-    if (token) navigate('/dashboard');
+    if (token) navigate('/businesses');
   };
 
   useEffect(() => checkToken(), []);

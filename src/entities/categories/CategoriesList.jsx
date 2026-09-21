@@ -25,6 +25,7 @@ import {
 import CategoriesService from './CategoriesService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
+import { ReturnButton } from '../../shared/return-button';
 
 export default function CategoriesList() {
   const { business_slug, menu_slug, category_id} = useParams();
@@ -216,12 +217,11 @@ export default function CategoriesList() {
 
   return (
     <Container maw={450} miw={300} pos="relative">
-      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
-
+    <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
+    <ReturnButton url={`/${business_slug}/`}/>
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Categorías {menu?.name ? `- ${menu.name}` : ''}
       </Title>
-
       <Button
         bg="custom.5"
         mb="xl"

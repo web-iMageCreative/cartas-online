@@ -4,6 +4,7 @@ import { Badge, Container, Group, Paper, Stack, Text, Title } from '@mantine/cor
 import MenusServices from './MenusService';
 import { NotificationService } from '../../shared/NotificationService';
 
+
 export default function MenuPage() {
   const { menu_slug } = useParams();
   const [menu, setMenu] = useState(null);
@@ -44,6 +45,7 @@ export default function MenuPage() {
     return (
       <Container size="lg" py="xl">
         <Text>No se encontró el menú.</Text>
+        
       </Container>
     );
   }

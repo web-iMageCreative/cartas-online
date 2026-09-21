@@ -21,4 +21,9 @@ $stmtAllergens = $db->prepare('SELECT allergen_id FROM allergens_items WHERE ite
 $stmtAllergens->execute([$id]);
 $item['allergens'] = $stmtAllergens->fetchAll(PDO::FETCH_COLUMN);
 
+// Obtener los IDs de alérgenos asociados para cargar en el formulario de edición
+$stmtAllergens = $db->prepare('SELECT * FROM items_variations WHERE item_id = ?');
+$stmtAllergens->execute([$id]);
+$item['variations'] = $stmtAllergens->fetchAll(PDO::FETCH_ASSOC);
+
 Response::success($item, 'Plato obtenido correctamente');

@@ -9,6 +9,7 @@ $name           = $input['name'] ?? null;
 $description    = $input['description'] ?? null;
 $price          = $input['price'] ?? null;
 $category_id    = $input['category_id'] ?? null;
+$variations     = json_decode($input['variations']) ?? null;
 $delete_image   = filter_var($input['deleteImage'], FILTER_VALIDATE_BOOLEAN) ?? null;
 $has_image      = isset($_FILES['image']);
 $remove_image   = !$has_image && $delete_image;
@@ -91,6 +92,18 @@ try {
             $insertStmt = $db->prepare("INSERT INTO allergens_items (allergen_id, item_id) VALUES (?, ?)");
             foreach ($allergens as $allergen_id) {
                 $insertStmt->execute([$allergen_id, $id]);
+            }
+        }
+    }
+
+    if (is_array($variations)) {
+        $update_variations_stmt =  $db->prepare("DELETE FROM items_variations WHERE item_id = ?");
+        $update_variations_stmt->execute([$id]);
+
+        if(!empty($variations)) {
+            $insert_variations_stmt = $db->prepare("INSERT INTO items_variations (name, price, item_id) VALUES (?, ?, ?)");
+            foreach ($variations as $variation) {
+                $insert_variations_stmt->execute([$variation->name, $variation->price, $id]);
             }
         }
     }

@@ -15,8 +15,10 @@ import {
   Box,
   Overlay,
   Checkbox,
-  Select
+  Select,
+  Fieldset
 } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 
 const defaultValues = {
   id: undefined,
@@ -26,7 +28,8 @@ const defaultValues = {
   price: undefined,
   menu_id: undefined,
   category_id: undefined,
-  allergens: []
+  allergens: [],
+  variations: []
 };
 
 export default function ItemsForm({
@@ -39,6 +42,11 @@ export default function ItemsForm({
   menuSlug
 }) {
   const [allergens, setAllergens] = useState(null);
+  const formattedInitialValues = {
+    ...defaultValues,
+    ...initialValues,
+    variations: (initialValues?.variations && initialValues?.variations.length > 0) ? initialValues.variations : []
+  };
   const [categoryOptions, setCategoryOptions] = useState([]);
 
   useEffect(() => {
@@ -48,47 +56,46 @@ export default function ItemsForm({
         .catch((error) => console.log(error))
     }
 
+    fetchAllergens();
+  }, []);
+
+  useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const categories = await ItemsService.getCategories(menuSlug);
+      await ItemsService.getCategories(menuSlug)
+        .then((categories) => {
+          // Separar padres e hijas según la columna parent
+          const parents = categories.filter(c => c.parent === null || c.parent === undefined);
+          const children = categories.filter(c => c.parent !== null && c.parent !== undefined);
 
-        // Separar padres e hijas según la columna parent
-        const parents = categories.filter(c => c.parent === null || c.parent === undefined);
-        const children = categories.filter(c => c.parent !== null && c.parent !== undefined);
+          // Agrupar por padre con sub-ítems
+          const formattedData = parents.map((parent) => {
+            const subCategories = children.filter((child) => String(child.parent) === String(parent.id));
 
-        // Agrupar por padre con sub-ítems
-        const formattedData = parents.map((parent) => {
-          const subCategories = children.filter((child) => String(child.parent) === String(parent.id));
-
-          return {
-            group: parent.name, // Nombre de la categoría padre como encabezado de grupo
-            items: [
-              { value: String(parent.id), label: `${parent.name} (Principal)` },
-              ...subCategories.map((sub) => ({
-                value: String(sub.id),
-                label: `└ ${sub.name}`, // Muestra las subcategorías con sangría visual
-              })),
-            ],
-          };
-        });
-        console.log("Categorías formateadas para el Select:", formattedData);
-        setCategoryOptions(formattedData);
-      } catch (error) {
-        console.log(error);
-      }
+            return {
+              group: parent.name, // Nombre de la categoría padre como encabezado de grupo
+              items: [
+                { value: String(parent.id), label: `${parent.name} (Principal)` },
+                ...subCategories.map((sub) => ({
+                  value: String(sub.id),
+                  label: `└ ${sub.name}`, // Muestra las subcategorías con sangría visual
+                })),
+              ],
+            };
+          });
+          console.log("Categorías formateadas para el Select:", formattedData);
+          setCategoryOptions(formattedData);
+        })
+        .catch ((error) => console.log(error));
     };
 
-    fetchAllergens();
     fetchCategories();
 
   }, []);
 
-
   const form = useForm({
-    initialValues: mode === 'create' ? defaultValues : initialValues,
+    initialValues: mode === 'create' ? defaultValues : formattedInitialValues,
     validate: {
       name: (value) => value === undefined || value.trim().length === 0 ? 'El nombre es obligatorio' : null,
-      price: (value) => value === undefined || value.trim().length === 0 ? 'El precio es obligatorio' : null,
       category_id: (value) => !value ? 'La categoría es obligatoria' : null
     },
   });
@@ -111,6 +118,16 @@ export default function ItemsForm({
       form.setFieldValue('image', undefined);
     }
   };
+
+  const addVariation = () => {
+    const newVariation = { id: Date.now(), name: '', price: '' };
+    form.setFieldValue('variations', [...(form.values.variations || []), newVariation]);
+  }
+
+  const removeVariation = (index) => {
+    const newArr = (form.values.variations || []).filter((_, i) => i !== index);
+    form.setFieldValue('variations', newArr);
+  }
 
   return (
     <Container miw="450">
@@ -137,13 +154,56 @@ export default function ItemsForm({
                 rows={4}
                 {...form.getInputProps('description')}
               />
+
               <TextInput
                 label="Precio"
                 placeholder="Ej: 10.99"
-                withAsterisk
                 {...form.getInputProps('price')}
                 onChange={handlePriceChange}
               />
+
+              <Fieldset legend="Variaciones de precios" bg="custom.4" style={{borderColor: "custom.3"}}>
+                <Button
+                  variant='subtle'
+                  my="sm"
+                  leftSection={<IconPlus />}
+                  onClick={addVariation}
+                >
+                  Añadir
+                </Button>
+
+                {form.values.variations && form.values.variations.length > 0 && (
+                  <>
+                    {form.values.variations.map((variation, idx) => (
+                      <Group key={variation.id} grow align="flex-end">
+                        {console.log(form.getInputProps(`variations.${idx}.name`))}
+                        
+                        <TextInput
+                          label="Nombre de variación"
+                          placeholder="Ej: 1/2 Ración"
+                          {...form.getInputProps(`variations.${idx}.name`)}
+                        />
+                        <Group wrap='no-wrap' align='end'>
+                          <TextInput
+                            label="Precio de la variación"
+                            placeholder="Ej: 10.99"
+                            {...form.getInputProps(`variations.${idx}.price`)}
+                            onChange={(e) => {
+                              const raw = e.target.value;
+                              const formatted = raw.replace(/\./g, ',');
+                              form.setFieldValue(`variations.${idx}.price`, formatted);
+                            }}
+                          />
+
+                          <Button variant="subtle" color="red" onClick={() => removeVariation(idx)}>
+                            <IconTrash />
+                          </Button>
+                        </Group>
+                      </Group>
+                    ))}
+                  </>
+                )}
+              </Fieldset>
             </Stack>
           </Paper>
           <Stack gap="md">
@@ -210,7 +270,10 @@ export default function ItemsForm({
                     value={String(allergen.id)}
                     label={
                       <>
-                        <Group gap="sm" align='center'><img src={allergen.icon} width="24" height="24" /> <span>{allergen.name}</span></Group>
+                        <Group gap="sm" align='center'>
+                          <img src={allergen.icon} width="24" height="24" /> 
+                          <span>{allergen.name}</span>
+                        </Group>
                       </>
                     } />
                 ))}

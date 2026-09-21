@@ -5,6 +5,7 @@ import BusinessesServices from './BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
 import MenuList from '../menus/MenusList';
 import { IconMail, IconPhone, IconMapPin } from '@tabler/icons-react';
+import { ReturnButton } from '../../shared/return-button';
 
 export default function BusinessPage() {
   const { business_slug } = useParams();
@@ -36,6 +37,7 @@ export default function BusinessPage() {
   return (
     <Container maw="450" pos="relative">
       <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
+      <ReturnButton url="/negocios"/>
 
       <Title order={2} c="custom.0" ta="center" mb="lg">{business.name} </Title>
       <Stack gap="md" mb="xl">

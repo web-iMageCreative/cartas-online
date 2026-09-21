@@ -9,7 +9,7 @@ $id = $input['id'] ?? null;
 
 if ($id) {
     // Consulta para obtener una categoría específica por ID
-    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ? ORDER BY display_order DESC');
+    $stmt = $db->prepare('SELECT * FROM categories WHERE menu_id = ? ORDER BY display_order ASC');
     $stmt->execute([$id]);
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $ordered_categories = [];

@@ -98,3 +98,45 @@
 .mantine-Checkbox-body {
   align-items: center;
 }
+
+.loop-element:first-child .order-arrow.up {
+  visibility: hidden;
+}
+
+.loop-element:last-child .order-arrow.down {
+  visibility: hidden;
+}
+
+.loop-element {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.loop-element.moving-up {
+  animation: slideUp 0.3s ease forwards;
+}
+
+.loop-element.moving-down {
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-84px);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(84px);
+    opacity: 1;
+  }
+}

@@ -220,12 +220,16 @@ export default function ItemsList() {
                   <Text fz="xs" c="dimmed">{category.description}</Text>
                 )}
 
-                {category.items.length > 0 && (
+                {category.items.length > 0 ? (
                   <Stack gap="md" mb="md">
                     {category.items.map((item) => (
                       <ItemCard key={item.id} category={category.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
                     ))}
                   </Stack>
+                ) : (
+                  <Text fz="xs" c="dimmed" fs="italic" ml="xs">
+                    Sin productos en esta categoría
+                  </Text>
                 )}
               </Box>
 
@@ -253,7 +257,7 @@ export default function ItemsList() {
                         </Stack>
                       ) : (
                         <Text fz="xs" c="dimmed" fs="italic" ml="xs">
-                          Sin artículos en esta subcategoría
+                          Sin productos en esta subcategoría
                         </Text>
                       )}
                     </Box>

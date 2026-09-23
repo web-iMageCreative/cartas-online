@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
-import { 
-  Container, 
-  Title, 
-  Stack, 
+import {
+  Container,
+  Title,
+  Stack,
   LoadingOverlay,
-  Group, 
-  Button, 
-  UnstyledButton, 
-  Text, 
-  Box, 
+  Group,
+  Button,
+  UnstyledButton,
+  Text,
+  Box,
   Modal,
   Paper,
   ActionIcon
 } from '@mantine/core';
-import { 
+import {
   IconTrash,
   IconEdit,
   IconFolderPlus,
   IconArrowUp,
-  IconArrowDown 
+  IconArrowDown
 } from '@tabler/icons-react';
 import CategoriesService from './CategoriesService';
 import MenuService from '../menus/MenusService';
@@ -28,7 +28,7 @@ import { NotificationService } from '../../shared/NotificationService';
 import { ReturnButton } from '../../shared/ReturnButton';
 
 export default function CategoriesList() {
-  const { business_slug, menu_slug, category_id} = useParams();
+  const { business_slug, menu_slug, category_id } = useParams();
   const [categories, setCategories] = useState([]);
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -42,10 +42,11 @@ export default function CategoriesList() {
 
       await MenuService.getMenuBySlug(menu_slug)
         .then((menuData) => setMenu(menuData))
-        .catch( (error) => {
+        .catch((error) => {
           console.error(error);
-          NotificationService.error(error, { title: 'Error al cargar las categorías' })})
-        .finally (() => setLoading(false));
+          NotificationService.error(error, { title: 'Error al cargar las categorías' })
+        })
+        .finally(() => setLoading(false));
     };
 
     if (menu_slug) {
@@ -58,7 +59,7 @@ export default function CategoriesList() {
       setLoading(true);
 
       await CategoriesService.getCategoriesByMenuId(menu.id)
-        .then( async (data) => {
+        .then(async (data) => {
           const categoriesWithOrder = Array.isArray(data) ? data.map((cat, index) => ({
             ...cat,
             display_order: index,
@@ -67,7 +68,7 @@ export default function CategoriesList() {
               display_order: subIndex
             })) : []
           })) : [];
-          
+
           setCategories(categoriesWithOrder);
 
           await Promise.all(
@@ -111,11 +112,10 @@ export default function CategoriesList() {
         const newIndex = direction === 1 ? currentIndex - 1 : currentIndex + 1;
         if (newIndex < 0 || newIndex >= parentCategory.subcategories.length) return;
 
+        // Animación
         const elements = document.querySelectorAll('.loop-element.subcategories');
         elements[currentIndex].classList.add(direction === 1 ? 'moving-up' : 'moving-down');
         elements[newIndex].classList.add(direction === 1 ? 'moving-down' : 'moving-up');
-
-        // Espera a que termine la animación
         await new Promise(resolve => setTimeout(resolve, 300));
 
         // Intercambiar subcategorías
@@ -125,8 +125,8 @@ export default function CategoriesList() {
         }));
 
         const parentCat = newCategories.find(cat => cat.id === parentCategoryId);
-        [parentCat.subcategories[currentIndex], parentCat.subcategories[newIndex]] = 
-        [parentCat.subcategories[newIndex], parentCat.subcategories[currentIndex]];
+        [parentCat.subcategories[currentIndex], parentCat.subcategories[newIndex]] =
+          [parentCat.subcategories[newIndex], parentCat.subcategories[currentIndex]];
 
         // Actualizar display_order de subcategorías
         parentCat.subcategories = parentCat.subcategories.map((subcat, index) => ({
@@ -167,8 +167,8 @@ export default function CategoriesList() {
           subcategories: [...(cat.subcategories || [])]
         }));
 
-        [newCategories[currentIndex], newCategories[newIndex]] = 
-        [newCategories[newIndex], newCategories[currentIndex]];
+        [newCategories[currentIndex], newCategories[newIndex]] =
+          [newCategories[newIndex], newCategories[currentIndex]];
 
         const updatedCategories = newCategories.map((cat, index) => ({
           ...cat,
@@ -216,9 +216,10 @@ export default function CategoriesList() {
   };
 
   return (
+    <>
     <Container maw={450} miw={300} pos="relative">
-    <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
-    <ReturnButton url={`/${business_slug}/`}/>
+      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
+      <ReturnButton url={`/${business_slug}/`} />
       <Title order={3} c="custom.0" ta="center" mb="lg">
         Categorías {menu?.name ? `- ${menu.name}` : ''}
       </Title>
@@ -276,14 +277,14 @@ export default function CategoriesList() {
             </Paper>
 
             {category.subcategories.length !== 0 && (
-              <Stack mt="md" gap="sm" ml="md" style={{borderLeft: "1px solid #fff"}}>
+              <Stack mt="md" gap="sm" ml="md" style={{ borderLeft: "1px solid #fff" }}>
 
                 {category.subcategories.map((subcategory) => (
                   <Paper key={subcategory.id} className="loop-element subcategories" py="xs" pl="xs" pr="md" ml="md" bg="custom.3">
                     <Group justify="space-between">
                       <Stack gap="xs">
-                        <ActionIcon className="order-arrow up" variant="light" onClick={() => changeOrder(1, subcategory.id, category.id)}><IconArrowUp size="1rem"/></ActionIcon>
-                        <ActionIcon className="order-arrow down" variant="light" onClick={() => changeOrder(-1, subcategory.id, category.id)}><IconArrowDown size="1rem"/></ActionIcon>
+                        <ActionIcon className="order-arrow up" variant="light" onClick={() => changeOrder(1, subcategory.id, category.id)}><IconArrowUp size="1rem" /></ActionIcon>
+                        <ActionIcon className="order-arrow down" variant="light" onClick={() => changeOrder(-1, subcategory.id, category.id)}><IconArrowDown size="1rem" /></ActionIcon>
                       </Stack>
                       <Box>
                         <Title order={3}>{subcategory.name}</Title>
@@ -312,17 +313,18 @@ export default function CategoriesList() {
 
               </Stack>
             )}
-          </Box>      
+          </Box>
         ))}
       </Stack>
-
-      <Modal opened={opened} onClose={close} title="Confirmar eliminación" centered>
-        <Text size="sm">¿Estás seguro de que deseas eliminar esta categoría?</Text>
-        <Group mt="md" justify="flex-end">
-          <Button variant="default" onClick={close}>Cancelar</Button>
-          <Button color="red" onClick={handleDelete}>Eliminar</Button>
-        </Group>
-      </Modal>
     </Container>
+
+    <Modal opened={opened} onClose={close} title="Confirmar eliminación" centered>
+      <Text size="sm">¿Estás seguro de que deseas eliminar esta categoría?</Text>
+      <Group mt="md" justify="flex-end">
+        <Button variant="default" onClick={close}>Cancelar</Button>
+        <Button color="red" onClick={handleDelete}>Eliminar</Button>
+      </Group>
+    </Modal>
+    </>
   );
 }

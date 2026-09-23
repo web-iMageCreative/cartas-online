@@ -157,7 +157,6 @@ export default class ItemsService {
     return result.data;
   }
 
-
   static async getCategories(menuSlug) {
     if (!menuSlug) return [];
 
@@ -176,5 +175,23 @@ export default class ItemsService {
     }
 
     return result.data;
+  }
+
+  static async syncItemOrder(id, displayOrder) {
+    const response = await fetch(`${API_URL}/items/sync-order`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({id: id, display_order: displayOrder}),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Error al actualizar la categoría');
+    }
+
+    return result.message;
   }
 }

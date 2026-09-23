@@ -16,12 +16,20 @@ import {
   IconArrowDown
 } from '@tabler/icons-react';
 
-export default function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug, business_slug }) {
+export default function ItemCard({
+  category,
+  subcategory,
+  item,
+  changeOrder,
+  handleOpenDelete,
+  menu_slug,
+  business_slug 
+}) {
 
   const hasVariations = Array.isArray(item.variations) && item.variations.length > 0;
 
   return (
-    <Paper radius="xl" pr="xs" style={{ overflow: 'hidden' }}>
+    <Paper className={subcategory ? "loop-element subitem" : "loop-element item"} radius="xl" pr="xs" style={{ overflow: 'hidden' }}>
       <Group justify="space-between" gap={15} align="center" wrap="nowrap">
         {/* Imagen / Avatar */}
         <Group gap="xs" wrap="nowrap">
@@ -100,10 +108,10 @@ export default function ItemCard({ item, changeOrder, handleOpenDelete, menu_slu
 
         {/* Botones de orden vertical */}
         <Stack gap="xs" style={{ justifyContent: 'center' }}>
-          <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
+          <ActionIcon className="order-arrow up" size="sm" variant="light" onClick={() => changeOrder(1, item.id, category, subcategory)}>
             <IconArrowUp size="1rem" />
           </ActionIcon>
-          <ActionIcon size="sm" variant="light" onClick={() => changeOrder(-1, item.id)}>
+          <ActionIcon className="order-arrow down" size="sm" variant="light" onClick={() => changeOrder(-1, item.id, category, subcategory)}>
             <IconArrowDown size="1rem" />
           </ActionIcon>
         </Stack>

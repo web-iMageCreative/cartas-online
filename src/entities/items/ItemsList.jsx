@@ -7,7 +7,7 @@ import ItemsService from './ItemsService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
 import { ReturnButton } from '../../shared/ReturnButton';
-import ItemCard from '../../shared/ItemCard';
+import ItemCard from './ItemCard';
 
 export default function ItemsList() {
   const [items, setItems] = useState([]);
@@ -26,7 +26,38 @@ export default function ItemsList() {
           setMenu(menuData);
 
           await ItemsService.getItemsByMenu(menuData.id)
-            .then((itemsData) => { setItems(itemsData); console.log(itemsData) })
+            .then( async (itemsData) => { 
+              const iTemsWithOrder = Array.isArray(itemsData) ? itemsData.map((cat) => ({
+                ...cat,
+                items: Array.isArray(cat.items) ? cat.items.map((item, index) => ({
+                  ...item,
+                  display_order: index
+                })) : [],
+                subcategories: Array.isArray(cat.subcategories) ? cat.subcategories.map((subcat) => ({
+                  ...subcat,
+                  items: Array.isArray(subcat.items) ? subcat.items.map((subItem, subIndex) => ({
+                    ...subItem,
+                    display_order: subIndex
+                  })) : []
+                })) : []
+              })) : [];
+
+              setItems(iTemsWithOrder);
+
+              await Promise.all(
+                iTemsWithOrder.flatMap((cat) => {
+                  const itemsPromise = cat.items.map((item) => {
+                    ItemsService.syncItemOrder(item.id, item.display_order);
+                  });
+
+                  const subItemsPromises = cat.subcategories.map((subcat) =>
+                    subcat.items.map((subItem) => ItemsService.syncItemOrder(subItem.id, subItem.display_order))
+                  );
+
+                  return [itemsPromise, ...subItemsPromises];
+                })
+              );
+            })
         })
         .catch((error) => {
           NotificationService.error(
@@ -85,8 +116,66 @@ export default function ItemsList() {
       .finally(() => setLoading(false));
   };
 
-  const changeOrder = (direction, itemId) => {
-    console.log('Cambiar orden:', direction, 'Item:', itemId);
+  const changeOrder = async (direction, itemId, categoryId, subCategoryId) => {
+    setLoading(true);
+
+    try {
+      let category;
+      let elements;
+
+      const newItems = items;
+
+      if (subCategoryId) {
+        // Encontrar la categoría padre
+        const parentCategory = newItems.find(cat => cat.id === categoryId);
+        if (!parentCategory) return;
+
+        // Encontrar la subcategoría
+        category = parentCategory.subcategories.find(subcat => subcat.id === subCategoryId);
+        if (!category) return;
+
+        elements = document.querySelectorAll('.loop-element.subitem');
+      } else {
+        category = newItems.find(cat => cat.id === categoryId);
+        if (!category) return;
+
+        elements = document.querySelectorAll('.loop-element.item');
+      }
+
+      const currentIndex = category.items.findIndex(item => item.id === itemId);
+      if (currentIndex === -1) return;
+
+      const newIndex = direction === 1 ? currentIndex - 1 : currentIndex + 1;
+      if (newIndex < 0 || newIndex >= category.items.length) return;
+
+      // Animación
+      elements[currentIndex].classList.add(direction === 1 ? 'moving-up' : 'moving-down');
+      elements[newIndex].classList.add(direction === 1 ? 'moving-down' : 'moving-up');
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      [category.items[currentIndex], category.items[newIndex]] =
+        [category.items[newIndex], category.items[currentIndex]];
+
+      category.items = category.items.map((item, index) => ({
+        ...item,
+        display_order: index
+      }));
+
+      setItems([...newItems]);
+
+      category.items.map( async (item) => {
+        await ItemsService.syncItemOrder(item.id, item.display_order);
+      });
+
+      elements.forEach(el => {
+        el.classList.remove('moving-up', 'moving-down');
+      });
+    } catch (error) {
+      console.error('ERROR: ', error);
+      NotificationService.error(error, { title: 'Error al cambiar el orden' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -122,7 +211,6 @@ export default function ItemsList() {
           )}
 
           {items.map((category) => (
-
             <Box key={category.id}>
               <Box mb="xs" pb="xs" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.15)' }}>
                 <Title order={4} c="white" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -135,7 +223,7 @@ export default function ItemsList() {
                 {category.items.length > 0 && (
                   <Stack gap="md" mb="md">
                     {category.items.map((item) => (
-                      <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
+                      <ItemCard key={item.id} category={category.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
                     ))}
                   </Stack>
                 )}
@@ -160,7 +248,7 @@ export default function ItemsList() {
                       {subcategory.items.length > 0 ? (
                         <Stack gap="sm">
                           {subcategory.items.map((item) => (
-                            <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
+                            <ItemCard key={item.id} category={category.id} subcategory={subcategory.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
                           ))}
                         </Stack>
                       ) : (

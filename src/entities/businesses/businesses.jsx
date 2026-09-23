@@ -5,7 +5,7 @@ import BusinessesServices from './BusinessesService';
 import { NotificationService } from '../../shared/NotificationService';
 import MenuList from '../menus/MenusList';
 import { IconMail, IconPhone, IconMapPin } from '@tabler/icons-react';
-import { ReturnButton } from '../../shared/return-button';
+import { ReturnButton } from '../../shared/ReturnButton';
 
 export default function BusinessPage() {
   const { business_slug } = useParams();

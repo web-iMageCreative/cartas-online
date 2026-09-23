@@ -48,7 +48,7 @@ export default function Login() {
         NotificationService.success('Bienvenido de nuevo', {
           title: 'Usuario identificado correctamente',
         });
-        navigate('/dashboard');
+        navigate('/negocios');
       } else {
         NotificationService.error('Error al iniciar sesión', {
           title: 'Usuario no identificado',

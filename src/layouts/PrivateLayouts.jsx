@@ -3,17 +3,16 @@ import {
   Burger,
   Button,
   Group,
-  Stack,
   Text,
-  Center
+  Center,
+  Box
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { AuthService } from '../entities/users/AuthService';
 
 export default function PrivateLayout() {
   const [opened, { toggle }] = useDisclosure();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await AuthService.logout();
@@ -22,7 +21,7 @@ export default function PrivateLayout() {
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      // navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
@@ -34,9 +33,14 @@ export default function PrivateLayout() {
               hiddenFrom="sm"
               size="sm"
             />
-            <Text fw={700} size="lg" c="custom.0">
-              Cartas Online
-            </Text>
+            <Box>
+              <Text fw={800} size="xl" c="custom.1">
+                Kamarero.es
+              </Text>
+              <Text fw={300} size="xs" c="custom.0">
+                Cartas Online para bares y restaurante
+              </Text>
+            </Box>
           </Group>
 
           <Button variant="default" onClick={handleLogout}>
@@ -45,7 +49,7 @@ export default function PrivateLayout() {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
+      {/* <AppShell.Navbar p="md">
         <Stack gap="sm">
           <Button variant="subtle" justify="flex-start" onClick={() => navigate('/inicio')}>
             Dashboard
@@ -54,7 +58,7 @@ export default function PrivateLayout() {
             Negocios
           </Button>
         </Stack>
-      </AppShell.Navbar>
+      </AppShell.Navbar> */}
 
       <AppShell.Main fz="sm">
         <Center display={'flex'}>

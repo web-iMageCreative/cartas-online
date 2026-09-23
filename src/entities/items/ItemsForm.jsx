@@ -223,7 +223,7 @@ export default function ItemsForm({
                 clearable
                 withAsterisk
                 disabled={categoryOptions.length === 0}
-                value={form.values.category_id ? String(form.values.category_id) : null}
+                {...form.getInputProps('category_id')}
                 onChange={(value) => form.setFieldValue('category_id', value)}
               />
             </Group>
@@ -281,13 +281,13 @@ export default function ItemsForm({
           </Paper>
 
           {/* Acciones */}
-          <Paper className="form-actions" shadow="md" p="lg">
-            <Group justify="flex-end">
+          <Paper  className="form-actions" shadow="md" p="lg">
+            <Group w="100%" justify="space-between">
+              <Button variant="filled" type="submit" loading={isLoading}>
+                {submitLabel || (mode === 'create' ? 'Crear Artículo' : 'Guardar Cambios')}
+              </Button>
               <Button variant="outline" onClick={onCancel}>
                 Cancelar
-              </Button>
-              <Button type="submit" loading={isLoading}>
-                {submitLabel || (mode === 'create' ? 'Crear Artículo' : 'Guardar Cambios')}
               </Button>
             </Group>
           </Paper>

@@ -18,7 +18,7 @@ import CategoriesService from '../categories/CategoriesService';
 import ItemsService from './ItemsService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
-import { ReturnButton } from '../../shared/return-button';
+import { ReturnButton } from '../../shared/ReturnButton';
 
 export default function ItemsReadList() {
   const [categories, setCategories] = useState([]);

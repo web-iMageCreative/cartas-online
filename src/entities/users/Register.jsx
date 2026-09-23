@@ -43,7 +43,7 @@ export default function Register() {
         NotificationService.success('Bienvenido a Cartas Online', {
           title: 'Usuario registrado correctamente',
         });
-        navigate('/dashboard');
+        navigate('/negocios');
       } else {
         NotificationService.error('Error al registrar usuario', {
           title: 'Usuario no registrado',

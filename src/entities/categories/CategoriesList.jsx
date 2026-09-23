@@ -25,7 +25,7 @@ import {
 import CategoriesService from './CategoriesService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
-import { ReturnButton } from '../../shared/return-button';
+import { ReturnButton } from '../../shared/ReturnButton';
 
 export default function CategoriesList() {
   const { business_slug, menu_slug, category_id} = useParams();

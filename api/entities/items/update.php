@@ -13,11 +13,10 @@ $variations     = json_decode($input['variations']) ?? null;
 $delete_image   = filter_var($input['deleteImage'], FILTER_VALIDATE_BOOLEAN) ?? null;
 $has_image      = isset($_FILES['image']);
 $remove_image   = !$has_image && $delete_image;
-
 $allergens      = isset($input['allergens']) ? json_decode($input['allergens'], true) : null;
 
-if (!$id || !$name || !$price) {
-    Response::error('ID, nombre y precio son obligatorios', 400);
+if (!$id || !$name ) {
+    Response::error('ID, nombre son obligatorios', 400);
 }
 
 function saveUploadedFile($fileKey) {

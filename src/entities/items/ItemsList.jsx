@@ -1,36 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  Container,
-  Title,
-  Stack,
-  LoadingOverlay,
-  Group,
-  Button,
-  Text,
-  Box,
-  Modal,
-  Paper,
-  ActionIcon,
-  Badge,
-  Avatar,
-} from '@mantine/core';
-import {
-  IconTrash,
-  IconEdit,
-  IconPlus,
-  IconArrowUp,
-  IconArrowDown
-} from '@tabler/icons-react';
-import CategoriesService from '../categories/CategoriesService';
+import { Container, Title, Stack, LoadingOverlay, Group, Button, Text, Box, Modal } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 import ItemsService from './ItemsService';
 import MenuService from '../menus/MenusService';
 import { NotificationService } from '../../shared/NotificationService';
-import { ReturnButton } from '../../shared/return-button';
+import { ReturnButton } from '../../shared/ReturnButton';
+import ItemCard from '../../shared/ItemCard';
 
 export default function ItemsList() {
-  const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [menu, setMenu] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -41,28 +20,21 @@ export default function ItemsList() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
-        const menuData = await MenuService.getMenuBySlug(menu_slug);
-        setMenu(menuData);
 
-        if (menuData?.id) {
-          const [categoriesData, itemsData] = await Promise.all([
-            CategoriesService.getCategoriesByMenuId(menuData.id),
-            ItemsService.getItemsByMenu(menuData.id)
-          ]);
+      await MenuService.getMenuBySlug(menu_slug)
+        .then(async (menuData) => {
+          setMenu(menuData);
 
-          setCategories(Array.isArray(categoriesData) ? categoriesData : []);
-          setItems(Array.isArray(itemsData) ? itemsData : []);
-        }
-      } catch (error) {
-        console.error(error);
-        NotificationService.error(
-          error.message || error,
-          { title: 'Error al cargar los artículos' }
-        );
-      } finally {
-        setLoading(false);
-      }
+          await ItemsService.getItemsByMenu(menuData.id)
+            .then((itemsData) => { setItems(itemsData); console.log(itemsData) })
+        })
+        .catch((error) => {
+          NotificationService.error(
+            error.message || error,
+            { title: 'Error al cargar el menú' }
+          );
+        })
+        .finally(() => setLoading(false));
     };
 
     if (menu_slug) {
@@ -75,48 +47,42 @@ export default function ItemsList() {
     open();
   };
 
+  function removeItemFromCategories(categories, itemId) {
+    return categories.map((category) => ({
+      ...category,
+
+      items: (category.items ?? []).filter(
+        (item) => item.id !== itemId
+      ),
+
+      subcategories: removeItemFromCategories(
+        category.subcategories ?? [],
+        itemId
+      )
+    }));
+  }
+
   const handleDelete = async () => {
     setLoading(true);
-    try {
-      await ItemsService.deleteItem(selectedId);
-      setItems((prev) => prev.filter((item) => item.id !== selectedId));
-      NotificationService.success('Artículo eliminado con éxito', { title: 'Éxito' });
-      close();
-    } catch (error) {
-      NotificationService.error(
-        error.message || error,
-        { title: 'Error eliminando artículo' }
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const rootCategories = categories.filter(
-    (cat) => !cat.parent_id || Number(cat.parent_id) === 0
-  );
+    await ItemsService.deleteItem(selectedId)
+      .then(() => {
+        setItems((prev) => removeItemFromCategories(prev, selectedId));
 
-  const getSubcategories = (category) => {
-    if (Array.isArray(category.subcategories) && category.subcategories.length > 0) {
-      return category.subcategories;
-    }
-    return categories.filter((cat) => String(cat.parent_id) === String(category.id));
-  };
+        NotificationService.success(
+          'Artículo eliminado con éxito',
+          { title: 'Éxito' }
+        );
 
-  const getDirectCategoryItems = (catId) => {
-    return items.filter(
-      (item) =>
-        String(item.category_id) === String(catId) &&
-        (!item.subcategory_id || String(item.subcategory_id) === '0' || String(item.subcategory_id) === 'null')
-    );
-  };
-
-  const getSubcategoryItems = (subcatId) => {
-    return items.filter(
-      (item) =>
-        String(item.category_id) === String(subcatId) ||
-        String(item.subcategory_id) === String(subcatId)
-    );
+        close();
+      })
+      .catch((error) => {
+        NotificationService.error(
+          error.message || error,
+          { title: 'Error eliminando artículo' }
+        );
+      })
+      .finally(() => setLoading(false));
   };
 
   const changeOrder = (direction, itemId) => {
@@ -124,41 +90,40 @@ export default function ItemsList() {
   };
 
   return (
-    <Container maw={480} miw={300} pos="relative" py="md">
-      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
-       <ReturnButton url={`/${business_slug}/`}/> 
-      <Title order={3} c="white" ta="center" mb="lg">
-        Productos {menu?.name ? `- ${menu.name}` : ''}
-      </Title>
+    <>
+      <Container maw={480} miw={300} pos="relative" py="md">
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 0, blur: 2 }} />
 
-      <Button
-        bg="custom.5"
-        mb="xl"
-        variant="filled"
-        fullWidth
-        leftSection={<IconPlus size={18} />}
-        ta="center"
-        fz="xs"
-        component="a"
-        href={`/${business_slug}/${menu_slug}/productos/crear`}
-      >
-        Crear nuevo producto
-      </Button>
+        <ReturnButton url={`/${business_slug}/`} />
 
-      <Stack gap="xl">
-        {rootCategories.length === 0 && items.length === 0 && !loading && (
-          <Text ta="center" size="sm" c="dimmed">
-            No hay categorías ni artículos registrados.
-          </Text>
-        )}
+        <Title order={3} c="white" ta="center" mb="lg">
+          Productos {menu?.name ? `- ${menu.name}` : ''}
+        </Title>
 
-        {rootCategories.map((category) => {
-          const directItems = getDirectCategoryItems(category.id);
-          const subcategories = getSubcategories(category);
+        <Button
+          bg="custom.5"
+          mb="xl"
+          variant="filled"
+          fullWidth
+          leftSection={<IconPlus size={18} />}
+          ta="center"
+          fz="xs"
+          component="a"
+          href={`/${business_slug}/${menu_slug}/productos/crear`}
+        >
+          Crear nuevo producto
+        </Button>
 
-          return (
+        <Stack gap="xl">
+          {items.length === 0 && items.length === 0 && !loading && (
+            <Text ta="center" size="sm" c="dimmed">
+              No hay categorías ni artículos registrados.
+            </Text>
+          )}
+
+          {items.map((category) => (
+
             <Box key={category.id}>
-              {/* Encabezado Categoría Principal */}
               <Box mb="xs" pb="xs" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.15)' }}>
                 <Title order={4} c="white" style={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   {category.name}
@@ -166,56 +131,52 @@ export default function ItemsList() {
                 {category.description && (
                   <Text fz="xs" c="dimmed">{category.description}</Text>
                 )}
+
+                {category.items.length > 0 && (
+                  <Stack gap="md" mb="md">
+                    {category.items.map((item) => (
+                      <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
+                    ))}
+                  </Stack>
+                )}
               </Box>
 
-              {/* Ítems directos de la categoría principal */}
-              {directItems.length > 0 && (
-                <Stack gap="xs" mb="md">
-                  {directItems.map((item) => (
-                    <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
+
+              {category.subcategories.length > 0 && (
+                <Stack gap="md" ml="xs" pl="sm" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.3)' }}>
+                  {category.subcategories.map((subcategory) => (
+                    <Box key={subcategory.id}>
+                      {/* Titular Subcategoría */}
+                      <Box mb="xs">
+                        <Text fw={600} fz="sm" c="teal.3">
+                          ↳ {subcategory.name}
+                        </Text>
+                        {subcategory.description && (
+                          <Text fz="xs" c="dimmed">{subcategory.description}</Text>
+                        )}
+                      </Box>
+
+                      {/* Ítems de la Subcategoría */}
+                      {subcategory.items.length > 0 ? (
+                        <Stack gap="sm">
+                          {subcategory.items.map((item) => (
+                            <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
+                          ))}
+                        </Stack>
+                      ) : (
+                        <Text fz="xs" c="dimmed" fs="italic" ml="xs">
+                          Sin artículos en esta subcategoría
+                        </Text>
+                      )}
+                    </Box>
                   ))}
                 </Stack>
               )}
-
-              {/* Subcategorías y sus ítems */}
-              {subcategories.length > 0 && (
-                <Stack gap="md" ml="xs" pl="sm" style={{ borderLeft: '2px solid rgba(0, 200, 200, 0.3)' }}>
-                  {subcategories.map((subcategory) => {
-                    const subcatItems = getSubcategoryItems(subcategory.id);
-
-                    return (
-                      <Box key={subcategory.id}>
-                        {/* Titular Subcategoría */}
-                        <Box mb="xs">
-                          <Text fw={600} fz="sm" c="teal.3">
-                            ↳ {subcategory.name}
-                          </Text>
-                          {subcategory.description && (
-                            <Text fz="xs" c="dimmed">{subcategory.description}</Text>
-                          )}
-                        </Box>
-
-                        {/* Ítems de la Subcategoría */}
-                        {subcatItems.length > 0 ? (
-                          <Stack gap="xs">
-                            {subcatItems.map((item) => (
-                              <ItemCard key={item.id} item={item} changeOrder={changeOrder} handleOpenDelete={handleOpenDelete} menu_slug={menu_slug} business_slug={business_slug} />
-                            ))}
-                          </Stack>
-                        ) : (
-                          <Text fz="xs" c="dimmed" fs="italic" ml="xs">
-                            Sin artículos en esta subcategoría
-                          </Text>
-                        )}
-                      </Box>
-                    );
-                  })}
-                </Stack>
-              )}
             </Box>
-          );
-        })}
-      </Stack>
+
+          ))}
+        </Stack>
+      </Container>
 
       <Modal opened={opened} onClose={close} title="Confirmar eliminación" centered>
         <Text size="sm">¿Estás seguro de que deseas eliminar este artículo?</Text>
@@ -224,93 +185,6 @@ export default function ItemsList() {
           <Button color="red" onClick={handleDelete}>Eliminar</Button>
         </Group>
       </Modal>
-    </Container>
-  );
-}
-
-// Componente reutilizable para la tarjeta de artículo condicionado por variaciones
-function ItemCard({ item, changeOrder, handleOpenDelete, menu_slug, business_slug }) {
-  
-const hasVariations = Array.isArray(item.variations) && item.variations.length > 0;
-
-  return (
-    <Paper radius="xl" pr="xs" style={{ overflow: 'hidden' }}>
-      <Group justify="space-between" gap={15} align="center" wrap="nowrap">
-        {/* Imagen / Avatar */}
-        <Group gap="xs" wrap="nowrap">
-          {item.image && (
-            <Avatar src={item.image} alt={item.name} radius="0" size="xl" />
-          )}
-        </Group>
-
-        {/* Información del Item */}
-        <Group gap="xs" wrap="nowrap" justify="flex-start" style={{ flex: 1, overflow: 'hidden' }}>
-          <Box style={{ width: '100%', overflow: 'hidden' }}>
-            <Group gap="xs" align="center" justify="flex-start">
-              <Text fw={600} size="sm" c="white" truncate>{item.name}</Text>
-              
-              {/* Si NO tiene variaciones, muestra el precio estándar */}
-              {!hasVariations && item.price !== undefined && item.price !== null && (
-                <Badge color="teal" variant="light" size="xs">{item.price} €</Badge>
-              )}
-            </Group>
-
-            {item.description && (
-              <Text fz="xs" c="dimmed" truncate>
-                {item.description}
-              </Text>
-            )}
-
-            {/* CONDICIONAL: Si tiene variaciones, se renderizan aquí abajo */}
-            {hasVariations && (
-              <Group gap={4} mt={4} wrap="wrap">
-                {item.variations.map((variant, index) => (
-                  <Badge 
-                    key={variant.id || index} 
-                    color="teal.3" 
-                    variant="outline" 
-                    size="xs"
-                    style={{ textTransform: 'none' }}
-                  >
-                    {variant.name}: {variant.price} €
-                  </Badge>
-                ))}
-              </Group>
-            )}
-          </Box>
-        </Group>
-
-        {/* Acciones Editar y Eliminar */}
-        <Group gap={6} wrap="nowrap" justify="flex-end">
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            component="a"
-            href={`/${business_slug}/${menu_slug}/productos/editar/${item.id}`}
-            title="Editar"
-          >
-            <IconEdit size={16} />
-          </ActionIcon>
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={() => handleOpenDelete(item.id)}
-            title="Eliminar"
-          >
-            <IconTrash size={16} />
-          </ActionIcon>
-        </Group>
-
-        {/* Botones de orden vertical */}
-        <Stack gap="xs" style={{ justifyContent: 'center' }}>
-          <ActionIcon size="sm" variant="light" onClick={() => changeOrder(1, item.id)}>
-            <IconArrowUp size="1rem" />
-          </ActionIcon>
-          <ActionIcon size="sm" variant="light" onClick={() => changeOrder(-1, item.id)}>
-            <IconArrowDown size="1rem" />
-          </ActionIcon>
-        </Stack>
-      </Group>
-    </Paper>
+    </>
   );
 }

@@ -4,7 +4,7 @@ import Login from './entities/users/Login';
 import Register from './entities/users/Register';
 import ForgotPassword from './entities/users/ForgotPassword';
 import ResetPassword from './entities/users/ResetPassword';
-import Dashboard from './entities/DashBoard';
+// import Dashboard from './entities/DashBoard';
 import ProtectedRoute from './ProtectedRoute';
 import BusinessesCreate from './entities/businesses/BusinessesCreate';
 import BusinessesList from './entities/businesses/BusinessesList';
@@ -32,9 +32,9 @@ export default function AppRoutes() {
     <Routes>
       <Route element={<PrivateLayout />}>
 
-        <Route path="/Inicio/"
+        {/* <Route path="/Inicio/"
           element={ <ProtectedRoute><Dashboard /></ProtectedRoute> } 
-        />
+        /> */}
 
 
         <Route path="/negocios/"
@@ -98,7 +98,7 @@ export default function AppRoutes() {
 
       </Route>
       <Route element={<PublicLayout />}>
-        <Route path="/"                                            element={ <Navigate to={token ? "/inicio" : "/login"} replace /> } />
+        <Route path="/"                                            element={ <Navigate to={token ? "/negocios" : "/login"} replace /> } />
         <Route path="/login"                                       element={ <Login /> } />
         <Route path="/register"                                    element={ <Register /> } />
         <Route path="/forgot-password"                             element={ <ForgotPassword /> } />

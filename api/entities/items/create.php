@@ -7,14 +7,13 @@ $input = $_POST;
 $name           = $input['name'] ?? null;
 $description    = $input['description'] ?? null;
 $price          = $input['price'] ?? null;
-$menu_id      = $input['menu_id'] ?? null;
+$menu_id        = $input['menu_id'] ?? null;
 $category_id    = $input['category_id'] ?? null;
+$variations     = isset($input['variations']) ? json_decode($input['variations'], true) : [];
+$allergens      = isset($input['allergens']) ? json_decode($input['allergens'], true) : [];
 
-// Decodificar el array de IDs de alérgenos si se recibe como JSON string
-// $allergens      = isset($input['allergens']) ? json_decode($input['allergens'], true) : [];
 
-
-if (!$name || !$price || !$menu_id) {
+if (!$name || !$menu_id) {
     Response::error('Nombre, precio y menú son obligatorios', 400);
 }
 
@@ -51,6 +50,7 @@ function saveUploadedFile($fileKey) {
 $image_path = saveUploadedFile('image');
 
 try {
+    $db->beginTransaction();
 
     $sql = "INSERT INTO items (name, description, image, price, menu_id, category_id) 
             VALUES (?, ?, ?, ?, ?, ?)";
@@ -69,6 +69,24 @@ try {
     if (!$item) {
         throw new Exception('Error al guardar el plato');
     }
+
+    $id = $db->lastInsertId();
+
+    if (!empty($allergens)) {
+        $insert_allergens_stmt = $db->prepare("INSERT INTO allergens_items (allergen_id, item_id) VALUES (?, ?)");
+        foreach ($allergens as $allergen_id) {
+            $insert_allergens_stmt->execute([$allergen_id, $id]);
+        }
+    }
+    
+    if (!empty($variations)) {
+        $insert_variations_stmt = $db->prepare("INSERT INTO items_variations (name, price, item_id) VALUES (?, ?, ?)");
+        foreach ($variations as $variation) {
+            $insert_variations_stmt->execute([$variation['name'], $variation['price'], $id]);
+        }
+    }
+
+    $db->commit();
     Response::success('Plato creado exitosamente');
 
 } catch (Exception $e) {

@@ -10,7 +10,7 @@ function App() {
     // Manejar callback de Google
     if (AuthService.handleGoogleCallback()) {
       // Redirigir al dashboard
-      window.location.href = '/dashboard';
+      window.location.href = '/negocios';
     }
   }, []);
 

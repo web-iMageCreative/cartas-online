@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import { Container, Title, Stack, LoadingOverlay, Group, Button, Text, Box, Modal } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
@@ -197,8 +197,8 @@ export default function ItemsList() {
           leftSection={<IconPlus size={18} />}
           ta="center"
           fz="xs"
-          component="a"
-          href={`/${business_slug}/${menu_slug}/productos/crear`}
+          component={Link}
+          to={`/${business_slug}/${menu_slug}/productos/crear`}
         >
           Crear nuevo producto
         </Button>

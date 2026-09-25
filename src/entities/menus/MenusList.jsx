@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Container, Title, Stack, LoadingOverlay, Card, Group, Button, UnstyledButton, Text, Box, Modal } from '@mantine/core';
 import { IconEye, IconEdit, IconTrash, IconFilePlus, IconSitemap, IconDownload } from '@tabler/icons-react';
 import MenusServices from './MenusService';
@@ -91,7 +91,7 @@ export default function MenusList({ businessSlug }) {
         mb="xl"
         variant="outline"
         fullWidth
-        leftSection={<IconFilePlus size={18} />} ta="center" fz="xs" component="a" href={`/${business_slug}/menus/crear`}>Crear nuevo menu</Button>
+        leftSection={<IconFilePlus size={18} />} ta="center" fz="xs" component={Link} to={`/${business_slug}/menus/crear`}>Crear nuevo menu</Button>
 
 
       <Stack gap="md">
@@ -118,10 +118,10 @@ export default function MenusList({ businessSlug }) {
 
             <Card.Section bg="custom.5">
               <Group justify="space-around" my="md" mx="xl">
-                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/${menu.slug}/productos`}><IconEye /><br />Ver</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component={Link} to={`/${business_slug}/${menu.slug}/productos`}><IconEye /><br />Ver</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDownloadPNG(menu.name)}><IconDownload /><br />Código QR</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/${menu.slug}/categorias`}><IconSitemap /><br />Categorías</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" href={`/${business_slug}/${menu.slug}/editar`}><IconEdit /><br />Editar</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component={Link} to={`/${business_slug}/${menu.slug}/categorias`}><IconSitemap /><br />Categorías</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component={Link} to={`/${business_slug}/${menu.slug}/editar`}><IconEdit /><br />Editar</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" component="a" onClick={() => handleDeleteMenu(menu.id)}><IconTrash /><br />Eliminar</UnstyledButton>
               </Group>
             </Card.Section>

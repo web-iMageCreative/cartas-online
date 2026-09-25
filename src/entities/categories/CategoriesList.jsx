@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import {
   Container,
@@ -231,8 +231,8 @@ export default function CategoriesList() {
         leftSection={<IconFolderPlus size={18} />}
         ta="center"
         fz="xs"
-        component="a"
-        href={`/${business_slug}/${menu_slug}/categorias/crear`}
+        component={Link}
+        to={`/${business_slug}/${menu_slug}/categorias/crear`}
       >
         Crear nueva categoría
       </Button>
@@ -260,8 +260,8 @@ export default function CategoriesList() {
                   <UnstyledButton
                     ta="center"
                     fz="xs"
-                    component="a"
-                    href={`/${business_slug}/${menu_slug}/categorias/editar/${category.id}`}
+                    component={Link}
+                    to={`/${business_slug}/${menu_slug}/categorias/editar/${category.id}`}
                   >
                     <IconEdit /><br />Editar
                   </UnstyledButton>
@@ -294,8 +294,8 @@ export default function CategoriesList() {
                         <UnstyledButton
                           ta="center"
                           fz="xs"
-                          component="a"
-                          href={`/${business_slug}/${menu_slug}/categorias/editar/${category_id}`}
+                          component={Link}
+                          to={`/${business_slug}/${menu_slug}/categorias/editar/${category_id}`}
                         >
                           <IconEdit /><br />Editar
                         </UnstyledButton>

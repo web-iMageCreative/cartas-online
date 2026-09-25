@@ -1,3 +1,10 @@
+body, html, #root {
+  background-color: var(--mantine-color-custom-4);
+  background-image: url(/src/assets/imgs/app-bg.jpg);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
 .mantine-TextInput-input,
 .mantine-PasswordInput-input,
 .mantine-FileInput-input,
@@ -138,5 +145,27 @@
   100% {
     transform: translateY(84px);
     opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: page-enter 250ms ease-out;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(500px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: none;
   }
 }

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { Container, Title, Stack, Image, LoadingOverlay, Card, Group, Avatar, Button, UnstyledButton, Text, Box, Modal } from '@mantine/core';
@@ -52,16 +53,16 @@ export default function BusinessesList() {
         Mis negocios
       </Title>
       
-      <Button 
+      <Button
+        component={Link}
+        to="/negocios/crear"
         bg="custom.5"
         mb="xl"
         variant="outline"
         fullWidth
         leftSection={<IconFilePlus size={18} />} 
         ta="center" 
-        fz="xs" 
-        component="a" 
-        href="/negocios/crear"
+        fz="xs"
       >
         Crear nuevo negocio
       </Button>
@@ -98,8 +99,8 @@ export default function BusinessesList() {
             
             <Card.Section bg="custom.5">
               <Group justify="space-around" mt="md" mb="md" ml="xl" mr="xl">
-                <UnstyledButton ta="center" fz="xs" component="a" href={'/' + business.slug + '/'}><IconEye /><br/>Ver</UnstyledButton>
-                <UnstyledButton ta="center" fz="xs" component="a" href={'/' + business.slug + '/editar'}><IconEdit /><br/>Editar</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component={Link} to={'/' + business.slug + '/'}><IconEye /><br/>Ver</UnstyledButton>
+                <UnstyledButton ta="center" fz="xs" component={Link} to={'/' + business.slug + '/editar'}><IconEdit /><br/>Editar</UnstyledButton>
                 <UnstyledButton ta="center" fz="xs" onClick={() => handleOpen(business.id)}><IconTrash /><br/>Eliminar</UnstyledButton>
               </Group>
             </Card.Section>          

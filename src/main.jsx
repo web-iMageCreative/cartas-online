@@ -9,6 +9,7 @@ import { theme } from './theme/theme';
 import { Box } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@gfazioli/mantine-qr-code/styles.css';
+import appBackground from './assets/imgs/app-bg.jpg';
 
 createRoot(document.getElementById('root')).render(
     <MantineProvider theme={theme} defaultColorScheme="dark">
@@ -19,13 +20,13 @@ createRoot(document.getElementById('root')).render(
           justifyContent: 'center', 
           alignItems: 'center', 
           minHeight: '100vh',
-          backgroundImage: 'url(/src/assets/imgs/app-bg.jpg)',
+          backgroundImage: `url(${appBackground})`,
           backgroundAttachment: 'fixed',
           backgroundSize: 'cover',
           border: 'none',
         }}
       >
-      <App />
+        <App />
       </Box>
     </MantineProvider>
 )

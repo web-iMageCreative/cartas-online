@@ -222,14 +222,14 @@ export const theme = createTheme({
     //     },
     //   })
     // },
-    Box: {
-      styles: (theme) => ({
-        root: {
-          // En modo oscuro, el fondo será ligeramente diferente
-          backgroundColor: theme.defaultGradient.dark[7],
-        },
-      }),
-    },
+    // Box: {
+    //   styles: (theme) => ({
+    //     root: {
+    //       // En modo oscuro, el fondo será ligeramente diferente
+    //       // backgroundColor: theme.defaultGradient.dark[7],
+    //     },
+    //   }),
+    // },
     Paper: {
       styles: (theme) => ({
         root: {

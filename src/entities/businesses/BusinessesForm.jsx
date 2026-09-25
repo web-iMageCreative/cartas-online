@@ -134,7 +134,7 @@ export default function BusinessesForm({
                   <label className='mantine-FileInput-label'>Logo</label>
                   <Box radius="md">
                     <Box bg={"url(" + (form.values.logo instanceof File ? URL.createObjectURL(form.values.logo) : form.values.logo) +")"}>
-                      <Button onClick={() => handleDeleteImage('logo')} href="#" c="white"><IconTrash /></Button>
+                      <Button onClick={() => handleDeleteImage('logo')} c="white"><IconTrash /></Button>
                       <Overlay></Overlay>
                     </Box>
                   </Box>
@@ -155,7 +155,7 @@ export default function BusinessesForm({
                   <label className='mantine-FileInput-label'>Portada</label>
                   <Box radius="md">
                     <Box bg={"url(" + (form.values.cover_image instanceof File? URL.createObjectURL(form.values.cover_image) : form.values.cover_image) +")"}>
-                      <Button onClick={() => handleDeleteImage('cover_image')} href="#" c="white"><IconTrash /></Button>
+                      <Button onClick={() => handleDeleteImage('cover_image')} c="white"><IconTrash /></Button>
                       <Overlay></Overlay>
                     </Box>
                   </Box>
